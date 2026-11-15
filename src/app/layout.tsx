@@ -1,12 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { site } from "@/lib/site";
 
-const sans = Inter({ subsets: ["latin"], variable: "--font-sans-var", display: "swap" });
-const display = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-display-var", display: "swap" });
+const sans = localFont({ src: "./fonts/inter.woff2", variable: "--font-sans-var", display: "swap", weight: "100 900" });
+const display = localFont({ src: "./fonts/plus-jakarta-sans.woff2", variable: "--font-display-var", display: "swap", weight: "200 800" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
