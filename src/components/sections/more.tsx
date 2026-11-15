@@ -53,7 +53,7 @@ export function Process() {
       <Stagger className="relative mt-16 grid gap-8 md:grid-cols-3">
         <div
           aria-hidden
-          className="absolute left-[16%] right-[16%] top-7 hidden h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent md:block"
+          className="absolute left-[16%] right-[16%] top-7 hidden h-px bg-linear-to-r from-transparent via-brand/40 to-transparent md:block"
         />
         {steps.map((s, i) => (
           <StaggerItem key={s.title} className="relative text-center">
@@ -81,7 +81,7 @@ export function Testimonials() {
                 <Quote className="size-8 text-brand/40" aria-hidden />
                 <p className="mt-4 leading-relaxed">{t.quote}</p>
                 <div className="mt-6 flex items-center gap-3">
-                  <span className="grid size-10 place-items-center rounded-full bg-gradient-to-br from-brand to-accent font-bold text-white">
+                  <span className="grid size-10 place-items-center rounded-full bg-linear-to-br from-brand to-accent font-bold text-white">
                     {t.name[0]}
                   </span>
                   <div className="text-sm">
@@ -112,7 +112,7 @@ export function PricingCards() {
             )}
           >
             {p.highlight && (
-              <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-brand to-accent px-4 py-1 text-xs font-bold text-white">
+              <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-linear-to-r from-brand to-accent px-4 py-1 text-xs font-bold text-white">
                 Most popular
               </span>
             )}

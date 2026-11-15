@@ -72,7 +72,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <ButtonLink href="/book" className="hidden !min-h-10 sm:inline-flex">
+          <ButtonLink href="/book" className="hidden min-h-10! sm:inline-flex">
             Book a consultation <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
           </ButtonLink>
           <button
@@ -93,7 +93,7 @@ export function SiteHeader() {
       {/* scroll progress */}
       <motion.div
         aria-hidden
-        className="h-0.5 origin-left bg-gradient-to-r from-brand to-accent"
+        className="h-0.5 origin-left bg-linear-to-r from-brand to-accent"
         style={{ scaleX: progress }}
       />
 
@@ -123,7 +123,7 @@ export function SiteHeader() {
                   </Link>
                 </motion.div>
               ))}
-              <ButtonLink href="/book" onClick={() => setOpen(false)} className="mt-4 !min-h-12">
+              <ButtonLink href="/book" onClick={() => setOpen(false)} className="mt-4 min-h-12!">
                 Book a consultation
               </ButtonLink>
             </nav>

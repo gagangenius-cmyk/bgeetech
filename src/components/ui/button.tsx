@@ -7,7 +7,7 @@ const base =
 
 const variants = {
   primary:
-    "bg-brand-strong text-white shadow-lg shadow-brand/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand/40 before:absolute before:inset-0 before:-translate-x-full before:bg-gradient-to-r before:from-transparent before:via-white/25 before:to-transparent before:transition-transform before:duration-700 hover:before:translate-x-full",
+    "bg-brand-strong text-white shadow-lg shadow-brand/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand/40 before:absolute before:inset-0 before:-translate-x-full before:bg-linear-to-r before:from-transparent before:via-white/25 before:to-transparent before:transition-transform before:duration-700 hover:before:translate-x-full",
   secondary:
     "border border-border bg-card text-foreground hover:-translate-y-0.5 hover:border-brand/60 hover:text-brand",
   ghost: "text-foreground hover:bg-muted",
