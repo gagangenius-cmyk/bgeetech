@@ -74,7 +74,7 @@ export function WhyUs() {
     <section className="relative bg-muted py-24">
       <div aria-hidden className="royal-pattern absolute inset-0 opacity-60" />
       <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
-        <SectionHeading eyebrow="Why bgeetech" title="Advice you can rely on, delivered with care" center />
+        <SectionHeading eyebrow="Why BGeetech" title="Advice you can rely on, delivered with care" center />
         <div aria-hidden className="gold-rule mx-auto mt-8 max-w-xs" />
         <Stagger className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {whyUs.map((w, i) => (

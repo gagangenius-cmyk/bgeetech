@@ -9,13 +9,15 @@ import { services } from "@/lib/site";
 
 const initial: LeadState = { ok: false };
 
-const input =
-  "min-h-12 w-full rounded-xl border border-border bg-background px-4 text-base outline-none transition-all placeholder:text-muted-foreground/70 focus:border-brand focus:ring-4 focus:ring-brand/15 aria-[invalid=true]:border-red-500";
+const inputBase =
+  "w-full rounded-xl border border-border bg-background px-4 text-base outline-none transition-all placeholder:text-muted-foreground/70 focus:border-brand focus:ring-4 focus:ring-brand/15 aria-[invalid=true]:border-red-500";
+const sizeFull = "min-h-12 text-base px-4";
+const sizeCompact = "min-h-11 text-sm px-3.5";
 
-function Field({ id, label, error, hint, children }: { id: string; label: string; error?: string; hint?: string; children: ReactNode }) {
+function Field({ id, label, error, hint, compact, children }: { id: string; label: string; error?: string; hint?: string; compact?: boolean; children: ReactNode }) {
   return (
     <div>
-      <label htmlFor={id} className="mb-1.5 block text-sm font-semibold">
+      <label htmlFor={id} className={`block font-semibold ${compact ? "mb-1 text-xs" : "mb-1.5 text-sm"}`}>
         {label} {hint && <span className="font-normal text-muted-foreground">({hint})</span>}
       </label>
       {children}
@@ -36,6 +38,8 @@ type Props = {
   defaultBudget?: string;
   defaultMessage?: string;
   submitLabel?: string;
+  /** Tighter layout for modals: smaller controls and spacing. */
+  compact?: boolean;
   onSuccess?: () => void;
 };
 
@@ -46,6 +50,7 @@ export function LeadForm({
   defaultBudget = "",
   defaultMessage = "",
   submitLabel = "Send",
+  compact = false,
   onSuccess,
 }: Props) {
   const uid = useId();
@@ -55,6 +60,7 @@ export function LeadForm({
     return next;
   }, initial);
 
+  const input = `${inputBase} ${compact ? sizeCompact : sizeFull}`;
   const id = (n: string) => `${uid}-${n}`;
   const err = (f: LeadField) => state.errors?.[f];
   const aria = (f: LeadField) => ({ "aria-invalid": !!err(f), "aria-describedby": err(f) ? `${id(f)}-error` : undefined });
@@ -74,21 +80,21 @@ export function LeadForm({
           <p className="mt-2 text-muted-foreground">{state.message}</p>
         </motion.div>
       ) : (
-        <motion.form key="form" action={action} className="space-y-4" noValidate>
+        <motion.form key="form" action={action} className={compact ? "space-y-3" : "space-y-4"} noValidate>
           <input type="hidden" name="source" value={source} />
           {defaultBudget && <input type="hidden" name="budget" value={defaultBudget} />}
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Field id={id("name")} label="Full name" error={err("name")}>
+          <div className={`grid sm:grid-cols-2 ${compact ? "gap-3" : "gap-4"}`}>
+            <Field compact={compact} id={id("name")} label="Full name" error={err("name")}>
               <input id={id("name")} name="name" autoComplete="name" required className={input} {...aria("name")} />
             </Field>
-            <Field id={id("phone")} label="Phone / WhatsApp" hint="optional" error={err("phone")}>
+            <Field compact={compact} id={id("phone")} label={compact ? "Phone" : "Phone / WhatsApp"} hint="optional" error={err("phone")}>
               <input id={id("phone")} name="phone" type="tel" inputMode="tel" autoComplete="tel" className={input} {...aria("phone")} />
             </Field>
           </div>
-          <Field id={id("email")} label="Email" error={err("email")}>
+          <Field compact={compact} id={id("email")} label="Email" error={err("email")}>
             <input id={id("email")} name="email" type="email" autoComplete="email" required className={input} {...aria("email")} />
           </Field>
-          <Field id={id("service")} label="Interested in">
+          <Field compact={compact} id={id("service")} label="Interested in">
             <select id={id("service")} name="service" defaultValue={defaultService} className={input}>
               <option value="">Not sure yet</option>
               {services.map((s) => (
@@ -99,7 +105,7 @@ export function LeadForm({
             </select>
           </Field>
           {message !== "none" && (
-            <Field id={id("message")} label="How can we help?" hint={message === "optional" ? "optional" : undefined} error={err("message")}>
+            <Field compact={compact} id={id("message")} label="How can we help?" hint={message === "optional" ? "optional" : undefined} error={err("message")}>
               <textarea
                 id={id("message")}
                 name="message"
@@ -115,7 +121,7 @@ export function LeadForm({
           <input type="text" name="company" tabIndex={-1} autoComplete="off" aria-hidden className="hidden" />
 
           <div>
-            <label className="flex cursor-pointer items-start gap-3 text-sm leading-snug">
+            <label className={`flex cursor-pointer items-start gap-3 leading-snug ${compact ? "text-xs" : "text-sm"}`}>
               <input type="checkbox" name="consent" required className="mt-0.5 size-5 shrink-0 accent-[var(--brand)]" {...aria("consent")} />
               <span>
                 I agree to be contacted about my enquiry. See our{" "}
@@ -138,7 +144,7 @@ export function LeadForm({
             </p>
           )}
 
-          <Button type="submit" disabled={pending} className="w-full disabled:opacity-60">
+          <Button type="submit" disabled={pending} className={`w-full disabled:opacity-60 ${compact ? "min-h-11!" : ""}`}>
             {pending ? "Sending..." : <>{submitLabel} <Send className="size-4" /></>}
           </Button>
         </motion.form>

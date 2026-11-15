@@ -2,11 +2,11 @@
 // Replace with real, verifiable content before launch.
 
 export const site = {
-  name: "bgeetech",
+  name: "BGeetech",
   url: "https://bgeetech.com",
   tagline: "Technology consulting, delivered online.",
   description:
-    "bgeetech helps ambitious teams plan, design and ship digital products with expert consulting delivered online. Book a consultation in under a minute.",
+    "BGeetech helps ambitious teams plan, design and ship digital products with expert consulting delivered online. Book a consultation in under a minute.",
   email: "hello@bgeetech.com",
   whatsappNumber: "919873334283", // international format, digits only
   whatsappDisplay: "+91 98733 34283",

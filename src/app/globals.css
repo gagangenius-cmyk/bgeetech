@@ -151,3 +151,6 @@ body {
     radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--brand) 14%, transparent) 1px, transparent 0);
   background-size: 22px 22px;
 }
+
+/* Native dialogs take focus when opened; the modal itself should not show a focus ring. */
+dialog:focus-visible { outline: none; }

@@ -1,10 +1,15 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { Sparkles, X } from "lucide-react";
+import { Check, Mail, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { LeadForm } from "@/components/lead-form";
+import { Logo } from "@/components/logo";
+import { whatsappUrl } from "@/lib/chat-knowledge";
+import { site } from "@/lib/site";
+
+const perks = ["Free first conversation, no obligation", "Senior specialists, never juniors", "Written plan within days"];
 
 export const OPEN_LEAD_EVENT = "bgee:open-lead";
 const SKIP_ON = ["/book", "/contact", "/estimate", "/privacy", "/terms"];
@@ -104,13 +109,13 @@ export function LeadPopup() {
   return (
     <dialog
       ref={ref}
-      aria-labelledby="lead-title"
+      aria-label="Request a call back"
       onClose={() => setOpen(false)}
       onCancel={() => write(DISMISS_KEY, String(Date.now()))}
       onClick={(e) => {
         if (e.target === ref.current) close();
       }}
-      className="m-auto w-[calc(100%-1.5rem)] max-w-lg overflow-visible rounded-3xl border border-border bg-transparent p-0 text-foreground backdrop:bg-ink/70 backdrop:backdrop-blur-sm"
+      className="m-auto w-[calc(100%-1.5rem)] max-w-3xl overflow-visible rounded-3xl border-0 bg-transparent p-0 text-foreground outline-none backdrop:bg-ink/75 backdrop:backdrop-blur-sm"
     >
       <AnimatePresence>
         {open && (
@@ -119,34 +124,70 @@ export function LeadPopup() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="relative max-h-[90dvh] overflow-y-auto rounded-3xl bg-card p-6 shadow-2xl sm:p-8"
+            className="relative grid max-h-[96dvh] overflow-y-auto overflow-x-hidden rounded-3xl bg-card shadow-2xl md:grid-cols-[1fr_1.05fr] md:overflow-hidden"
           >
-            <div aria-hidden className="gold-rule absolute inset-x-8 top-0" />
-            <button
-              type="button"
-              onClick={() => close()}
-              aria-label="Close"
-              className="absolute right-3 top-3 grid size-11 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-            >
-              <X className="size-5" />
-            </button>
-            <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-accent">
-              <Sparkles className="size-4" aria-hidden /> Free consultation enquiry
-            </p>
-            <h2 id="lead-title" className="mt-2 pr-8 font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-              Tell us about your project
-            </h2>
-            <p className="mb-6 mt-2 text-sm text-muted-foreground">
-              Share a few details and a specialist will reply within one business day.
-            </p>
-            <LeadForm
-              source="popup"
-              submitLabel="Request a call back"
-              onSuccess={() => {
-                write(DONE_KEY, "1");
-                window.setTimeout(() => close(false), 2800);
-              }}
-            />
+            {/* Left: brand + value (hidden on small screens to keep the form on one screen) */}
+            <div className="relative isolate hidden flex-col justify-between gap-8 overflow-hidden bg-ink p-8 text-white md:flex">
+              <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+                <div className="absolute -left-16 -top-16 size-64 animate-aurora rounded-full bg-emerald-600/40 blur-[80px]" />
+                <div className="absolute -bottom-20 -right-10 size-64 animate-aurora rounded-full bg-amber-400/25 blur-[80px] [animation-delay:-8s]" />
+                <div className="grid-lines absolute inset-0 opacity-70" />
+              </div>
+              <Logo onDark />
+              <div>
+                <h2 id="lead-title" className="font-display text-3xl font-extrabold leading-tight tracking-tight">
+                  Let&rsquo;s plan your <span className="text-gradient">next project</span>
+                </h2>
+                <p className="mt-3 text-sm leading-relaxed text-white/70">
+                  Tell us a little about what you need and a specialist will get back to you within one business day.
+                </p>
+                <ul className="mt-6 space-y-3 text-sm">
+                  {perks.map((t) => (
+                    <li key={t} className="flex items-center gap-3">
+                      <span className="grid size-5 shrink-0 place-items-center rounded-full bg-amber-400/20 text-amber-300">
+                        <Check className="size-3" aria-hidden />
+                      </span>
+                      {t}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="space-y-1.5 text-xs text-white/60">
+                <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="block hover:text-white">
+                  WhatsApp {site.whatsappDisplay}
+                </a>
+                <a href={`mailto:${site.email}`} className="flex items-center gap-1.5 hover:text-white">
+                  <Mail className="size-3.5" aria-hidden /> {site.email}
+                </a>
+              </div>
+            </div>
+
+            {/* Right: compact form */}
+            <div className="relative p-5 sm:p-7 md:flex md:flex-col md:justify-center">
+              <button
+                type="button"
+                onClick={() => close()}
+                aria-label="Close"
+                className="absolute right-2 top-2 grid size-11 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              >
+                <X className="size-5" />
+              </button>
+              <div className="md:hidden">
+                <Logo className="mb-3" />
+              </div>
+              <h3 className="pr-10 font-display text-xl font-extrabold tracking-tight md:text-2xl">Request a call back</h3>
+              <p className="mb-4 mt-1 text-xs text-muted-foreground">Takes less than a minute.</p>
+              <LeadForm
+                source="popup"
+                message="none"
+                compact
+                submitLabel="Request a call back"
+                onSuccess={() => {
+                  write(DONE_KEY, "1");
+                  window.setTimeout(() => close(false), 2800);
+                }}
+              />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

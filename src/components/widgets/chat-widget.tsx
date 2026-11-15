@@ -11,7 +11,7 @@ type Msg = { role: "user" | "assistant"; content: string };
 
 const GREETING: Msg = {
   role: "assistant",
-  content: "Hi! I am the bgeetech assistant. Ask me about our services, pricing, booking, or the latest in web, cloud and AI.",
+  content: "Hi! I am the BGeetech assistant. Ask me about our services, pricing, booking, or the latest in web, cloud and AI.",
 };
 
 const SUGGESTIONS = [
@@ -116,7 +116,7 @@ export function ChatWidget() {
           <motion.section
             id="chat-panel"
             role="dialog"
-            aria-label="bgeetech assistant"
+            aria-label="BGeetech assistant"
             initial={{ opacity: 0, y: 24, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.97 }}
@@ -128,7 +128,7 @@ export function ChatWidget() {
                 <Bot className="size-5" aria-hidden />
               </span>
               <div className="flex-1">
-                <p className="font-display font-bold leading-tight">bgeetech assistant</p>
+                <p className="font-display font-bold leading-tight">BGeetech assistant</p>
                 <p className="flex items-center gap-1.5 text-xs text-white/70">
                   <span className="size-2 rounded-full bg-emerald-400" aria-hidden /> AI assistant · replies instantly
                 </p>

@@ -21,10 +21,10 @@ export function LogoMark({ className }: { className?: string }) {
 
 export function Logo({ className, onDark = false }: { className?: string; onDark?: boolean }) {
   return (
-    <span className={cn("inline-flex items-center gap-2.5 font-display text-xl tracking-tight", className)}>
+    <span className={cn("inline-flex items-center gap-2.5 font-sans text-xl tracking-[-0.03em]", className)}>
       <LogoMark />
       <span className={onDark ? "text-white" : "text-foreground"}>
-        <span className="font-extrabold">bgee</span>
+        <span className="font-extrabold">BGee</span>
         <span className={cn("font-normal", onDark ? "text-amber-300" : "text-brand")}>tech</span>
       </span>
       <span className="sr-only">home</span>

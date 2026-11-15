@@ -7,7 +7,7 @@ import { FinalCta, Stats } from "@/components/sections/more";
 
 export const metadata: Metadata = {
   title: "About",
-  description: "Who we are and how bgeetech works with teams.",
+  description: "Who we are and how BGeetech works with teams.",
 };
 
 const values = [
@@ -22,14 +22,14 @@ export default function AboutPage() {
       <PageHero
         eyebrow="About"
         title="A small team of senior practitioners"
-        body="bgeetech brings hands-on engineering, design and strategy experience to teams that want expert input without long contracts."
+        body="BGeetech brings hands-on engineering, design and strategy experience to teams that want expert input without long contracts."
       />
       <Stats />
       <section className="mx-auto max-w-3xl px-5 pt-24 sm:px-8">
         <h2 className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">Our story</h2>
         <div aria-hidden className="gold-rule mt-5 max-w-24" />
         <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-          Good technology decisions are rarely about tools. They are about timing, trade-offs and people. We started bgeetech to give teams direct access to experienced practitioners without long contracts or sales cycles.
+          Good technology decisions are rarely about tools. They are about timing, trade-offs and people. We started BGeetech to give teams direct access to experienced practitioners without long contracts or sales cycles.
         </p>
         <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
           Every engagement is online, focused and documented. You bring the question, we bring the experience, and you leave with a plan written in plain language that your whole team can follow.

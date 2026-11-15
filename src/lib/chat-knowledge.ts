@@ -1,9 +1,9 @@
 import { faqs, plans, services, site } from "@/lib/site";
 
-export const whatsappUrl = (text = "Hello bgeetech, I would like to know more about your services.") =>
+export const whatsappUrl = (text = "Hello BGeetech, I would like to know more about your services.") =>
   `https://wa.me/${site.whatsappNumber}?text=${encodeURIComponent(text)}`;
 
-/** Approved facts the assistant may state about bgeetech. */
+/** Approved facts the assistant may state about BGeetech. */
 export function businessFacts() {
   return [
     `Company: ${site.name}. ${site.description}`,

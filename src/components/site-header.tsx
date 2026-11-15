@@ -40,7 +40,7 @@ export function SiteHeader() {
       )}
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8">
-        <Link href="/" aria-label="bgeetech home" onClick={() => setOpen(false)}>
+        <Link href="/" aria-label="BGeetech home" onClick={() => setOpen(false)}>
           <Logo onDark={!scrolled && !open && pathname === "/"} />
         </Link>
 
