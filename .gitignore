@@ -42,3 +42,4 @@ next-env.d.ts
 
 # lead data (contains personal information)
 /data/
+!.env.example
