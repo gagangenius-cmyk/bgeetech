@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { ArrowRight, Check, Quote } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import { Counter } from "@/components/motion/counter";
 import { Marquee } from "@/components/motion/marquee";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { SpotlightCard } from "@/components/motion/spotlight-card";
 import { ButtonLink } from "@/components/ui/button";
 import { SectionHeading } from "@/components/sections/services-grid";
-import { plans, stats, steps, tech, testimonials } from "@/lib/site";
+import { industries, plans, stats, steps, tech, whyUs } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 export function Stats() {
@@ -69,31 +69,42 @@ export function Process() {
   );
 }
 
-export function Testimonials() {
+export function WhyUs() {
   return (
-    <section className="bg-muted py-24">
-      <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <SectionHeading eyebrow="Client stories" title="Trusted by teams that ship" center />
-        <Stagger className="mt-14 grid gap-5 md:grid-cols-3">
-          {testimonials.map((t, i) => (
-            <StaggerItem key={i}>
+    <section className="relative bg-muted py-24">
+      <div aria-hidden className="royal-pattern absolute inset-0 opacity-60" />
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
+        <SectionHeading eyebrow="Why bgeetech" title="Advice you can rely on, delivered with care" center />
+        <div aria-hidden className="gold-rule mx-auto mt-8 max-w-xs" />
+        <Stagger className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {whyUs.map((w, i) => (
+            <StaggerItem key={w.title}>
               <SpotlightCard className="h-full">
-                <Quote className="size-8 text-brand/40" aria-hidden />
-                <p className="mt-4 leading-relaxed">{t.quote}</p>
-                <div className="mt-6 flex items-center gap-3">
-                  <span className="grid size-10 place-items-center rounded-full bg-linear-to-br from-brand to-accent font-bold text-white">
-                    {t.name[0]}
-                  </span>
-                  <div className="text-sm">
-                    <p className="font-semibold">{t.name}</p>
-                    <p className="text-muted-foreground">{t.role}</p>
-                  </div>
-                </div>
+                <span className="font-display text-5xl font-extrabold text-accent/70">0{i + 1}</span>
+                <h3 className="mt-3 font-display text-xl font-bold">{w.title}</h3>
+                <p className="mt-2 leading-relaxed text-muted-foreground">{w.body}</p>
               </SpotlightCard>
             </StaggerItem>
           ))}
         </Stagger>
       </div>
+    </section>
+  );
+}
+
+export function Industries() {
+  return (
+    <section className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
+      <SectionHeading eyebrow="Industries" title="Experience across sectors" center />
+      <Stagger className="mt-10 flex flex-wrap justify-center gap-3" gap={0.05}>
+        {industries.map((i) => (
+          <StaggerItem key={i}>
+            <span className="inline-block rounded-full border border-accent/40 bg-card px-5 py-2.5 text-sm font-semibold transition-all hover:-translate-y-0.5 hover:border-accent hover:bg-accent/10">
+              {i}
+            </span>
+          </StaggerItem>
+        ))}
+      </Stagger>
     </section>
   );
 }
@@ -161,8 +172,8 @@ export function FinalCta() {
     <section className="mx-auto max-w-7xl px-5 sm:px-8">
       <Reveal>
         <div className="relative isolate overflow-hidden rounded-[2rem] bg-ink px-6 py-16 text-center text-white sm:px-16 sm:py-20">
-          <div aria-hidden className="absolute -left-20 -top-20 -z-10 size-96 animate-aurora rounded-full bg-blue-600/40 blur-[100px]" />
-          <div aria-hidden className="absolute -bottom-24 -right-16 -z-10 size-96 animate-aurora rounded-full bg-teal-400/30 blur-[100px] [animation-delay:-8s]" />
+          <div aria-hidden className="absolute -left-20 -top-20 -z-10 size-96 animate-aurora rounded-full bg-emerald-600/40 blur-[100px]" />
+          <div aria-hidden className="absolute -bottom-24 -right-16 -z-10 size-96 animate-aurora rounded-full bg-amber-400/30 blur-[100px] [animation-delay:-8s]" />
           <h2 className="mx-auto max-w-2xl font-display text-3xl font-extrabold tracking-tight sm:text-5xl">
             Ready to turn your idea into a plan?
           </h2>

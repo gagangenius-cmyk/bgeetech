@@ -1,6 +1,8 @@
+import { ArrowRight } from "lucide-react";
+import { ButtonLink } from "@/components/ui/button";
 import { Faq } from "@/components/sections/faq";
 import { Hero } from "@/components/sections/hero";
-import { FinalCta, PricingTeaser, Process, Stats, TechMarquee, Testimonials } from "@/components/sections/more";
+import { FinalCta, Industries, PricingTeaser, Process, Stats, TechMarquee, WhyUs } from "@/components/sections/more";
 import { SectionHeading, ServicesGrid } from "@/components/sections/services-grid";
 
 export default function HomePage() {
@@ -14,11 +16,17 @@ export default function HomePage() {
           title="Specialist help for every stage of delivery"
           body="Focused, outcome-led sessions with senior practitioners. Pick what you need, see the price, book instantly."
         />
-        <ServicesGrid />
+        <ServicesGrid limit={6} />
+        <div className="mt-10 text-center">
+          <ButtonLink href="/services" variant="secondary">
+            View all 12 services <ArrowRight className="size-4" />
+          </ButtonLink>
+        </div>
       </section>
       <TechMarquee />
       <Process />
-      <Testimonials />
+      <WhyUs />
+      <Industries />
       <PricingTeaser />
       <section className="mx-auto max-w-7xl px-5 pb-24 sm:px-8">
         <SectionHeading eyebrow="FAQ" title="Questions, answered" center />

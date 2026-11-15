@@ -9,9 +9,9 @@ export function Hero() {
     <section className="relative isolate overflow-hidden bg-ink pb-24 pt-32 text-white sm:pt-40">
       {/* animated aurora + grid background */}
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute -left-40 -top-40 size-[44rem] animate-aurora rounded-full bg-blue-600/40 blur-[120px]" />
-        <div className="absolute -right-32 top-20 size-[38rem] animate-aurora rounded-full bg-teal-400/30 blur-[120px] [animation-delay:-6s]" />
-        <div className="absolute bottom-0 left-1/3 size-[30rem] animate-aurora rounded-full bg-indigo-500/30 blur-[120px] [animation-delay:-12s]" />
+        <div className="absolute -left-40 -top-40 size-[44rem] animate-aurora rounded-full bg-emerald-600/40 blur-[120px]" />
+        <div className="absolute -right-32 top-20 size-[38rem] animate-aurora rounded-full bg-amber-400/30 blur-[120px] [animation-delay:-6s]" />
+        <div className="absolute bottom-0 left-1/3 size-[30rem] animate-aurora rounded-full bg-emerald-700/30 blur-[120px] [animation-delay:-12s]" />
         <div className="grid-lines absolute inset-0" />
       </div>
 
@@ -52,8 +52,8 @@ export function Hero() {
           <Reveal delay={0.9}>
             <ul className="mt-10 flex flex-wrap gap-x-7 gap-y-3 text-sm text-white/65">
               <li className="flex items-center gap-2"><Star className="size-4 text-amber-300" aria-hidden /> Rated by clients worldwide</li>
-              <li className="flex items-center gap-2"><ShieldCheck className="size-4 text-teal-300" aria-hidden /> Secure Stripe payments</li>
-              <li className="flex items-center gap-2"><CalendarCheck className="size-4 text-blue-300" aria-hidden /> Free rescheduling</li>
+              <li className="flex items-center gap-2"><ShieldCheck className="size-4 text-amber-300" aria-hidden /> Secure Stripe payments</li>
+              <li className="flex items-center gap-2"><CalendarCheck className="size-4 text-emerald-300" aria-hidden /> Free rescheduling</li>
             </ul>
           </Reveal>
         </div>

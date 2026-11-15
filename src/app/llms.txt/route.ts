@@ -1,3 +1,4 @@
+import { posts } from "@/lib/content";
 import { plans, services, site } from "@/lib/site";
 
 export function GET() {
@@ -11,8 +12,12 @@ export function GET() {
     "## Pricing",
     ...plans.map((p) => `- ${p.name}: $${p.price}. ${p.blurb}`),
     "",
+    "## Insights",
+    ...posts.map((p) => `- [${p.title}](${site.url}/blog/${p.slug}): ${p.excerpt}`),
+    "",
     "## Contact",
     `- ${site.email}`,
+    `- WhatsApp ${site.whatsappDisplay}`,
     "",
   ].join("\n");
 

@@ -30,8 +30,8 @@ export function ServicesGrid({ limit }: { limit?: number }) {
   const list = limit ? services.slice(0, limit) : services;
   return (
     <Stagger className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {list.map((s, i) => (
-        <StaggerItem key={s.slug} className={cn(i === 0 && "lg:col-span-2")}>
+      {list.map((s) => (
+        <StaggerItem key={s.slug}>
           <Link href={`/services/${s.slug}`} className="block h-full">
             <SpotlightCard className="h-full">
               <div className="flex items-start justify-between">

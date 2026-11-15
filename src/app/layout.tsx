@@ -4,9 +4,25 @@ import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { site } from "@/lib/site";
+import { ChatWidget } from "@/components/widgets/chat-widget";
+import { CommandPalette } from "@/components/widgets/command-palette";
+import { LeadPopup } from "@/components/widgets/lead-popup";
+import { WhatsAppButton } from "@/components/widgets/whatsapp-button";
+
+const orgJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  name: site.name,
+  url: site.url,
+  description: site.description,
+  email: site.email,
+  telephone: `+${site.whatsappNumber}`,
+  logo: `${site.url}/brand/logo-mark.svg`,
+  areaServed: "Worldwide",
+};
 
 const sans = localFont({ src: "./fonts/inter.woff2", variable: "--font-sans-var", display: "swap", weight: "100 900" });
-const display = localFont({ src: "./fonts/plus-jakarta-sans.woff2", variable: "--font-display-var", display: "swap", weight: "200 800" });
+const display = localFont({ src: "./fonts/fraunces.woff2", variable: "--font-display-var", display: "swap", weight: "100 900" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -38,6 +54,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
         </main>
         <SiteFooter />
+        <WhatsAppButton />
+        <ChatWidget />
+        <LeadPopup />
+        <CommandPalette />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd).replace(/</g, "\u003c") }} />
       </body>
     </html>
   );

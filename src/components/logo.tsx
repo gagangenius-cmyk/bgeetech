@@ -7,8 +7,8 @@ export function LogoMark({ className }: { className?: string }) {
     <svg viewBox="0 0 80 80" className={cn("size-9", className)} aria-hidden>
       <defs>
         <linearGradient id={id} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#2563EB" />
-          <stop offset="1" stopColor="#14B8A6" />
+          <stop offset="0" stopColor="#047857" />
+          <stop offset="1" stopColor="#D4AF37" />
         </linearGradient>
       </defs>
       <rect x="4" y="4" width="72" height="72" rx="18" fill={`url(#${id})`} />
@@ -25,7 +25,7 @@ export function Logo({ className, onDark = false }: { className?: string; onDark
       <LogoMark />
       <span className={onDark ? "text-white" : "text-foreground"}>
         <span className="font-extrabold">bgee</span>
-        <span className={cn("font-normal", onDark ? "text-teal-300" : "text-brand")}>tech</span>
+        <span className={cn("font-normal", onDark ? "text-amber-300" : "text-brand")}>tech</span>
       </span>
       <span className="sr-only">home</span>
     </span>

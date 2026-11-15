@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useScroll, useSpring } from "motion/react";
-import { ArrowRight, Menu, X } from "lucide-react";
+import { ArrowRight, Menu, Search, X } from "lucide-react";
+import { OPEN_SEARCH_EVENT } from "@/components/widgets/command-palette";
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/logo";
 import { ButtonLink } from "@/components/ui/button";
@@ -71,7 +72,18 @@ export function SiteHeader() {
           })}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
+          <button
+            type="button"
+            aria-label="Search the site (Ctrl or Command K)"
+            onClick={() => window.dispatchEvent(new Event(OPEN_SEARCH_EVENT))}
+            className={cn(
+              "grid size-11 place-items-center rounded-full transition-colors hover:bg-white/10",
+              !scrolled && !open && pathname === "/" ? "text-white" : "text-foreground hover:bg-muted",
+            )}
+          >
+            <Search className="size-5" />
+          </button>
           <ButtonLink href="/book" className="hidden min-h-10! sm:inline-flex">
             Book a consultation <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
           </ButtonLink>

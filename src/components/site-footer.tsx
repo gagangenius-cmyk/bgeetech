@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/logo";
+import { whatsappUrl } from "@/lib/chat-knowledge";
 import { nav, services, site } from "@/lib/site";
 
 export function SiteFooter() {
@@ -12,6 +13,9 @@ export function SiteFooter() {
           <p className="mt-5 max-w-sm text-sm leading-relaxed">{site.description}</p>
           <a href={`mailto:${site.email}`} className="mt-5 inline-block text-sm font-medium text-white underline-offset-4 hover:underline">
             {site.email}
+          </a>
+          <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="mt-2 block text-sm font-medium text-white underline-offset-4 hover:underline">
+            WhatsApp {site.whatsappDisplay}
           </a>
         </div>
         <div>
@@ -36,6 +40,9 @@ export function SiteFooter() {
                 </Link>
               </li>
             ))}
+            <li>
+              <Link className="transition-colors hover:text-white" href="/estimate">Cost estimator</Link>
+            </li>
             <li>
               <Link className="transition-colors hover:text-white" href="/privacy">Privacy</Link>
             </li>

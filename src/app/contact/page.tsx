@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Clock, Mail } from "lucide-react";
-import { ContactForm } from "@/components/contact-form";
+import { LeadForm } from "@/components/lead-form";
 import { PageHero } from "@/components/page-hero";
 import { Reveal } from "@/components/motion/reveal";
 import { site } from "@/lib/site";
@@ -34,7 +34,7 @@ export default function ContactPage() {
           </ul>
         </Reveal>
         <Reveal delay={0.1}>
-          <ContactForm />
+          <LeadForm source="contact" message="required" submitLabel="Send message" />
         </Reveal>
       </section>
     </>

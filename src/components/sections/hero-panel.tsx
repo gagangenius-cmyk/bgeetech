@@ -33,14 +33,14 @@ export function HeroPanel() {
     >
       <motion.div
         style={reduce ? undefined : { rotateX: rx, rotateY: ry, transformStyle: "preserve-3d" }}
-        className="relative rounded-3xl border border-white/15 bg-white/[0.07] p-6 shadow-2xl shadow-blue-950/50 backdrop-blur-xl"
+        className="relative rounded-3xl border border-white/15 bg-white/[0.07] p-6 shadow-2xl shadow-emerald-950/50 backdrop-blur-xl"
       >
         <div className="flex items-center justify-between">
           <div>
             <p className="text-xs uppercase tracking-widest text-white/50">Next available</p>
             <p className="mt-1 font-display text-xl font-bold">Strategy session</p>
           </div>
-          <span className="rounded-full bg-teal-400/15 px-3 py-1 text-xs font-semibold text-teal-300">60 min</span>
+          <span className="rounded-full bg-amber-400/15 px-3 py-1 text-xs font-semibold text-amber-300">60 min</span>
         </div>
 
         <div className="mt-6 grid grid-cols-2 gap-3">
@@ -56,7 +56,7 @@ export function HeroPanel() {
               transition={{ delay: 0.9 + i * 0.1 }}
               className={`min-h-11 rounded-xl border px-3 text-sm font-medium tabular-nums ${
                 i === 1
-                  ? "border-blue-400 bg-blue-500/25 text-white"
+                  ? "border-emerald-400 bg-emerald-500/25 text-white"
                   : "border-white/10 bg-white/5 text-white/75 hover:border-white/30"
               }`}
             >
@@ -66,7 +66,7 @@ export function HeroPanel() {
         </div>
 
         <div className="mt-6 flex items-center gap-3 rounded-2xl bg-white/5 p-3.5 text-sm">
-          <Video className="size-5 text-blue-300" aria-hidden />
+          <Video className="size-5 text-emerald-300" aria-hidden />
           <span className="text-white/75">Video link sent instantly after booking</span>
         </div>
 
@@ -75,7 +75,7 @@ export function HeroPanel() {
           style={reduce ? undefined : { translateZ: 60 }}
           className="absolute -left-6 -top-5 flex animate-float items-center gap-2 rounded-2xl border border-white/15 bg-ink/90 px-3.5 py-2.5 text-xs font-medium shadow-xl backdrop-blur"
         >
-          <CheckCircle2 className="size-4 text-teal-300" aria-hidden /> Booking confirmed
+          <CheckCircle2 className="size-4 text-amber-300" aria-hidden /> Booking confirmed
         </motion.div>
         <motion.div
           style={reduce ? undefined : { translateZ: 80 }}

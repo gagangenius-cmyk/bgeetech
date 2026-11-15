@@ -1,4 +1,4 @@
-import { Brain, Cloud, Code2, Compass, Palette, ShieldCheck, type LucideIcon } from "lucide-react";
+import { Bot, Brain, Cloud, Code2, Compass, Crown, Palette, ShieldCheck, ShoppingCart, Smartphone, TrendingUp, Workflow, type LucideIcon } from "lucide-react";
 import type { Service } from "@/lib/site";
 
 const map: Record<Service["icon"], LucideIcon> = {
@@ -8,6 +8,12 @@ const map: Record<Service["icon"], LucideIcon> = {
   palette: Palette,
   shield: ShieldCheck,
   compass: Compass,
+  phone: Smartphone,
+  cart: ShoppingCart,
+  trend: TrendingUp,
+  bot: Bot,
+  workflow: Workflow,
+  crown: Crown,
 };
 
 export function ServiceIcon({ name, className }: { name: Service["icon"]; className?: string }) {
