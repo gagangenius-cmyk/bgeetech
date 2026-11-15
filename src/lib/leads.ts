@@ -1,6 +1,7 @@
 import "server-only";
 import { appendFile, mkdir } from "node:fs/promises";
 import path from "node:path";
+import { getDb } from "@/lib/db";
 
 export type Lead = {
   name: string;
@@ -16,52 +17,58 @@ export type Lead = {
 /**
  * Delivers a lead through every configured channel. Failures in one channel never
  * block the others, and PII is never written to logs.
- *  1. data/leads.jsonl  (persistent Node hosts; NOT durable on serverless platforms)
- *  2. LEAD_WEBHOOK_URL  (Zapier / Make / Google Apps Script / CRM)
- *  3. Resend email      (RESEND_API_KEY + LEAD_NOTIFY_EMAIL + LEAD_FROM_EMAIL)
+ *  1. MySQL (Lead table)  - primary store, visible in /admin/leads
+ *  2. data/leads.jsonl    - fallback only when the database write fails
+ *  3. LEAD_WEBHOOK_URL    - Zapier / Make / Google Apps Script / CRM
+ *  4. Resend email        - RESEND_API_KEY + LEAD_NOTIFY_EMAIL + LEAD_FROM_EMAIL
  * Returns true when at least one channel accepted the lead.
  */
 export async function saveLead(lead: Lead): Promise<boolean> {
-  const results = await Promise.allSettled([toFile(lead), toWebhook(lead), toEmail(lead)]);
-  return results.some((r) => r.status === "fulfilled" && r.value === true);
+  const [dbRes, hook, mail] = await Promise.allSettled([
+    getDb().then((db) =>
+      db.Lead.create({ name: lead.name, email: lead.email, phone: lead.phone, service: lead.service, budget: lead.budget, message: lead.message, source: lead.source }),
+    ),
+    postWebhook({ type: "lead", ...lead }),
+    sendEmail(`New ${lead.source} lead: ${lead.name.slice(0, 60)}`, lead, lead.email),
+  ]);
+  const dbOk = dbRes.status === "fulfilled";
+  let fileOk = false;
+  if (!dbOk) fileOk = await appendJsonl("leads.jsonl", lead).catch(() => false);
+  return dbOk || fileOk || (hook.status === "fulfilled" && hook.value) || (mail.status === "fulfilled" && mail.value);
 }
 
-async function toFile(lead: Lead) {
+export async function appendJsonl(file: string, record: unknown) {
   const dir = path.join(process.cwd(), "data");
   await mkdir(dir, { recursive: true });
-  await appendFile(path.join(dir, "leads.jsonl"), JSON.stringify(lead) + "\n", "utf8");
+  await appendFile(path.join(dir, file), JSON.stringify(record) + "\n", "utf8");
   return true;
 }
 
-async function toWebhook(lead: Lead) {
+export async function postWebhook(payload: Record<string, unknown>) {
   const url = process.env.LEAD_WEBHOOK_URL;
   if (!url) return false;
   const res = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(lead),
+    body: JSON.stringify(payload),
     signal: AbortSignal.timeout(8000),
   });
   return res.ok;
 }
 
-const esc = (s = "") => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
+const esc = (v: unknown) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 
-async function toEmail(lead: Lead) {
+export async function sendEmail(subject: string, fields: Record<string, unknown>, replyTo?: string) {
   const { RESEND_API_KEY: key, LEAD_NOTIFY_EMAIL: to, LEAD_FROM_EMAIL: from } = process.env;
   if (!key || !to || !from) return false;
+  const rows = Object.entries(fields)
+    .filter(([, v]) => v !== undefined && v !== "")
+    .map(([k, v]) => `<tr><td style="padding:4px 12px 4px 0"><b>${esc(k)}</b></td><td>${esc(v)}</td></tr>`)
+    .join("");
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      from,
-      to: [to],
-      reply_to: lead.email,
-      subject: `New ${lead.source} lead: ${lead.name.slice(0, 60)}`,
-      html: `<h2>New lead (${esc(lead.source)})</h2>
-<p><b>Name:</b> ${esc(lead.name)}<br><b>Email:</b> ${esc(lead.email)}<br><b>Phone:</b> ${esc(lead.phone)}<br>
-<b>Service:</b> ${esc(lead.service)}<br><b>Budget:</b> ${esc(lead.budget)}</p><p>${esc(lead.message)}</p>`,
-    }),
+    body: JSON.stringify({ from, to: [to], ...(replyTo ? { reply_to: replyTo } : {}), subject, html: `<table>${rows}</table>` }),
     signal: AbortSignal.timeout(8000),
   });
   return res.ok;

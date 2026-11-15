@@ -12,7 +12,7 @@ import { site } from "@/lib/site";
 const perks = ["Free first conversation, no obligation", "Senior specialists, never juniors", "Written plan within days"];
 
 export const OPEN_LEAD_EVENT = "bgee:open-lead";
-const SKIP_ON = ["/book", "/contact", "/estimate", "/privacy", "/terms"];
+const SKIP_ON = ["/book", "/contact", "/estimate", "/builder", "/privacy", "/terms", "/admin"];
 const DISMISS_KEY = "bgee_lead_dismissed";
 const DONE_KEY = "bgee_lead_done";
 const DAY = 86_400_000;

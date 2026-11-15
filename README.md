@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BGeetech
 
-## Getting Started
+Technology consulting website built with Next.js 16 (App Router), Tailwind CSS 4, Motion, TanStack Query and MySQL (Sequelize).
 
-First, run the development server:
+## Features
+
+- Marketing site: services (12), pricing, estimator, about, contact, booking flow (UI)
+- **Dynamic blog** and **product demos** (CRM, POS, HRMS...) managed from the admin panel
+- **Website builder** (`/builder`): business details, 90+ business types, 100 colour themes + custom colours, 8 styles, live Desktop/Tablet/Mobile preview, plans from $10/month (monthly, quarterly, annual)
+- **Admin panel** (`/admin`): blog posts, demos, leads, website orders (search, create, edit, delete, CSV export)
+- AI chatbot (Claude), WhatsApp button, lead popup, Cmd/Ctrl+K search
+
+## Setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # then fill it in
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Requires Node 20.9+ and a MySQL or MariaDB database. Tables are created automatically on first start, and starter blog posts and demos are seeded.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Environment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+See [.env.example](.env.example). The essentials:
 
-## Learn More
+| Variable | Purpose |
+| --- | --- |
+| `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASS` | MySQL connection |
+| `AUTH_SECRET` | 32+ random characters; signs admin session cookies |
+| `ADMIN_EMAIL`, `ADMIN_PASSWORD` | Creates the first admin on first start (change the password, then remove these) |
+| `ANTHROPIC_API_KEY` | Enables the AI chatbot (otherwise scripted answers) |
+| `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` | Builder payments (otherwise orders are saved and a payment link is sent manually) |
+| `LEAD_WEBHOOK_URL`, `RESEND_API_KEY`, `LEAD_NOTIFY_EMAIL`, `LEAD_FROM_EMAIL` | Optional lead and order notifications |
 
-To learn more about Next.js, take a look at the following resources:
+Stripe webhook endpoint: `/api/stripe/webhook` (events: `checkout.session.completed`, `invoice.paid`, `checkout.session.expired`).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `npm run dev`, `npm run build`, `npm run lint`
+- Builds use `--webpack` so they also work on hosts whose glibc is too old for the native SWC/Turbopack binaries.
 
-## Deploy on Vercel
+## Deploying
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+`next.config.mjs` uses `output: "standalone"`. Build, then run `node .next/standalone/server.js` (copy `public/` and `.next/static/` next to it). All server dependencies (Sequelize, mysql2, bcryptjs, jose) are pure JavaScript.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Notes
+
+- Placeholder content to replace before launch: prices, estimator rates, builder plans (`src/lib/builder/config.ts`), legal pages, demo content.
+- Admin API routes verify a signed session on every request; `src/proxy.ts` is only a first-line redirect.
+- Lead and order PII lives in the database; `data/` (fallback files, uploaded logos) is git-ignored.

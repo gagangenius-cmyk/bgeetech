@@ -10,12 +10,17 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.8.0",
+    "@tanstack/react-query": "^5.107.1",
+    "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",
+    "jose": "^6.2.17",
     "lucide-react": "^1.73.0",
     "motion": "^14.14.0",
+    "mysql2": "^3.24.6",
     "next": "16.4.6",
     "react": "19.3.0",
     "react-dom": "19.3.0",
+    "sequelize": "^6.37.8",
     "server-only": "^0.0.1",
     "tailwind-merge": "^3.7.0",
     "zod": "^4.6.7"
@@ -29,5 +34,10 @@
     "eslint-config-next": "16.4.6",
     "tailwindcss": "4.3.3",
     "typescript": "^5"
+  },
+  "overrides": {
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "11.0.8"
+    }
   }
 }

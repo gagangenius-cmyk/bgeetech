@@ -1,11 +1,11 @@
 "use client";
 
-import { Calculator, CalendarCheck, FileText, Home, Mail, MessageCircle, Search, Tag } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { Calculator, CalendarCheck, FileText, Home, Mail, MessageCircle, MonitorPlay, Search, Sparkles, Tag } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { openLeadPopup } from "@/components/widgets/lead-popup";
 import { whatsappUrl } from "@/lib/chat-knowledge";
-import { posts } from "@/lib/content";
 import { nav, services } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -19,6 +19,14 @@ export function CommandPalette() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [q, setQ] = useState("");
   const [active, setActive] = useState(0);
+  const [armed, setArmed] = useState(false); // fetch the index only after the palette is first opened
+  type Entry = { label: string; href: string; hint?: string };
+  const idx = useQuery({
+    queryKey: ["search-index"],
+    queryFn: async () => (await fetch("/api/search-index")).json() as Promise<{ posts: Entry[]; demos: Entry[] }>,
+    enabled: armed,
+    staleTime: 5 * 60_000,
+  });
 
   const close = useCallback(() => (document.getElementById("site-palette") as HTMLDialogElement | null)?.close(), []);
   const go = useCallback(
@@ -33,14 +41,16 @@ export function CommandPalette() {
     () => [
       { id: "book", group: "Actions", label: "Book a consultation", hint: "/book", icon: <CalendarCheck className="size-4" />, run: go("/book") },
       { id: "quote", group: "Actions", label: "Get a free quote", hint: "Opens form", icon: <Mail className="size-4" />, run: () => { close(); openLeadPopup(); } },
+      { id: "builder", group: "Actions", label: "Build your website", hint: "/builder", icon: <Sparkles className="size-4" />, run: go("/builder") },
       { id: "estimate", group: "Actions", label: "Estimate your project cost", hint: "/estimate", icon: <Calculator className="size-4" />, run: go("/estimate") },
       { id: "wa", group: "Actions", label: "Chat on WhatsApp", hint: "Opens WhatsApp", icon: <MessageCircle className="size-4" />, run: () => { close(); window.open(whatsappUrl(), "_blank", "noopener,noreferrer"); } },
       { id: "home", group: "Pages", label: "Home", hint: "/", icon: <Home className="size-4" />, run: go("/") },
       ...nav.map((n) => ({ id: n.href, group: "Pages", label: n.label, hint: n.href, icon: <FileText className="size-4" />, run: go(n.href) })),
       ...services.map((s) => ({ id: s.slug, group: "Services", label: s.title, hint: `from $${s.from}`, icon: <Tag className="size-4" />, run: go(`/services/${s.slug}`) })),
-      ...posts.map((p) => ({ id: p.slug, group: "Insights", label: p.title, hint: p.category, icon: <FileText className="size-4" />, run: go(`/blog/${p.slug}`) })),
+      ...(idx.data?.demos ?? []).map((d) => ({ id: "d-" + d.href, group: "Demos", label: d.label, hint: d.hint ?? "", icon: <MonitorPlay className="size-4" />, run: go(d.href) })),
+      ...(idx.data?.posts ?? []).map((p) => ({ id: "p-" + p.href, group: "Insights", label: p.label, hint: p.hint ?? "", icon: <FileText className="size-4" />, run: go(p.href) })),
     ],
-    [go, close],
+    [go, close, idx.data],
   );
 
   const results = useMemo(() => {
@@ -53,6 +63,7 @@ export function CommandPalette() {
     if (ref.current && !ref.current.open) {
       setQ("");
       setActive(0);
+      setArmed(true);
       ref.current.showModal();
       inputRef.current?.focus();
     }

@@ -33,6 +33,7 @@ export function SiteHeader() {
   }, [open]);
 
   return (
+    <>
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-300",
@@ -41,13 +42,13 @@ export function SiteHeader() {
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8">
         <Link href="/" aria-label="BGeetech home" onClick={() => setOpen(false)}>
-          <Logo onDark={!scrolled && !open && pathname === "/"} />
+          <Logo onDark={!scrolled && !open} />
         </Link>
 
         <nav aria-label="Main" className="hidden items-center gap-1 md:flex">
           {nav.map((item) => {
             const active = pathname.startsWith(item.href);
-            const dark = !scrolled && pathname === "/";
+            const dark = !scrolled;
             return (
               <Link
                 key={item.href}
@@ -63,7 +64,7 @@ export function SiteHeader() {
                 {active && (
                   <motion.span
                     layoutId="nav-pill"
-                    className="absolute inset-0 -z-10 rounded-full bg-brand/10"
+                    className={cn("absolute inset-0 -z-10 rounded-full", dark ? "bg-white/15" : "bg-brand/10")}
                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
                   />
                 )}
@@ -79,7 +80,7 @@ export function SiteHeader() {
             onClick={() => window.dispatchEvent(new Event(OPEN_SEARCH_EVENT))}
             className={cn(
               "grid size-11 place-items-center rounded-full transition-colors hover:bg-white/10",
-              !scrolled && !open && pathname === "/" ? "text-white" : "text-foreground hover:bg-muted",
+              !scrolled && !open ? "text-white" : "text-foreground hover:bg-muted",
             )}
           >
             <Search className="size-5" />
@@ -94,7 +95,7 @@ export function SiteHeader() {
             onClick={() => setOpen((v) => !v)}
             className={cn(
               "grid size-11 place-items-center rounded-full md:hidden",
-              !scrolled && !open && pathname === "/" ? "text-white" : "text-foreground",
+              !scrolled && !open ? "text-white" : "text-foreground",
             )}
           >
             {open ? <X className="size-6" /> : <Menu className="size-6" />}
@@ -108,7 +109,10 @@ export function SiteHeader() {
         className="h-0.5 origin-left bg-linear-to-r from-brand to-accent"
         style={{ scaleX: progress }}
       />
+    </header>
 
+      {/* Rendered outside <header>: its backdrop-filter would otherwise become the containing block
+          for this fixed panel and collapse it to the header's height. */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -116,7 +120,7 @@ export function SiteHeader() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.25 }}
-            className="glass fixed inset-x-0 top-16 bottom-0 overflow-y-auto border-t border-border md:hidden"
+            className="fixed inset-x-0 top-16 bottom-0 z-[45] overflow-y-auto border-t border-border bg-background md:hidden"
           >
             <nav aria-label="Mobile" className="mx-auto flex max-w-7xl flex-col gap-1 px-5 py-6">
               {nav.map((item, i) => (
@@ -142,6 +146,6 @@ export function SiteHeader() {
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 }
