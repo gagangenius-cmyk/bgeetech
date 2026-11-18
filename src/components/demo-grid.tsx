@@ -47,7 +47,7 @@ export function DemoGrid({ demos }: { demos: DemoView[] }) {
       <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {shown.map((d) => (
           <SpotlightCard key={d.slug} className="flex flex-col p-0">
-            <div className="relative grid h-44 place-items-center overflow-hidden bg-linear-to-br from-emerald-900 to-ink">
+            <div className="relative grid h-44 place-items-center overflow-hidden bg-linear-to-br from-blue-900 to-ink">
               {d.imageUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={d.imageUrl} alt={`${d.title} screenshot`} className="size-full object-cover object-top" loading="lazy" />

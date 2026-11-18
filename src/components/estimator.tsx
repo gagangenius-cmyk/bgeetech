@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { Calculator, Check } from "lucide-react";
 import { useMemo, useState } from "react";
+import { useCurrency } from "@/components/currency";
 import { LeadForm } from "@/components/lead-form";
 import { estimator } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -41,9 +42,10 @@ function Choice<T extends string>({
   );
 }
 
-const fmt = (n: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n);
 
 export function Estimator() {
+  const { money } = useCurrency();
+  const fmt = (n: number) => money(n);
   const [type, setType] = useState<keyof typeof estimator.types>("web");
   const [size, setSize] = useState<keyof typeof estimator.sizes>("medium");
   const [speed, setSpeed] = useState<keyof typeof estimator.speeds>("standard");
@@ -111,7 +113,7 @@ export function Estimator() {
       </div>
 
       <aside className="lg:sticky lg:top-24 lg:self-start">
-        <div className="relative overflow-hidden rounded-3xl bg-ink p-7 text-white shadow-2xl shadow-emerald-950/30">
+        <div className="relative overflow-hidden rounded-3xl bg-ink p-7 text-white shadow-2xl shadow-blue-950/30">
           <div aria-hidden className="absolute -right-16 -top-16 size-56 animate-aurora rounded-full bg-amber-400/25 blur-[70px]" />
           <p className="relative flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-amber-300">
             <Calculator className="size-4" aria-hidden /> Indicative estimate

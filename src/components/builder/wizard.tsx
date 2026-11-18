@@ -6,6 +6,7 @@ import { ArrowLeft, ArrowRight, Check, CheckCircle2, ImagePlus, Loader2, Lock, S
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createOrder } from "@/actions/order";
 import { DevicePreview } from "@/components/builder/device-preview";
+import { CurrencySwitcher, useCurrency } from "@/components/currency";
 import { Button } from "@/components/ui/button";
 import {
   cleanDomain, cycles, initialData, priceFor, styles, tiers,
@@ -83,10 +84,11 @@ export default function BuilderWizard() {
   const set = <K extends keyof BuilderData>(k: K, v: BuilderData[K]) => setData((d) => ({ ...d, [k]: v }));
   const setBiz = (k: keyof BuilderData["business"], v: string) => setData((d) => ({ ...d, business: { ...d.business, [k]: v } }));
 
+  const { code, money } = useCurrency();
   const price = priceFor(data.plan.tier, data.plan.cycle);
 
   const order = useMutation({
-    mutationFn: () => createOrder({ ...data, industry: data.industry ?? "", terms: true as const, business: { ...data.business, domain: cleanDomain(data.business.domain) } }),
+    mutationFn: () => createOrder({ ...data, currency: code, industry: data.industry ?? "", terms: true as const, business: { ...data.business, domain: cleanDomain(data.business.domain) } }),
     onSuccess: (r) => {
       if (!r.ok) return setErrors({ pay: r.error });
       try {
@@ -360,7 +362,10 @@ export default function BuilderWizard() {
           {step === 4 && (
             <div className="grid gap-10 lg:grid-cols-[1.1fr_1fr]">
               <div>
-                <h2 className="font-display text-3xl font-extrabold tracking-tight">Choose a plan</h2>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <h2 className="font-display text-3xl font-extrabold tracking-tight">Choose a plan</h2>
+                  <CurrencySwitcher />
+                </div>
                 <div role="radiogroup" aria-label="Billing period" className="mt-5 inline-flex rounded-full border border-border bg-card p-1">
                   {cycles.map((c) => (
                     <button key={c.id} type="button" role="radio" aria-checked={data.plan.cycle === c.id} onClick={() => set("plan", { ...data.plan, cycle: c.id })} className={cn("min-h-10 rounded-full px-4 text-sm font-semibold transition", data.plan.cycle === c.id ? "bg-brand-strong text-white" : "text-muted-foreground hover:text-foreground")}>
@@ -376,7 +381,7 @@ export default function BuilderWizard() {
                     return (
                       <button key={t.id} type="button" aria-pressed={on} onClick={() => set("plan", { ...data.plan, tier: t.id })} className={cn("relative rounded-2xl border p-5 text-left transition hover:-translate-y-0.5", on ? "border-brand bg-brand/10 ring-2 ring-brand/30" : "border-border bg-card hover:border-brand/50")}>
                         <span className="font-display text-lg font-bold">{t.name}</span>
-                        <span className="mt-1 block font-display text-3xl font-extrabold">${p.perMonth.toFixed(p.perMonth % 1 ? 2 : 0)}<span className="text-sm font-medium text-muted-foreground"> /month</span></span>
+                        <span className="mt-1 block font-display text-3xl font-extrabold">{money(p.perMonth)}<span className="text-sm font-medium text-muted-foreground"> /month</span></span>
                         <span className="mt-1 block text-xs text-muted-foreground">{t.blurb}</span>
                         <ul className="mt-3 space-y-1.5 text-sm">
                           {t.features.map((f) => (
@@ -401,10 +406,10 @@ export default function BuilderWizard() {
                     ].map(([k, v]) => (
                       <div key={k} className="flex justify-between gap-4"><dt className="text-muted-foreground">{k}</dt><dd className="text-right font-medium">{v}</dd></div>
                     ))}
-                    {price.saved > 0 && <div className="flex justify-between text-accent"><dt>You save</dt><dd className="font-semibold">${price.saved.toFixed(2)}</dd></div>}
+                    {price.saved > 0 && <div className="flex justify-between text-accent"><dt>You save</dt><dd className="font-semibold">{money(price.saved)}</dd></div>}
                     <div className="flex items-baseline justify-between border-t border-border pt-3">
                       <dt className="font-semibold">Total today</dt>
-                      <dd className="font-display text-2xl font-extrabold text-brand">${price.total.toFixed(2)} <span className="text-xs font-medium text-muted-foreground">USD</span></dd>
+                      <dd className="font-display text-2xl font-extrabold text-brand">{money(price.total)} <span className="text-xs font-medium text-muted-foreground">{code}</span></dd>
                     </div>
                   </dl>
                   <label className="mt-4 flex cursor-pointer items-start gap-3 text-sm">

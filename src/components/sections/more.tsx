@@ -1,3 +1,4 @@
+import { Price } from "@/components/currency";
 import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
 import { Counter } from "@/components/motion/counter";
@@ -130,7 +131,7 @@ export function PricingCards() {
             <h3 className="font-display text-xl font-bold">{p.name}</h3>
             <p className={cn("mt-2 text-sm", p.highlight ? "text-white/65" : "text-muted-foreground")}>{p.blurb}</p>
             <p className="mt-6 font-display text-5xl font-extrabold">
-              ${p.price}
+              <Price usd={p.price} />
               <span className={cn("text-base font-medium", p.highlight ? "text-white/55" : "text-muted-foreground")}>
                 {p.name === "Partner" ? " /month" : " /one-off"}
               </span>
@@ -172,7 +173,7 @@ export function FinalCta() {
     <section className="mx-auto max-w-7xl px-5 sm:px-8">
       <Reveal>
         <div className="relative isolate overflow-hidden rounded-[2rem] bg-ink px-6 py-16 text-center text-white sm:px-16 sm:py-20">
-          <div aria-hidden className="absolute -left-20 -top-20 -z-10 size-96 animate-aurora rounded-full bg-emerald-600/40 blur-[100px]" />
+          <div aria-hidden className="absolute -left-20 -top-20 -z-10 size-96 animate-aurora rounded-full bg-blue-600/40 blur-[100px]" />
           <div aria-hidden className="absolute -bottom-24 -right-16 -z-10 size-96 animate-aurora rounded-full bg-amber-400/30 blur-[100px] [animation-delay:-8s]" />
           <h2 className="mx-auto max-w-2xl font-display text-3xl font-extrabold tracking-tight sm:text-5xl">
             Ready to turn your idea into a plan?

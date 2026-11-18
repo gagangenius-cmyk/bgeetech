@@ -8,7 +8,7 @@ export default function LoginPage() {
   return (
     <div className="relative isolate grid min-h-dvh place-items-center overflow-hidden bg-ink px-5 py-16">
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute -left-32 -top-32 size-[34rem] animate-aurora rounded-full bg-emerald-600/35 blur-[110px]" />
+        <div className="absolute -left-32 -top-32 size-[34rem] animate-aurora rounded-full bg-blue-600/35 blur-[110px]" />
         <div className="absolute -bottom-24 -right-24 size-[28rem] animate-aurora rounded-full bg-amber-400/25 blur-[110px] [animation-delay:-7s]" />
         <div className="grid-lines absolute inset-0" />
       </div>

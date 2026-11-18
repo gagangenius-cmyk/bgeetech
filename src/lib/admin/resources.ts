@@ -24,7 +24,7 @@ export const slugify = (s: string) =>
 const readMinutes = (body: string) => Math.max(1, Math.round(body.split(/\s+/).filter(Boolean).length / 200));
 
 type Def = {
-  model: keyof Pick<DB, "Post" | "Demo" | "Lead" | "Order">;
+  model: keyof Pick<DB, "Post" | "Demo" | "Lead" | "Order" | "Booking">;
   schema: z.ZodObject;
   search: string[];
   order: [string, "ASC" | "DESC"][];
@@ -93,6 +93,14 @@ export const defs: Record<string, Def> = {
     order: [["id", "DESC"]],
     canCreate: false,
     canDelete: true,
+  },
+  bookings: {
+    model: "Booking",
+    schema: z.object({ status: z.enum(["pending", "paid", "cancelled"]).optional(), notes: z.string().max(5000).optional() }),
+    search: ["ref", "name", "email", "service"],
+    order: [["id", "DESC"]],
+    canCreate: false,
+    canDelete: false,
   },
   orders: {
     model: "Order",

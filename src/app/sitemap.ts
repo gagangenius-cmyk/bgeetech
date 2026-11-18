@@ -4,7 +4,7 @@ import { services, site } from "@/lib/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [posts, demos] = await Promise.all([getPosts(), getDemos()]);
-  const pages = ["", "/services", "/pricing", "/about", "/contact", "/book", "/estimate", "/blog", "/demos", "/builder", "/privacy", "/terms"];
+  const pages = ["", "/services", "/pricing", "/about", "/contact", "/book", "/estimate", "/blog", "/demos", "/builder", "/team", "/privacy", "/terms"];
   return [
     ...pages.map((p) => ({ url: `${site.url}${p}`, changeFrequency: "monthly" as const, priority: p === "" ? 1 : 0.7 })),
     ...services.map((s) => ({ url: `${site.url}/services/${s.slug}`, changeFrequency: "monthly" as const, priority: 0.8 })),

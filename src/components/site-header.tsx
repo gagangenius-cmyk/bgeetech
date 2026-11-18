@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useScroll, useSpring } from "motion/react";
 import { ArrowRight, Menu, Search, X } from "lucide-react";
+import { CurrencySwitcher } from "@/components/currency";
 import { OPEN_SEARCH_EVENT } from "@/components/widgets/command-palette";
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/logo";
@@ -45,7 +46,7 @@ export function SiteHeader() {
           <Logo onDark={!scrolled && !open} />
         </Link>
 
-        <nav aria-label="Main" className="hidden items-center gap-1 md:flex">
+        <nav aria-label="Main" className="hidden items-center gap-1 xl:flex">
           {nav.map((item) => {
             const active = pathname.startsWith(item.href);
             const dark = !scrolled;
@@ -85,6 +86,7 @@ export function SiteHeader() {
           >
             <Search className="size-5" />
           </button>
+          <CurrencySwitcher onDark={!scrolled && !open} className="hidden sm:inline-flex" />
           <ButtonLink href="/book" className="hidden min-h-10! sm:inline-flex">
             Book a consultation <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
           </ButtonLink>
@@ -94,7 +96,7 @@ export function SiteHeader() {
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
             className={cn(
-              "grid size-11 place-items-center rounded-full md:hidden",
+              "grid size-11 place-items-center rounded-full xl:hidden",
               !scrolled && !open ? "text-white" : "text-foreground",
             )}
           >
@@ -120,7 +122,7 @@ export function SiteHeader() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-x-0 top-16 bottom-0 z-[45] overflow-y-auto border-t border-border bg-background md:hidden"
+            className="fixed inset-x-0 top-16 bottom-0 z-[45] overflow-y-auto border-t border-border bg-background xl:hidden"
           >
             <nav aria-label="Mobile" className="mx-auto flex max-w-7xl flex-col gap-1 px-5 py-6">
               {nav.map((item, i) => (
@@ -139,6 +141,7 @@ export function SiteHeader() {
                   </Link>
                 </motion.div>
               ))}
+              <CurrencySwitcher className="mt-4 self-start" />
               <ButtonLink href="/book" onClick={() => setOpen(false)} className="mt-4 min-h-12!">
                 Book a consultation
               </ButtonLink>

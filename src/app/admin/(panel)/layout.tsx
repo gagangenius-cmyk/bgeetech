@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BookOpen, ExternalLink, Inbox, LayoutDashboard, LogOut, MonitorPlay, ShoppingBag } from "lucide-react";
+import { BookOpen, CalendarCheck, ExternalLink, Inbox, LayoutDashboard, LogOut, MonitorPlay, ShoppingBag } from "lucide-react";
 import { Suspense, type ReactNode } from "react";
 import { logout } from "@/actions/auth";
 import { AdminProviders } from "@/components/admin/providers";
@@ -13,6 +13,7 @@ const links = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/posts", label: "Blog posts", icon: BookOpen },
   { href: "/admin/demos", label: "Demos", icon: MonitorPlay },
+  { href: "/admin/bookings", label: "Bookings", icon: CalendarCheck },
   { href: "/admin/leads", label: "Leads", icon: Inbox },
   { href: "/admin/orders", label: "Website orders", icon: ShoppingBag },
 ];

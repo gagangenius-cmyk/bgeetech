@@ -1,3 +1,4 @@
+import { Price } from "@/components/currency";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -35,7 +36,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
             Book this session <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
           </ButtonLink>
           <span className="inline-flex items-center gap-2 text-sm text-white/70">
-            <Clock className="size-4" aria-hidden /> {s.duration} · from ${s.from}
+            <Clock className="size-4" aria-hidden /> {s.duration} · from <Price usd={s.from} />
           </span>
         </div>
       </PageHero>
@@ -127,7 +128,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
                   <ServiceIcon name={r.icon} className="size-5" />
                 </span>
                 <p className="mt-3 font-semibold group-hover:text-brand">{r.title}</p>
-                <p className="text-sm text-muted-foreground">from ${r.from}</p>
+                <p className="text-sm text-muted-foreground">from <Price usd={r.from} /></p>
               </Link>
             ))}
           </div>

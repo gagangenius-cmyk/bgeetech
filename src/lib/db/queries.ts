@@ -74,19 +74,19 @@ function warn(what: string) {
   console.error(`${what}: database unavailable, using built-in content`);
 }
 
-export async function getPosts(): Promise<PostView[]> {
+export async function getPosts(opts: { withBody?: boolean } = {}): Promise<PostView[]> {
   await connection(); // request-time only: never touch the database while prerendering
   try {
     const db = await getDb();
     const rows = await db.Post.findAll({
       where: { published: true, publishedAt: { [Op.lte]: new Date() } },
       order: [["publishedAt", "DESC"]],
-      attributes: { exclude: ["body"] },
+      attributes: opts.withBody ? undefined : { exclude: ["body"] },
     });
     return rows.map((r) => toPost(plain<Raw>(r)!));
   } catch {
     warn("posts");
-    return fallbackPosts().map((p) => ({ ...p, body: "" }));
+    return fallbackPosts().map((p) => (opts.withBody ? p : { ...p, body: "" }));
   }
 }
 

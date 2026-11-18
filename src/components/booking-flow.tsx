@@ -1,7 +1,12 @@
 "use client";
 
+import { useMutation } from "@tanstack/react-query";
+import { createBooking } from "@/actions/booking";
+import { CurrencySwitcher, Price, useCurrency } from "@/components/currency";
+import { BOOKING_TIMES } from "@/lib/booking";
+
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowLeft, ArrowRight, CalendarDays, Check, Lock } from "lucide-react";
+import { ArrowLeft, ArrowRight, CalendarDays, Check, CheckCircle2, Loader2, Lock } from "lucide-react";
 import { useMemo, useState, useSyncExternalStore } from "react";
 import { ServiceIcon } from "@/components/service-icon";
 import { Button } from "@/components/ui/button";
@@ -9,7 +14,7 @@ import { services } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 const steps = ["Service", "Time", "Details", "Review"] as const;
-const times = ["09:00", "10:30", "12:00", "14:00", "15:30", "17:00"];
+const times = BOOKING_TIMES;
 
 const noopSubscribe = () => () => {};
 function readPresetService(): string | null {
@@ -39,7 +44,29 @@ export function BookingFlow() {
   const [date, setDate] = useState<string | null>(null);
   const [time, setTime] = useState<string | null>(null);
   const [details, setDetails] = useState({ name: "", email: "", goal: "" });
-  const [notice, setNotice] = useState(false);
+  const { code } = useCurrency();
+  const [error, setError] = useState<string | null>(null);
+  const [done, setDone] = useState<string | null>(null);
+
+  const pay = useMutation({
+    mutationFn: () =>
+      createBooking({
+        currency: code,
+        serviceSlug: slug ?? "",
+        date: date ?? "",
+        time: (time ?? "") as (typeof BOOKING_TIMES)[number],
+        timezone: tz,
+        name: details.name,
+        email: details.email,
+        goal: details.goal,
+      }),
+    onSuccess: (r) => {
+      if (!r.ok) return setError(r.error);
+      if (r.url) window.location.href = r.url;
+      else setDone(r.ref);
+    },
+    onError: () => setError("Something went wrong. Please try again or message us on WhatsApp."),
+  });
 
   const slug = slugState ?? preset;
   const step = stepState ?? (preset ? 1 : 0);
@@ -52,6 +79,18 @@ export function BookingFlow() {
     (step === 0 && !!slug) ||
     (step === 1 && !!date && !!time) ||
     (step === 2 && details.name.trim().length > 1 && /\S+@\S+\.\S+/.test(details.email));
+
+  if (done)
+    return (
+      <div className="mx-auto max-w-xl rounded-3xl border border-border bg-card p-10 text-center shadow-xl shadow-brand/5">
+        <CheckCircle2 className="mx-auto size-14 text-accent" aria-hidden />
+        <h2 className="mt-5 font-display text-2xl font-extrabold">Booking received</h2>
+        <p className="mt-2 text-muted-foreground">
+          Your reference is <strong className="text-foreground">{done}</strong>. Online payment is not switched on yet, so we will email a secure
+          payment link to <strong className="text-foreground">{details.email}</strong> to confirm your slot.
+        </p>
+      </div>
+    );
 
   return (
     <div className="mx-auto max-w-3xl">
@@ -116,7 +155,7 @@ export function BookingFlow() {
                       </span>
                       <span>
                         <span className="block font-semibold">{s.title}</span>
-                        <span className="text-sm text-muted-foreground">{s.duration} · from ${s.from}</span>
+                        <span className="text-sm text-muted-foreground">{s.duration} · from <Price usd={s.from} /></span>
                       </span>
                     </button>
                   ))}
@@ -217,18 +256,29 @@ export function BookingFlow() {
                   ))}
                   <div className="flex justify-between bg-muted px-5 py-4">
                     <dt className="font-semibold">Total</dt>
-                    <dd className="font-display text-xl font-extrabold text-brand">${service.from}</dd>
+                    <dd className="font-display text-xl font-extrabold text-brand"><Price usd={service.from} /></dd>
                   </div>
                 </dl>
-                <Button className="mt-6 w-full" onClick={() => setNotice(true)}>
-                  <Lock className="size-4" /> Continue to secure payment
-                </Button>
-                {notice && (
-                  <p role="status" className="mt-4 rounded-xl border border-amber-400/40 bg-amber-400/10 p-4 text-sm">
-                    Online payment is not connected yet. Stripe checkout, calendar holds and confirmation emails arrive in the
-                    next build phase.
+                <div className="mt-4 flex items-center justify-between gap-3 text-sm">
+                  <span className="text-muted-foreground">Pay in</span>
+                  <CurrencySwitcher />
+                </div>
+                {error && (
+                  <p role="alert" className="mt-4 rounded-xl border border-red-500/40 bg-red-500/10 p-3 text-sm">
+                    {error}
                   </p>
                 )}
+                <Button
+                  className="mt-4 w-full disabled:opacity-60"
+                  disabled={pay.isPending}
+                  onClick={() => {
+                    setError(null);
+                    pay.mutate();
+                  }}
+                >
+                  {pay.isPending ? <Loader2 className="size-4 animate-spin" /> : <Lock className="size-4" />} Continue to secure payment
+                </Button>
+                <p className="mt-3 text-center text-xs text-muted-foreground">Card details are entered on Stripe&rsquo;s secure page, never on this site.</p>
               </div>
             )}
           </motion.div>

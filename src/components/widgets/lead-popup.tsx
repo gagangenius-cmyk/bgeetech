@@ -129,7 +129,7 @@ export function LeadPopup() {
             {/* Left: brand + value (hidden on small screens to keep the form on one screen) */}
             <div className="relative isolate hidden flex-col justify-between gap-8 overflow-hidden bg-ink p-8 text-white md:flex">
               <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-                <div className="absolute -left-16 -top-16 size-64 animate-aurora rounded-full bg-emerald-600/40 blur-[80px]" />
+                <div className="absolute -left-16 -top-16 size-64 animate-aurora rounded-full bg-blue-600/40 blur-[80px]" />
                 <div className="absolute -bottom-20 -right-10 size-64 animate-aurora rounded-full bg-amber-400/25 blur-[80px] [animation-delay:-8s]" />
                 <div className="grid-lines absolute inset-0 opacity-70" />
               </div>

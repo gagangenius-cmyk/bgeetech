@@ -56,8 +56,13 @@ export function CommandPalette() {
   const results = useMemo(() => {
     const t = q.trim().toLowerCase();
     if (!t) return items.slice(0, 9);
-    return items.filter((i) => `${i.label} ${i.hint} ${i.group}`.toLowerCase().includes(t)).slice(0, 12);
-  }, [items, q]);
+    const found = items.filter((i) => `${i.label} ${i.hint} ${i.group}`.toLowerCase().includes(t)).slice(0, 10);
+    // Always offer the full results page, which also searches article text, features and more.
+    return [
+      ...found,
+      { id: "search-all", group: "Search", label: `See all results for "${q.trim()}"`, hint: "/search", icon: <Search className="size-4" />, run: go(`/search?q=${encodeURIComponent(q.trim())}`) },
+    ];
+  }, [items, q, go]);
 
   const open = useCallback(() => {
     if (ref.current && !ref.current.open) {

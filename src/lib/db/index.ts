@@ -12,6 +12,7 @@ export type DB = {
   Order: ModelStatic<Model>;
   Post: ModelStatic<Model>;
   Demo: ModelStatic<Model>;
+  Booking: ModelStatic<Model>;
 };
 
 const g = globalThis as unknown as { __bgeeDb?: Promise<DB> };
@@ -78,6 +79,23 @@ function defineModels(s: Sequelize): Omit<DB, "sequelize"> {
       published: { type: DataTypes.BOOLEAN, defaultValue: false },
       publishedAt: DataTypes.DATE,
       readMinutes: { type: DataTypes.INTEGER, defaultValue: 3 },
+    }),
+    Booking: s.define("Booking", {
+      ref: { type: str(24), allowNull: false, unique: true },
+      status: { type: str(20), defaultValue: "pending" }, // pending | paid | cancelled
+      serviceSlug: str(120),
+      service: str(200),
+      slotDate: { type: DataTypes.DATEONLY, allowNull: false },
+      slotTime: { type: str(5), allowNull: false },
+      timezone: str(60),
+      name: { type: str(120), allowNull: false },
+      email: { type: str(190), allowNull: false },
+      phone: str(40),
+      goal: DataTypes.TEXT,
+      amountCents: DataTypes.INTEGER,
+      currency: { type: str(3), defaultValue: "usd" },
+      stripeSessionId: str(255),
+      notes: DataTypes.TEXT,
     }),
     Demo: s.define("Demo", {
       slug: { type: str(190), allowNull: false, unique: true },

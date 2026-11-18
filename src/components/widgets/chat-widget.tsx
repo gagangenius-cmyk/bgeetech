@@ -124,13 +124,13 @@ export function ChatWidget() {
             className="fixed inset-x-3 bottom-40 z-40 flex h-[min(34rem,calc(100dvh-11rem))] flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-2xl sm:inset-x-auto sm:right-5 sm:w-[24rem]"
           >
             <header className="flex items-center gap-3 bg-ink px-4 py-3.5 text-white">
-              <span className="grid size-10 place-items-center rounded-full bg-gradient-to-br from-emerald-600 to-amber-400">
+              <span className="grid size-10 place-items-center rounded-full bg-gradient-to-br from-blue-600 to-amber-400">
                 <Bot className="size-5" aria-hidden />
               </span>
               <div className="flex-1">
                 <p className="font-display font-bold leading-tight">BGeetech assistant</p>
                 <p className="flex items-center gap-1.5 text-xs text-white/70">
-                  <span className="size-2 rounded-full bg-emerald-400" aria-hidden /> AI assistant · replies instantly
+                  <span className="size-2 rounded-full bg-blue-400" aria-hidden /> AI assistant · replies instantly
                 </p>
               </div>
             </header>

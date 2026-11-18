@@ -57,12 +57,12 @@ export type BuilderData = {
   plan: { tier: Tier["id"]; cycle: Cycle["id"] };
 };
 
-export const defaultTheme: Theme = { id: "emerald-mono", name: "Emerald Mono", colors: ["#0b7a4f", "#eef7f2", "#d98a2b"] };
+export const defaultTheme: Theme = { id: "blue-mono", name: "Azure Mono", colors: ["#1d4ed8", "#eef3ff", "#d98a2b"] };
 
 export const initialData: BuilderData = {
   business: { name: "", domain: "", slogan: "", email: "", phone: "", logo: "" },
   industry: null,
-  theme: { id: "custom", colors: ["#0b6e4f", "#eef7f2", "#d4a017"] },
+  theme: { id: "custom", colors: ["#1d4ed8", "#eef3ff", "#d4a017"] },
   style: "modern",
   plan: { tier: "business", cycle: "annual" },
 };

@@ -8,7 +8,11 @@ Technology consulting website built with Next.js 16 (App Router), Tailwind CSS 4
 - **Dynamic blog** and **product demos** (CRM, POS, HRMS...) managed from the admin panel
 - **Website builder** (`/builder`): business details, 90+ business types, 100 colour themes + custom colours, 8 styles, live Desktop/Tablet/Mobile preview, plans from $10/month (monthly, quarterly, annual)
 - **Admin panel** (`/admin`): blog posts, demos, leads, website orders (search, create, edit, delete, CSV export)
-- AI chatbot (Claude), WhatsApp button, lead popup, Cmd/Ctrl+K search
+- **Currency switcher** (USD / AED / INR) for all prices, with matching Stripe charges (rates in `src/lib/currency.ts`)
+- **Stripe Checkout**: website-builder subscriptions and paid consultation bookings, signature-verified webhook
+- **Search**: full results page (`/search`) over services, articles, demos, team and website types, plus a Cmd/Ctrl+K palette
+- **Team** page with vector avatars (`src/lib/team.ts`)
+- AI chatbot (Claude), WhatsApp button, lead popup
 
 ## Setup
 
@@ -33,7 +37,7 @@ See [.env.example](.env.example). The essentials:
 | `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` | Builder payments (otherwise orders are saved and a payment link is sent manually) |
 | `LEAD_WEBHOOK_URL`, `RESEND_API_KEY`, `LEAD_NOTIFY_EMAIL`, `LEAD_FROM_EMAIL` | Optional lead and order notifications |
 
-Stripe webhook endpoint: `/api/stripe/webhook` (events: `checkout.session.completed`, `invoice.paid`, `checkout.session.expired`).
+Stripe: add a webhook endpoint at `/api/stripe/webhook` with events `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `checkout.session.async_payment_failed`, `checkout.session.expired` and `invoice.paid`. Amounts are calculated on the server in the chosen currency. AED and INR must be enabled on your Stripe account (INR subscriptions have extra Indian e-mandate rules). The INR rate in `src/lib/currency.ts` is a placeholder, so keep it current.
 
 ## Scripts
 

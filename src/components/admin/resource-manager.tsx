@@ -5,6 +5,7 @@ import { Download, Loader2, Pencil, Plus, Search, Trash2, X } from "lucide-react
 import { useEffect, useRef, useState } from "react";
 import { api, ApiError } from "@/components/admin/providers";
 import type { ColumnDef, FieldDef, ResourceConfig } from "@/lib/admin/config";
+import { formatMoney, isCurrency } from "@/lib/currency";
 import { cn } from "@/lib/utils";
 
 type Row = Record<string, unknown> & { id: number };
@@ -17,7 +18,7 @@ function Cell({ col, row }: { col: ColumnDef; row: Row }) {
   const v = row[col.key];
   if (col.kind === "bool") return <span className={v ? "font-semibold text-brand" : "text-muted-foreground"}>{v ? "Yes" : "No"}</span>;
   if (col.kind === "date") return <>{v ? new Date(String(v)).toLocaleDateString() : "-"}</>;
-  if (col.kind === "money") return <>{typeof v === "number" ? `$${(v / 100).toFixed(2)}` : "-"}</>;
+  if (col.kind === "money") return <>{typeof v === "number" ? formatMoney(v / 100, isCurrency(row.currency) ? row.currency : "USD", { decimals: true }) : "-"}</>;
   if (col.kind === "badge")
     return v ? <span className="rounded-full bg-accent/15 px-2.5 py-0.5 text-xs font-semibold capitalize">{String(v)}</span> : <>-</>;
   return <span className="line-clamp-1 max-w-[16rem]">{v === null || v === undefined || v === "" ? "-" : String(v)}</span>;
@@ -155,7 +156,7 @@ function EditorForm({ cfg, isNew, initial, onClose, onSaved }: { cfg: ResourceCo
               .map(([k, v]) => (
                 <div key={k}>
                   <dt className="text-xs uppercase tracking-wide text-muted-foreground">{k}</dt>
-                  <dd className="break-words font-medium">{k === "amountCents" ? `$${(Number(v) / 100).toFixed(2)}` : String(v)}</dd>
+                  <dd className="break-words font-medium">{k === "amountCents" ? formatMoney(Number(v) / 100, isCurrency(initial.currency) ? initial.currency : "USD", { decimals: true }) : String(v)}</dd>
                 </div>
               ))}
           </dl>

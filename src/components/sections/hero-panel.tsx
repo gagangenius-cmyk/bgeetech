@@ -33,7 +33,7 @@ export function HeroPanel() {
     >
       <motion.div
         style={reduce ? undefined : { rotateX: rx, rotateY: ry, transformStyle: "preserve-3d" }}
-        className="relative rounded-3xl border border-white/15 bg-white/[0.07] p-6 shadow-2xl shadow-emerald-950/50 backdrop-blur-xl"
+        className="relative rounded-3xl border border-white/15 bg-white/[0.07] p-6 shadow-2xl shadow-blue-950/50 backdrop-blur-xl"
       >
         <div className="flex items-center justify-between">
           <div>
@@ -56,7 +56,7 @@ export function HeroPanel() {
               transition={{ delay: 0.9 + i * 0.1 }}
               className={`min-h-11 rounded-xl border px-3 text-sm font-medium tabular-nums ${
                 i === 1
-                  ? "border-emerald-400 bg-emerald-500/25 text-white"
+                  ? "border-blue-400 bg-blue-500/25 text-white"
                   : "border-white/10 bg-white/5 text-white/75 hover:border-white/30"
               }`}
             >
@@ -66,7 +66,7 @@ export function HeroPanel() {
         </div>
 
         <div className="mt-6 flex items-center gap-3 rounded-2xl bg-white/5 p-3.5 text-sm">
-          <Video className="size-5 text-emerald-300" aria-hidden />
+          <Video className="size-5 text-blue-300" aria-hidden />
           <span className="text-white/75">Video link sent instantly after booking</span>
         </div>
 
