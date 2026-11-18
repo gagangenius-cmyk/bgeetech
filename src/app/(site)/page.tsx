@@ -34,7 +34,7 @@ function AtAGlance() {
     ["Payments", `Prices and payments are available in US dollars, UAE dirhams and Indian rupees (${packageCatalog.projects.length} project types and ${packageCatalog.monthly.length} monthly services can be combined in our custom package calculator).`],
   ];
   return (
-    <section aria-labelledby="glance" className="mx-auto max-w-5xl px-5 py-24 sm:px-8">
+    <section data-juju="glance" aria-labelledby="glance" className="mx-auto max-w-5xl px-5 py-24 sm:px-8">
       <SectionHeading eyebrow="At a glance" title={`${site.name} in a nutshell`} center />
       <dl className="mt-12 divide-y divide-border rounded-3xl border border-border bg-card">
         {rows.map(([k, v]) => (
@@ -57,7 +57,7 @@ export default function HomePage() {
       <JsonLd data={faqPage(faqs)} />
       <Hero />
       <Stats />
-      <section className="mx-auto max-w-7xl px-5 pt-24 sm:px-8">
+      <section data-juju="services" className="mx-auto max-w-7xl px-5 pt-24 sm:px-8">
         <SectionHeading
           eyebrow="Services"
           title="Products and services for every stage of your business"
@@ -76,7 +76,7 @@ export default function HomePage() {
       <AtAGlance />
       <Industries />
       <PricingTeaser />
-      <section className="mx-auto max-w-7xl px-5 pb-24 sm:px-8">
+      <section data-juju="faq" className="mx-auto max-w-7xl px-5 pb-24 sm:px-8">
         <SectionHeading eyebrow="FAQ" title="Questions, answered" center />
         <Faq />
         <p className="mt-8 text-center">

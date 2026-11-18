@@ -25,7 +25,7 @@ export default function DemosPage() {
         title="See our software in action"
         body="Browse working demos of CRMs, POS, HRMS and other business systems. Open a live demo or ask for a guided walkthrough."
       />
-      <section className="mx-auto max-w-7xl px-5 pb-24 pt-16 sm:px-8">
+      <section data-juju="demo-grid" className="mx-auto max-w-7xl px-5 pb-24 pt-16 sm:px-8">
         <Suspense fallback={<div className="h-72 animate-pulse rounded-3xl bg-muted" />}>
           <Demos />
         </Suspense>

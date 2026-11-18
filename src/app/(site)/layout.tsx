@@ -3,6 +3,7 @@ import { AdminProviders as QueryProvider } from "@/components/admin/providers";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { BottomNav } from "@/components/bottom-nav";
+import { Juju } from "@/components/juju/juju";
 import { ServiceWorkerRegister } from "@/components/pwa/sw-register";
 import { CommandPalette } from "@/components/widgets/command-palette";
 import { LeadPopup } from "@/components/widgets/lead-popup";
@@ -32,6 +33,7 @@ export default function SiteLayout({ children }: LayoutProps<"/">) {
       <Suspense fallback={null}>
         <FloatingWidgets />
         <BottomNav />
+        <Juju />
       </Suspense>
       <ServiceWorkerRegister />
       <Suspense fallback={null}>

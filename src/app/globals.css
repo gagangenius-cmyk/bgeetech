@@ -182,3 +182,21 @@ button, a, input, select, textarea, label, summary, [role="button"], [role="tab"
   body { -webkit-user-select: none; user-select: none; }
   input, textarea, [contenteditable], article, p { -webkit-user-select: text; user-select: text; }
 }
+
+/* ---------- Juju, the site guide mascot ---------- */
+@keyframes juju-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes juju-pulse { 0%, 100% { transform: scale(1); opacity: .85; } 50% { transform: scale(1.35); opacity: 1; } }
+@keyframes juju-wave { 0%, 100% { transform: rotate(0deg); } 30% { transform: rotate(-70deg); } 65% { transform: rotate(-35deg); } }
+@keyframes juju-flip { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@keyframes juju-spin { to { transform: rotate(360deg); } }
+@keyframes juju-shadow { 0%, 100% { transform: scaleX(1); opacity: .28; } 50% { transform: scaleX(.8); opacity: .18; } }
+.juju-bob { animation: juju-bob 3.4s ease-in-out infinite; }
+.juju-antenna { transform-box: fill-box; transform-origin: center; animation: juju-pulse 1.8s ease-in-out infinite; }
+.juju-waving { animation: juju-wave .75s ease-in-out infinite; }
+.juju-mouth-a { animation: juju-flip .32s steps(1) infinite; }
+.juju-mouth-b { animation: juju-flip .32s steps(1) infinite reverse; }
+.juju-spin { animation: juju-spin .8s ease-in-out 1; transform-origin: center; }
+.juju-shadow { transform-box: fill-box; transform-origin: center; animation: juju-shadow 3.4s ease-in-out infinite; }
+.juju-eyes { transition: transform .08s ease-out; }
+.juju-blink { transform: scaleY(.08); }
+.juju-pupil { transition: transform .12s ease-out; }

@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import { PageHero } from "@/components/page-hero";
 import { Prose } from "@/components/prose";
 import { FinalCta } from "@/components/sections/more";
+import { blogArt } from "@/lib/art";
 import { getPost } from "@/lib/db/queries";
 import { JsonLd, blogPosting } from "@/lib/jsonld";
 import { pageMeta } from "@/lib/seo";
@@ -40,15 +41,12 @@ async function Article({ params }: { params: PageProps<"/blog/[slug]">["params"]
       <JsonLd data={blogPosting(p)} />
       <PageHero
         crumbs={[{ name: "Insights", path: "/blog" }, { name: p.title, path: `/blog/${p.slug}` }]}
+        art={p.coverUrl ? { src: p.coverUrl, srcSet: p.coverUrl } : blogArt(p.category)}
         eyebrow={p.category}
         title={p.title}
         body={`By BGeetech Team · Published ${new Date(p.date).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })} · ${p.readMinutes} min read`}
       />
       <article className="mx-auto max-w-3xl px-5 py-16 sm:px-8">
-        {p.coverUrl && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={p.coverUrl} alt="" className="mb-10 w-full rounded-2xl border border-border object-cover" />
-        )}
         {p.excerpt && <p className="mb-8 text-xl leading-relaxed text-muted-foreground">{p.excerpt}</p>}
         <Prose text={p.body} />
         <section aria-labelledby="related" className="mt-14 rounded-2xl border border-border bg-card p-6">

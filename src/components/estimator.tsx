@@ -67,7 +67,7 @@ export function Estimator() {
     `. Indicative range ${fmt(range.low)} - ${fmt(range.high)}.`;
 
   return (
-    <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 lg:grid-cols-[1.4fr_1fr]">
+    <div data-juju="estimator" className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 lg:grid-cols-[1.4fr_1fr]">
       <div className="space-y-10">
         <fieldset>
           <legend className="mb-3 font-display text-lg font-bold">What are you building?</legend>

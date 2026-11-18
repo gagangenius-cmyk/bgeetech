@@ -18,7 +18,9 @@ export default function BuilderPage() {
         title="Design your website in minutes"
         body="Tell us about your business, pick a look, preview it on every device, and choose a plan from $10 a month."
       />
-      <BuilderClient />
+      <div data-juju="wizard">
+        <BuilderClient />
+      </div>
     </>
   );
 }

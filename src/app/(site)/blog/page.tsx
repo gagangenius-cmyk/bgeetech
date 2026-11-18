@@ -6,6 +6,8 @@ import { Suspense } from "react";
 import { PageHero } from "@/components/page-hero";
 import { Stagger, StaggerItem } from "@/components/motion/reveal";
 import { SpotlightCard } from "@/components/motion/spotlight-card";
+import { ArtImage } from "@/components/art-image";
+import { blogArt } from "@/lib/art";
 import { getPosts } from "@/lib/db/queries";
 
 export const metadata = pageMeta({
@@ -22,7 +24,11 @@ async function PostGrid() {
       {posts.map((p) => (
         <StaggerItem key={p.slug}>
           <Link href={`/blog/${p.slug}`} className="block h-full">
-            <SpotlightCard className="flex h-full flex-col">
+            <SpotlightCard className="flex h-full flex-col p-0">
+              <div className="aspect-[16/9] overflow-hidden">
+                <ArtImage art={p.coverUrl ? { src: p.coverUrl, srcSet: p.coverUrl } : blogArt(p.category)} className="transition-transform duration-700 group-hover:scale-105" />
+              </div>
+              <div className="flex flex-1 flex-col p-6">
               <div className="flex items-center justify-between text-xs">
                 <span className="rounded-full bg-accent/15 px-3 py-1 font-semibold text-accent">{p.category}</span>
                 <ArrowUpRight className="size-5 text-muted-foreground transition-all group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-brand" aria-hidden />
@@ -32,6 +38,7 @@ async function PostGrid() {
               <p className="mt-5 flex items-center gap-2 text-xs text-muted-foreground">
                 <Clock className="size-3.5" aria-hidden /> {p.readMinutes} min read
               </p>
+              </div>
             </SpotlightCard>
           </Link>
         </StaggerItem>

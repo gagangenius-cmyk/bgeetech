@@ -1,9 +1,11 @@
 "use client";
 
-import { ArrowUpRight, ExternalLink, MonitorPlay } from "lucide-react";
+import { ArrowUpRight, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { ArtImage } from "@/components/art-image";
 import { SpotlightCard } from "@/components/motion/spotlight-card";
+import { demoArt } from "@/lib/art";
 import { openLeadPopup } from "@/components/widgets/lead-popup";
 import type { DemoView } from "@/lib/db/queries";
 import { cn } from "@/lib/utils";
@@ -52,7 +54,7 @@ export function DemoGrid({ demos }: { demos: DemoView[] }) {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={d.imageUrl} alt={`${d.title} screenshot`} className="size-full object-cover object-top" loading="lazy" />
               ) : (
-                <MonitorPlay className="size-14 text-amber-300/80" aria-hidden />
+                <ArtImage art={demoArt(d.category)} className="transition-transform duration-700 group-hover:scale-105" />
               )}
               <span className="absolute left-3 top-3 rounded-full bg-black/50 px-3 py-1 text-xs font-semibold text-white backdrop-blur">{d.category}</span>
             </div>

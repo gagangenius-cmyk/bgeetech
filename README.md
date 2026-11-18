@@ -14,6 +14,9 @@ Website for a web and software services company (websites, apps, CRM, ERP, AI an
 - **Stripe Checkout**: website-builder subscriptions and paid consultation bookings, signature-verified webhook
 - **Search**: full results page (`/search`) over services, articles, demos, team and website types, plus a Cmd/Ctrl+K palette
 - **Team** page with vector avatars (`src/lib/team.ts`)
+- **Juju**, the animated site guide: a robot mascot whose eyes follow the cursor, who greets first-time visitors, gives a tip per page, offers shortcuts, and runs a spotlight tour of the current page. Content lives in `src/lib/juju-content.ts` (tips, tours, shortcuts); tour targets are `data-juju="..."` attributes on page sections. Visitors can hide Juju, and it respects reduced-motion settings.
+- Illustrated banners for every service, article and demo (`scripts/generate-page-images.mjs`), plus the hero artwork (`scripts/generate-hero-images.mjs`)
+- Contact page with a click-to-load Google Map (set the location in `site.address` in `src/lib/site.ts`; add a street address there for an exact pin)
 - **App-like on phones and tablets**: installable PWA (manifest, generated icons, offline page), bottom tab bar in the thumb zone, safe-area aware layout (`viewport-fit=cover`), sticky Back/Continue bars in multi-step flows, 16px+ form text (no iOS zoom), 44px touch targets, correct mobile keyboards
 - AI chatbot (Claude), WhatsApp button, lead popup
 

@@ -10,6 +10,8 @@ export const site = {
   email: "hello@bgeetech.com",
   whatsappNumber: "919873334283", // international format, digits only
   whatsappDisplay: "+91 98733 34283",
+  /** Public location. City-level on purpose: add a street address here when you want one to appear on the map. */
+  address: { label: "Dubai, United Arab Emirates", mapQuery: "Dubai, United Arab Emirates", city: "Dubai", country: "AE" },
   /** Official profile URLs (LinkedIn, Facebook, Instagram, X, YouTube...). They feed Organization "sameAs", which helps search and AI engines recognise the brand. */
   socials: [] as string[],
   /** Allow AI model-training crawlers (GPTBot, ClaudeBot...) in robots.txt. Search and answer bots are always allowed. */

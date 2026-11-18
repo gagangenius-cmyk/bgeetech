@@ -1,4 +1,5 @@
 import { JsonLd, webPage } from "@/lib/jsonld";
+import { aboutArt } from "@/lib/art";
 import { pageMeta } from "@/lib/seo";
 import { site } from "@/lib/site";
 import { Eye, Handshake, Rocket } from "lucide-react";
@@ -24,7 +25,7 @@ export default function AboutPage() {
     <>
       <JsonLd data={webPage("AboutPage", "About BGeetech", site.description, "/about")} />
       <PageHero crumbs={[{"name":"About","path":"/about"}]}
-        eyebrow="About"
+        art={aboutArt} eyebrow="About"
         title="A web and software company for growing businesses"
         body="BGeetech designs, builds and supports websites, apps, CRM, ERP and AI solutions, and offers your first 30-minute consultation free."
       />

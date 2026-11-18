@@ -14,7 +14,7 @@ export default function BookPage() {
     <>
       <JsonLd data={webPage("WebPage", "Book a free consultation", "Book a free 30-minute video consultation.", "/book")} />
       <PageHero crumbs={[{"name":"Book a consultation","path":"/book"}]} eyebrow="Book" title="Book your free consultation" body="Your first 30 minutes are free. Four quick steps, no account needed." />
-      <section className="px-5 py-16 sm:px-8">
+      <section data-juju="booking" className="px-5 py-16 sm:px-8">
         <BookingFlow />
       </section>
     </>

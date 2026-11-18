@@ -11,6 +11,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { serviceDetails } from "@/lib/content";
 import { priceText, services } from "@/lib/site";
 import { JsonLd, faqPage, serviceSchema } from "@/lib/jsonld";
+import { serviceArt } from "@/lib/art";
 import { pageMeta } from "@/lib/seo";
 
 export function generateStaticParams() {
@@ -34,7 +35,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
   return (
     <>
       <JsonLd data={[serviceSchema(s, d?.faqs), ...(d?.faqs.length ? [faqPage(d.faqs)] : [])]} />
-      <PageHero crumbs={[{ name: "Services", path: "/services" }, { name: s.title, path: `/services/${s.slug}` }]} eyebrow="Service" title={s.title} body={s.summary}>
+      <PageHero crumbs={[{ name: "Services", path: "/services" }, { name: s.title, path: `/services/${s.slug}` }]} art={serviceArt(s.slug)} eyebrow="Service" title={s.title} body={s.summary}>
         <div className="flex flex-wrap items-center gap-4">
           <ButtonLink href={`/book?service=${s.slug}`}>
             {s.from === 0 ? "Book your free consultation" : "Get started with a free call"} <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />

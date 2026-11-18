@@ -27,6 +27,7 @@ export const organization = (): Json => ({
   slogan: site.tagline,
   email: site.email,
   telephone: `+${site.whatsappNumber}`,
+  address: { "@type": "PostalAddress", addressLocality: site.address.city, addressCountry: site.address.country },
   areaServed: "Worldwide",
   founder: { "@type": "Person", name: "Karan" },
   knowsAbout: ["Website development", "Web application development", "Mobile app development", "CRM software", "ERP software", "POS software", "HRMS software", "AI chatbots", "Business automation", "Bug fixing and software maintenance", "SEO"],

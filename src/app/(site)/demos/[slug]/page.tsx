@@ -10,6 +10,7 @@ import { FinalCta } from "@/components/sections/more";
 import { ButtonLink } from "@/components/ui/button";
 import { getDemo } from "@/lib/db/queries";
 import { JsonLd, softwareApplication } from "@/lib/jsonld";
+import { demoArt } from "@/lib/art";
 import { pageMeta } from "@/lib/seo";
 
 export async function generateMetadata({ params }: PageProps<"/demos/[slug]">): Promise<Metadata> {
@@ -27,7 +28,7 @@ async function Detail({ params }: { params: PageProps<"/demos/[slug]">["params"]
   return (
     <>
       <JsonLd data={softwareApplication(d)} />
-      <PageHero crumbs={[{ name: "Demos", path: "/demos" }, { name: d.title, path: `/demos/${d.slug}` }]} eyebrow={d.category} title={d.title} body={d.summary}>
+      <PageHero crumbs={[{ name: "Demos", path: "/demos" }, { name: d.title, path: `/demos/${d.slug}` }]} art={d.imageUrl ? { src: d.imageUrl, srcSet: d.imageUrl } : demoArt(d.category)} eyebrow={d.category} title={d.title} body={d.summary}>
         <div className="flex flex-wrap items-center gap-3">
           {d.url ? (
             <ButtonLink href={d.url} target="_blank" rel="noopener noreferrer">

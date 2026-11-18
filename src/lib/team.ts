@@ -20,8 +20,8 @@ export const team: TeamMember[] = [
     avatar: { skin: "#d9a07a", hair: "#1c1917", hairStyle: "quiff", shirt: "#1e3a8a", bg: ["#1e3a8a", "#d4a017"], beard: true },
   },
   {
-    slug: "bharti-manchanda",
-    name: "Bharti Manchanda",
+    slug: "bharti",
+    name: "Bharti",
     role: "CEO",
     bio: "Leads the company's direction, operations and client relationships, and keeps the whole team focused on results.",
     skills: ["Leadership", "Operations", "Client relationships"],
