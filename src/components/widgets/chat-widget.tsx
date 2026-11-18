@@ -1,17 +1,18 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { Bot, MessageCircle, Send, UserRound, X } from "lucide-react";
+import { Bot, Mic, MicOff, Send, UserRound, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { openLeadPopup } from "@/components/widgets/lead-popup";
 import { whatsappUrl } from "@/lib/chat-knowledge";
+import { createRecognition, speak, voiceOn, type Recognition } from "@/lib/speech";
 import { cn } from "@/lib/utils";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
 const GREETING: Msg = {
   role: "assistant",
-  content: "Hi! I am the BGeetech assistant. Ask me about our services, pricing, booking, or the latest in web, cloud and AI.",
+  content: "Hi, I'm BGee! Ask me about our services, pricing, booking, or the latest in web, cloud and AI.",
 };
 
 const SUGGESTIONS = [
@@ -21,7 +22,7 @@ const SUGGESTIONS = [
   "How can AI help my business?",
 ];
 
-export function ChatWidget({ hideLauncherOnMobile = false }: { hideLauncherOnMobile?: boolean }) {
+export function ChatWidget() {
   const reduce = useReducedMotion();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([GREETING]);
@@ -29,7 +30,12 @@ export function ChatWidget({ hideLauncherOnMobile = false }: { hideLauncherOnMob
   const [busy, setBusy] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const toggleMicRef = useRef<() => void>(() => {});
   const abortRef = useRef<AbortController | null>(null);
+  const recRef = useRef<Recognition | null>(null);
+  const [listening, setListening] = useState(false);
+  const [micOk, setMicOk] = useState(false);
+  const [micError, setMicError] = useState("");
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "end" });
@@ -46,14 +52,54 @@ export function ChatWidget({ hideLauncherOnMobile = false }: { hideLauncherOnMob
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
-  useEffect(() => () => abortRef.current?.abort(), []);
+  useEffect(() => {
+    const t = setTimeout(() => setMicOk(createRecognition() !== null), 0);
+    return () => {
+      clearTimeout(t);
+      abortRef.current?.abort();
+      recRef.current?.abort();
+    };
+  }, []);
+
+  function toggleMic() {
+    setMicError("");
+    if (listening) {
+      recRef.current?.stop();
+      return;
+    }
+    const rec = createRecognition();
+    if (!rec) return;
+    recRef.current = rec;
+    rec.onresult = (e) => {
+      const text = Array.from(e.results)
+        .map((r) => r[0].transcript)
+        .join(" ");
+      setInput(text);
+      if (Array.from(e.results).every((r) => r.isFinal) && text.trim()) void send(text);
+    };
+    rec.onerror = (e) => setMicError(e.error === "not-allowed" ? "Microphone blocked. Allow it in your browser to speak to BGee." : "I could not hear you. Please try again.");
+    rec.onend = () => setListening(false);
+    try {
+      rec.start();
+      setListening(true);
+    } catch {
+      setListening(false);
+    }
+  }
 
   // Lets other parts of the site (e.g. the hero) open the assistant.
   useEffect(() => {
-    const onOpen = () => setOpen(true);
+    const onOpen = (e: Event) => {
+      setOpen(true);
+      if ((e as CustomEvent<{ listen?: boolean }>).detail?.listen) setTimeout(() => toggleMicRef.current(), 450);
+    };
     window.addEventListener("bgee:open-chat", onOpen);
     return () => window.removeEventListener("bgee:open-chat", onOpen);
   }, []);
+
+  useEffect(() => {
+    toggleMicRef.current = toggleMic;
+  });
 
   async function send(raw: string) {
     const content = raw.trim();
@@ -84,6 +130,7 @@ export function ChatWidget({ hideLauncherOnMobile = false }: { hideLauncherOnMob
         setMessages((m) => [...m.slice(0, -1), { role: "assistant", content: acc }]);
       }
       if (!acc.trim()) throw new Error("empty");
+      if (voiceOn()) speak(acc);
     } catch (e) {
       if ((e as Error).name === "AbortError") return;
       setMessages((m) => [
@@ -97,45 +144,24 @@ export function ChatWidget({ hideLauncherOnMobile = false }: { hideLauncherOnMob
 
   return (
     <>
-      <button
-        type="button"
-        aria-label={open ? "Close chat assistant" : "Open chat assistant"}
-        aria-expanded={open}
-        aria-controls="chat-panel"
-        onClick={() => setOpen((v) => !v)}
-        className={cn("fixed bottom-[calc(9.5rem+env(safe-area-inset-bottom))] right-5 z-40 grid size-14 place-items-center rounded-full bg-brand-strong text-white shadow-xl shadow-black/30 ring-2 ring-accent/70 transition-transform duration-300 hover:scale-110 active:scale-95 lg:bottom-24", hideLauncherOnMobile && "max-lg:hidden")}
-      >
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.span
-            key={open ? "x" : "m"}
-            initial={{ rotate: -60, opacity: 0 }}
-            animate={{ rotate: 0, opacity: 1 }}
-            exit={{ rotate: 60, opacity: 0 }}
-            transition={{ duration: 0.18 }}
-          >
-            {open ? <X className="size-6" /> : <MessageCircle className="size-6" />}
-          </motion.span>
-        </AnimatePresence>
-      </button>
-
       <AnimatePresence>
         {open && (
           <motion.section
             id="chat-panel"
             role="dialog"
-            aria-label="BGeetech assistant"
+            aria-label="Ask BGee"
             initial={{ opacity: 0, y: 24, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.97 }}
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed inset-x-3 bottom-[calc(5.25rem+env(safe-area-inset-bottom))] z-[49] flex h-[min(38rem,calc(100dvh-9rem))] flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-2xl sm:inset-x-auto sm:right-5 sm:w-[24rem] lg:bottom-40 lg:z-40 lg:h-[min(34rem,calc(100dvh-11rem))]"
+            className="fixed inset-x-3 bottom-[calc(5.25rem+env(safe-area-inset-bottom))] z-[49] flex h-[min(38rem,calc(100dvh-9rem))] flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-2xl sm:inset-x-auto sm:left-5 sm:w-[24rem] lg:bottom-40 lg:z-[46] lg:h-[min(34rem,calc(100dvh-11rem))]"
           >
             <header className="flex items-center gap-3 bg-ink px-4 py-3.5 text-white">
               <span className="grid size-10 place-items-center rounded-full bg-gradient-to-br from-blue-600 to-amber-400">
                 <Bot className="size-5" aria-hidden />
               </span>
               <div className="flex-1">
-                <p className="font-display font-bold leading-tight">BGeetech assistant</p>
+                <p className="font-display font-bold leading-tight">BGee, your AI guide</p>
                 <p className="flex items-center gap-1.5 text-xs text-white/70">
                   <span className="size-2 rounded-full bg-blue-400" aria-hidden /> AI assistant · replies instantly
                 </p>
@@ -164,7 +190,7 @@ export function ChatWidget({ hideLauncherOnMobile = false }: { hideLauncherOnMob
                     )}
                   >
                     {m.content || (
-                      <span className="inline-flex gap-1" aria-label="Assistant is typing">
+                      <span className="inline-flex gap-1" aria-label="BGee is typing">
                         {[0, 1, 2].map((d) => (
                           <span key={d} className="size-1.5 animate-bounce rounded-full bg-muted-foreground" style={{ animationDelay: `${d * 0.15}s` }} />
                         ))}
@@ -224,10 +250,21 @@ export function ChatWidget({ hideLauncherOnMobile = false }: { hideLauncherOnMob
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 maxLength={1500}
-                placeholder="Ask about services or tech..."
+                placeholder={listening ? "Listening..." : "Ask BGee about services or tech..."}
                 autoComplete="off"
                 className="min-h-11 flex-1 rounded-full border border-border bg-background px-4 text-sm outline-none focus:border-brand focus:ring-4 focus:ring-brand/15"
               />
+              {micOk && (
+                <button
+                  type="button"
+                  onClick={toggleMic}
+                  aria-label={listening ? "Stop listening" : "Speak your question"}
+                  aria-pressed={listening}
+                  className={cn("grid size-11 place-items-center rounded-full border border-border transition-all hover:border-brand/60", listening && "animate-pulse border-red-500 bg-red-500/10 text-red-600")}
+                >
+                  {listening ? <MicOff className="size-4" /> : <Mic className="size-4 text-brand" />}
+                </button>
+              )}
               <button
                 type="submit"
                 disabled={busy || !input.trim()}
@@ -237,6 +274,11 @@ export function ChatWidget({ hideLauncherOnMobile = false }: { hideLauncherOnMob
                 <Send className="size-4" />
               </button>
             </form>
+            {micError && (
+              <p role="alert" className="px-4 pb-1 text-center text-xs text-red-600">
+                {micError}
+              </p>
+            )}
             <p className="px-4 pb-3 text-center text-[11px] text-muted-foreground">
               AI can make mistakes. Check important details with our team.
             </p>

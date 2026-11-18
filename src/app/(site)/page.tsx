@@ -30,11 +30,11 @@ function AtAGlance() {
     ["Who we help", "Small and growing businesses, startups and agencies worldwide, from local services such as barbers, clinics and shops to booking engines, real estate and immigration firms."],
     ["What it costs", `Starting prices are published: websites from ${usd(price("Website Launch"))}, CRM and business apps from ${usd(price("CRM & Business App"))}, AI and automation from ${usd(price("AI & Automation"))}, ERP from ${usd(price("ERP Suite"))}, and care plans for bug fixing from ${usd(price("Care Plan"))} per month. Hosted websites built in our website builder start at ${usd(10)} per month. Every project gets a fixed-scope proposal.`],
     ["Free consultation", `Your first ${consultation.freeMinutes} minutes with an expert are free, with no obligation. A ${consultation.extendedMinutes}-minute deep-dive is ${usd(consultation.extendedUsd)}.`],
-    ["How to start", "Book a free call, chat with our AI assistant, or message us on WhatsApp. We reply within one business day."],
+    ["How to start", "Book a free call, ask BGee, our AI guide, or message us on WhatsApp. We reply within one business day."],
     ["Payments", `Prices and payments are available in US dollars, UAE dirhams and Indian rupees (${packageCatalog.projects.length} project types and ${packageCatalog.monthly.length} monthly services can be combined in our custom package calculator).`],
   ];
   return (
-    <section data-juju="glance" aria-labelledby="glance" className="mx-auto max-w-5xl px-5 py-24 sm:px-8">
+    <section data-bgee="glance" aria-labelledby="glance" className="mx-auto max-w-5xl px-5 py-24 sm:px-8">
       <SectionHeading eyebrow="At a glance" title={`${site.name} in a nutshell`} center />
       <dl className="mt-12 divide-y divide-border rounded-3xl border border-border bg-card">
         {rows.map(([k, v]) => (
@@ -57,7 +57,7 @@ export default function HomePage() {
       <JsonLd data={faqPage(faqs)} />
       <Hero />
       <Stats />
-      <section data-juju="services" className="mx-auto max-w-7xl px-5 pt-24 sm:px-8">
+      <section data-bgee="services" className="mx-auto max-w-7xl px-5 pt-24 sm:px-8">
         <SectionHeading
           eyebrow="Services"
           title="Products and services for every stage of your business"
@@ -76,7 +76,7 @@ export default function HomePage() {
       <AtAGlance />
       <Industries />
       <PricingTeaser />
-      <section data-juju="faq" className="mx-auto max-w-7xl px-5 pb-24 sm:px-8">
+      <section data-bgee="faq" className="mx-auto max-w-7xl px-5 pb-24 sm:px-8">
         <SectionHeading eyebrow="FAQ" title="Questions, answered" center />
         <Faq />
         <p className="mt-8 text-center">

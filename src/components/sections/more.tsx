@@ -49,7 +49,7 @@ export function TechMarquee() {
 
 export function Process() {
   return (
-    <section data-juju="process" className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
+    <section data-bgee="process" className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
       <SectionHeading eyebrow="How it works" title="From idea to launch in three steps" center />
       <Stagger className="relative mt-16 grid gap-8 md:grid-cols-3">
         <div
@@ -157,7 +157,7 @@ export function PricingCards({ limit }: { limit?: number }) {
 
 export function PricingTeaser() {
   return (
-    <section data-juju="pricing" className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
+    <section data-bgee="pricing" className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
       <SectionHeading
         eyebrow="Pricing"
         title="Clear starting prices for every product"

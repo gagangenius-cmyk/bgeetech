@@ -4,8 +4,11 @@ import Script from "next/script";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useSyncExternalStore } from "react";
+import { GTM_ID, track } from "@/lib/track";
 
-const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+// GA4 is loaded directly only when no Tag Manager container is set (otherwise add the GA4 tag inside GTM, to avoid double counting).
+const GA_ID = GTM_ID ? undefined : (process.env.NEXT_PUBLIC_GA_ID ?? "G-BTVYKMJJB6");
+const TRACKING = Boolean(GA_ID || GTM_ID);
 const KEY = "bgee_consent";
 const EVENT = "bgee:consent";
 
@@ -50,13 +53,38 @@ export function Analytics() {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (!GA_ID || consent !== "granted") return;
-    (window as GtagWindow).gtag?.("event", "page_view", { page_path: pathname, page_location: window.location.href });
+    if (consent !== "granted") return;
+    if (GA_ID) (window as GtagWindow).gtag?.("event", "page_view", { page_path: pathname, page_location: window.location.href });
+    if (GTM_ID) track("virtual_page_view", { page_location: window.location.href, page_title: document.title });
   }, [pathname, consent]);
 
-  if (!GA_ID || consent !== "granted") return null;
+  // Every WhatsApp link on the site (button, header, footer, chat, BGee) reports one event.
+  useEffect(() => {
+    if (consent !== "granted") return;
+    const onClick = (e: MouseEvent) => {
+      const a = (e.target as Element | null)?.closest?.("a[href]") as HTMLAnchorElement | null;
+      if (!a || !/^https:\/\/(wa\.me|api\.whatsapp\.com)\//.test(a.href)) return;
+      track("whatsapp_click", { link_url: a.href.split("?")[0], link_text: (a.textContent ?? "").trim().slice(0, 60) || a.getAttribute("aria-label") || "WhatsApp" });
+    };
+    document.addEventListener("click", onClick, true);
+    return () => document.removeEventListener("click", onClick, true);
+  }, [consent]);
+
+  if (consent !== "granted") return null;
   return (
     <>
+      {GTM_ID && (
+        <>
+          <Script id="gtm-init" strategy="afterInteractive">{`
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+            (function(){var f=document.getElementsByTagName('script')[0],j=document.createElement('script');
+            j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id=${GTM_ID}';f.parentNode.insertBefore(j,f);})();
+          `}</Script>
+        </>
+      )}
+      {GA_ID && (
+        <>
       <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
       <Script id="ga-init" strategy="afterInteractive">{`
         window.dataLayer = window.dataLayer || [];
@@ -65,6 +93,8 @@ export function Analytics() {
         gtag('js', new Date());
         gtag('config', '${GA_ID}', { send_page_view: false, anonymize_ip: true });
       `}</Script>
+        </>
+      )}
     </>
   );
 }
@@ -72,7 +102,7 @@ export function Analytics() {
 /** Cookie notice: shown only when analytics is configured and no choice has been made yet. */
 export function ConsentBanner() {
   const consent = useConsent();
-  if (!GA_ID || consent !== "unset") return null;
+  if (!TRACKING || consent !== "unset") return null;
   return (
     <div role="dialog" aria-label="Cookie preferences" className="fixed inset-x-3 bottom-[calc(5rem+env(safe-area-inset-bottom))] z-[60] mx-auto max-w-2xl rounded-2xl border border-border bg-card p-4 shadow-2xl lg:bottom-5">
       <p className="text-sm leading-relaxed">
@@ -89,7 +119,7 @@ export function ConsentBanner() {
 
 /** Footer link to change the choice later (only when analytics is configured). */
 export function CookieSettingsLink({ className }: { className?: string }) {
-  if (!GA_ID) return null;
+  if (!TRACKING) return null;
   return (
     <button type="button" onClick={() => choose("reset")} className={className}>
       Cookie settings

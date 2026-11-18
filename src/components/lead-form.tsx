@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { CheckCircle2, Send } from "lucide-react";
 import { useActionState, useId, type ReactNode } from "react";
+import { track } from "@/lib/track";
 import { submitLead, type LeadField, type LeadState } from "@/actions/lead";
 import { Button } from "@/components/ui/button";
 import { services } from "@/lib/site";
@@ -56,7 +57,11 @@ export function LeadForm({
   const uid = useId();
   const [state, action, pending] = useActionState(async (prev: LeadState, fd: FormData) => {
     const next = await submitLead(prev, fd);
-    if (next.ok) onSuccess?.();
+    if (next.ok) {
+      track("generate_lead", { form_source: source });
+      track("form_submit", { form_name: "lead", form_source: source });
+      onSuccess?.();
+    }
     return next;
   }, initial);
 

@@ -20,7 +20,7 @@ export default function ServicesPage() {
         title="Everything your business needs online"
         body="Websites, apps, CRM, ERP, AI and ongoing support, all from one team. Every product shows its starting price, and your first 30-minute consultation is free."
       />
-      <section data-juju="service-grid" className="mx-auto max-w-7xl px-5 pb-24 sm:px-8">
+      <section data-bgee="service-grid" className="mx-auto max-w-7xl px-5 pb-24 sm:px-8">
         <ServicesGrid />
       </section>
       <FinalCta />

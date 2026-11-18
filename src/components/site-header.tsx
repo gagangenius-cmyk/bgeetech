@@ -154,7 +154,7 @@ export function SiteHeader() {
                   }}
                   className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-border bg-card text-sm font-semibold transition active:scale-[0.98]"
                 >
-                  <MessageCircle className="size-4 text-brand" aria-hidden /> Chat with AI
+                  <MessageCircle className="size-4 text-brand" aria-hidden /> Ask BGee
                 </button>
                 <a
                   href={whatsappUrl()}

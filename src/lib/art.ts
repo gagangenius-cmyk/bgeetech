@@ -15,6 +15,13 @@ const blogMap: Record<string, string> = {
   Guides: "technology-consulting",
   Engineering: "web-app-development",
   Strategy: "technology-consulting",
+  "Mobile apps": "mobile-app-development",
+  SEO: "seo-digital-marketing",
+  "E-commerce": "ecommerce-development",
+  Security: "security-audit",
+  Cloud: "cloud-hosting-devops",
+  Design: "ui-ux-design",
+  Automation: "automation-integrations",
 };
 const demoMap: Record<string, string> = {
   CRM: "crm-software",

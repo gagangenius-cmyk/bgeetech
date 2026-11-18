@@ -1,18 +1,20 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { ChevronLeft, ChevronRight, Compass, MessageCircle, Sparkles, X } from "lucide-react";
+import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion } from "motion/react";
+import { ChevronLeft, ChevronRight, Compass, Footprints, Mic, Sparkles, Volume2, VolumeX, X } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { JujuCharacter, type Mood } from "@/components/juju/character";
+import { BGeeCharacter, type Mood } from "@/components/bgee/character";
 import { whatsappUrl } from "@/lib/chat-knowledge";
-import { actions, greeting, tipsFor, tourFor, type TourStep } from "@/lib/juju-content";
+import { actions, introFor, tourFor, walk, type TourStep } from "@/lib/bgee-content";
+import { VOICE_KEY, canSpeak, speak, stopSpeaking } from "@/lib/speech";
 import { cn } from "@/lib/utils";
 
-const HIDDEN_KEY = "bgee_juju_hidden";
-const SEEN_KEY = "bgee_juju_seen";
-const EVENT = "bgee:juju";
-// Step-by-step flows keep a sticky Back/Continue bar at the bottom on phones, so Juju steps aside there.
+const HIDDEN_KEY = "bgee_guide_hidden";
+const SEEN_KEY = "bgee_guide_seen";
+const EVENT = "bgee:guide";
+const OFFSCREEN = -280;
+// Step-by-step flows keep a sticky Back/Continue bar at the bottom on phones, so BGee steps aside there.
 const FLOWS = ["/builder", "/book", "/estimate"];
 
 const store = {
@@ -41,24 +43,8 @@ const subscribe = (cb: () => void) => {
     window.removeEventListener("storage", cb);
   };
 };
-const session = {
-  has: (k: string) => {
-    try {
-      return sessionStorage.getItem(k) === "1";
-    } catch {
-      return false;
-    }
-  },
-  mark: (k: string) => {
-    try {
-      sessionStorage.setItem(k, "1");
-    } catch {
-      /* ignore */
-    }
-  },
-};
 
-type Mode = "idle" | "tip" | "menu" | "tour";
+type Mode = "idle" | "tip" | "menu" | "tour" | "walk";
 type Rect = { top: number; left: number; width: number; height: number };
 
 /** Types the message out character by character (instantly for reduced motion). */
@@ -78,11 +64,12 @@ function useTyped(full: string, instant: boolean) {
   return { shown: done ? full : full.slice(0, n), done };
 }
 
-export function Juju() {
+export function BGee() {
   const pathname = usePathname();
   const router = useRouter();
   const reduce = useReducedMotion() ?? false;
   const hidden = useSyncExternalStore(subscribe, () => store.get(HIDDEN_KEY) === "1", () => true);
+  const voice = useSyncExternalStore(subscribe, () => store.get(VOICE_KEY) === "1", () => false);
   const mounted = useSyncExternalStore(
     () => () => {},
     () => true,
@@ -99,39 +86,140 @@ export function Juju() {
   const [look, setLook] = useState({ x: 0, y: 0 });
   const [blink, setBlink] = useState(false);
   const [spin, setSpin] = useState(false);
+  const [walking, setWalking] = useState(false);
+  const [facing, setFacing] = useState<1 | -1>(1);
+  const [walkIdx, setWalkIdx] = useState(0);
+  const [stationReady, setStationReady] = useState(false);
+  const [shift, setShift] = useState(0);
 
+  const x = useMotionValue(OFFSCREEN);
   const modeRef = useRef<Mode>("idle");
   const hideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const boxRef = useRef<HTMLDivElement>(null);
   const clicks = useRef<number[]>([]);
   const rectRef = useRef<Rect | null>(null);
+  const anim = useRef<{ stop: () => void } | null>(null);
+  const moveToken = useRef(0);
+  const walkToken = useRef(0);
+  const nextRef = useRef<(() => void) | null>(null);
+  const lastIntro = useRef("");
 
   const inTour = mode === "tour" && tourPath === pathname && steps.length > 0;
-  const message = inTour ? (steps[stepIdx]?.text ?? "") : mode === "menu" ? "What would you like to do?" : tipText;
+  const walkActive = mode === "walk";
+  const station = walk[walkIdx];
+  const message = inTour ? (steps[stepIdx]?.text ?? "") : mode === "menu" ? "What would you like to do?" : walkActive ? (stationReady ? station.text : "") : tipText;
+  const bubbleOpen = mode !== "idle" && (mode === "walk" ? stationReady : mode !== "tour" || inTour);
   const typed = useTyped(message, reduce);
-  const mood: Mood = mode !== "idle" && !typed.done ? "talking" : baseMood;
+  const mood: Mood = bubbleOpen && !typed.done ? "talking" : walking ? "happy" : baseMood;
 
   useEffect(() => {
     modeRef.current = mode;
     rectRef.current = inTour ? rect : null;
   }, [mode, inTour, rect]);
 
+  // Read messages aloud when the visitor has switched the voice on.
+  useEffect(() => {
+    if (!voice || !bubbleOpen || !message) return;
+    speak(message);
+    return () => stopSpeaking();
+  }, [voice, bubbleOpen, message]);
+
+  /** Walks BGee along the bottom of the screen to horizontal offset `target` (px from the dock). */
+  const moveTo = useCallback(
+    (target: number) =>
+      new Promise<boolean>((resolve) => {
+        anim.current?.stop();
+        const token = ++moveToken.current;
+        const cur = x.get();
+        const dist = Math.abs(target - cur);
+        if (reduce || dist < 2) {
+          x.set(target);
+          setWalking(false);
+          setFacing(1);
+          resolve(true);
+          return;
+        }
+        setFacing(target > cur ? 1 : -1);
+        setWalking(true);
+        anim.current = animate(x, target, {
+          duration: Math.min(3.4, Math.max(0.6, dist / 230)),
+          ease: "easeInOut",
+          onComplete: () => {
+            const current = token === moveToken.current;
+            if (current) {
+              setWalking(false);
+              setFacing(1);
+            }
+            resolve(current);
+          },
+        });
+      }),
+    [x, reduce],
+  );
+
   /** Show a message. Auto messages fade after a few seconds. */
   const say = useCallback((text: string, m: Mood = "happy") => {
     clearTimeout(hideTimer.current);
+    setShift(0);
     setTipText(text);
     setBaseMood(m);
     setMode("tip");
     hideTimer.current = setTimeout(() => {
       if (modeRef.current === "tip") setMode("idle");
-    }, 4500 + text.length * 55);
+    }, 6500 + text.length * 55);
   }, []);
 
+  /** Closes whatever is open (and cancels a walk in progress, sending BGee home). */
   const close = useCallback(() => {
     clearTimeout(hideTimer.current);
+    walkToken.current++;
+    nextRef.current?.();
     setMode("idle");
     setBaseMood("happy");
-  }, []);
+    setStationReady(false);
+    setShift(0);
+    if (Math.abs(x.get()) > 2) void moveTo(0);
+  }, [x, moveTo]);
+
+  /** The complete website introduction: stroll left to right, stopping at each part of the site. */
+  const runWalk = useCallback(async () => {
+    const token = ++walkToken.current;
+    const alive = () => walkToken.current === token;
+    clearTimeout(hideTimer.current);
+    setBaseMood("happy");
+    setMode("walk");
+    const box = boxRef.current;
+    const width = box?.offsetWidth ?? 90;
+    const margin = box ? parseFloat(getComputedStyle(box).left) || 12 : 12;
+    const bubbleW = Math.min(336, window.innerWidth - 24);
+    for (let i = 0; i < walk.length; i++) {
+      if (!alive()) return;
+      setWalkIdx(i);
+      setStationReady(false);
+      const avail = Math.max(0, window.innerWidth - width - margin * 2);
+      const target = (avail * i) / (walk.length - 1);
+      const arrived = await moveTo(target);
+      if (!alive() || !arrived) return;
+      const r = box?.getBoundingClientRect();
+      if (r) setShift(Math.min(Math.max(r.left, 12), window.innerWidth - 12 - bubbleW) - r.left);
+      setBaseMood(i === 0 ? "wave" : "happy");
+      setStationReady(true);
+      await new Promise<void>((res) => {
+        const timer = setTimeout(res, 5200 + walk[i].text.length * 55);
+        nextRef.current = () => {
+          clearTimeout(timer);
+          res();
+        };
+      });
+      nextRef.current = null;
+    }
+    if (!alive()) return;
+    setStationReady(false);
+    setShift(0);
+    await moveTo(0);
+    if (!alive()) return;
+    say("That's everything! Ask me anything, or book your free 30-minute call.", "wave");
+  }, [moveTo, say]);
 
   // Eyes follow the pointer (or the highlighted section during a tour).
   useEffect(() => {
@@ -189,25 +277,35 @@ export function Juju() {
     return () => clearTimeout(t);
   }, [reduce, hidden]);
 
-  // Greets first-time visitors, then gives one helpful tip per page per session.
+  // On every page: BGee walks in from the left and introduces it. First-time visitors get the full walk.
   useEffect(() => {
-    if (hidden) return;
+    if (!mounted || hidden) return;
     const first = !store.get(SEEN_KEY);
-    const key = `bgee_juju_tip:${pathname}`;
-    if (!first && session.has(key)) return;
     const t = setTimeout(
-      () => {
-        if (modeRef.current !== "idle") return;
-        session.mark(key);
+      async () => {
+        if (modeRef.current !== "idle" && modeRef.current !== "tip") return;
         if (first) {
           store.set(SEEN_KEY, "1");
-          say(greeting, "wave");
-        } else say(tipsFor(pathname)[0], "happy");
+          lastIntro.current = pathname;
+          x.set(reduce ? 0 : OFFSCREEN);
+          await moveTo(0);
+          void runWalk();
+          return;
+        }
+        if (lastIntro.current === pathname) {
+          if (Math.abs(x.get()) > 2) void moveTo(0);
+          return;
+        }
+        lastIntro.current = pathname;
+        const h1 = document.querySelector("h1")?.textContent?.trim() ?? "";
+        x.set(reduce ? 0 : OFFSCREEN);
+        const arrived = await moveTo(0);
+        if (arrived && (modeRef.current === "idle" || modeRef.current === "tip")) say(introFor(pathname, h1), "wave");
       },
-      first ? 2200 : 1700,
+      first ? 1600 : 900,
     );
     return () => clearTimeout(t);
-  }, [pathname, hidden, say]);
+  }, [pathname, mounted, hidden, reduce, x, moveTo, runWalk, say]);
 
   // Spotlight: follow the current tour target while it scrolls into view.
   useEffect(() => {
@@ -230,21 +328,26 @@ export function Juju() {
     return () => cancelAnimationFrame(raf);
   }, [inTour, steps, stepIdx, reduce]);
 
-  // Escape closes whatever is open.
+  // Escape closes whatever is open; opening the chat panel tucks the bubble away.
   useEffect(() => {
     if (mode === "idle") return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [mode, close]);
+  useEffect(() => {
+    window.addEventListener("bgee:open-chat", close);
+    return () => window.removeEventListener("bgee:open-chat", close);
+  }, [close]);
 
   function startTour() {
     const found = tourFor(pathname).filter((s) => document.querySelector(s.selector));
     if (found.length === 0) {
-      say("I don't have a tour for this page yet, but tap me any time for shortcuts!", "think");
+      say("I don't have a section tour for this page yet, but I can walk you through the whole site!", "think");
       return;
     }
     clearTimeout(hideTimer.current);
+    setShift(0);
     setSteps(found);
     setStepIdx(0);
     setRect(null);
@@ -263,7 +366,7 @@ export function Juju() {
       say("Hehe, that tickles! 😄", "wow");
       return;
     }
-    if (mode === "menu" || mode === "tour") close();
+    if (mode !== "idle" && mode !== "tip") close();
     else {
       clearTimeout(hideTimer.current);
       setBaseMood("happy");
@@ -279,31 +382,34 @@ export function Juju() {
   // Render nothing until hydrated, so the saved "hidden" preference never flashes the wrong state.
   if (!mounted) return null;
 
+  const inFlow = FLOWS.some((p) => pathname.startsWith(p));
+
   if (hidden) {
     return (
       <button
         type="button"
         onClick={() => {
           store.set(HIDDEN_KEY, null);
-          setTimeout(() => say("I'm back! Where would you like to go?", "wave"), 300);
+          lastIntro.current = "";
         }}
-        aria-label="Bring back Juju, the site guide"
+        aria-label="Bring back BGee, the site guide"
         className={cn(
           "fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] left-3 z-[44] inline-flex min-h-11 items-center gap-1.5 rounded-full border border-border bg-card px-3.5 text-xs font-semibold shadow-lg transition hover:-translate-y-0.5 lg:bottom-5 lg:left-5",
-          FLOWS.some((p) => pathname.startsWith(p)) && "max-lg:hidden",
+          inFlow && "max-lg:hidden",
         )}
       >
-        <Sparkles className="size-4 text-accent" aria-hidden /> Juju
+        <Sparkles className="size-4 text-accent" aria-hidden /> BGee
       </button>
     );
   }
 
   const hasTour = tourFor(pathname).length > 0;
   const last = stepIdx >= steps.length - 1;
+  const speechOk = canSpeak();
 
   return (
     <>
-      {/* Spotlight dims the page and rings the section Juju is talking about. */}
+      {/* Spotlight dims the page and rings the section BGee is talking about. */}
       <AnimatePresence>
         {inTour && rect && (
           <motion.div
@@ -318,38 +424,55 @@ export function Juju() {
         )}
       </AnimatePresence>
 
-      <div
+      <motion.div
         ref={boxRef}
-        className={cn(
-          "fixed bottom-[calc(5.25rem+env(safe-area-inset-bottom))] left-3 z-[44] lg:bottom-5 lg:left-5",
-          FLOWS.some((p) => pathname.startsWith(p)) && "max-lg:hidden",
-        )}
+        style={{ x }}
+        className={cn("fixed bottom-[calc(5.25rem+env(safe-area-inset-bottom))] left-3 z-[44] lg:bottom-5 lg:left-5", inFlow && "max-lg:hidden")}
       >
         <AnimatePresence>
-          {mode !== "idle" && (mode !== "tour" || inTour) && (
+          {bubbleOpen && (
             <motion.div
               key={mode}
               role="dialog"
-              aria-label="Juju, your site guide"
+              aria-label="BGee, your site guide"
               aria-live="polite"
               initial={{ opacity: 0, y: 12, scale: 0.92 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 8, scale: 0.95 }}
               transition={{ type: "spring", stiffness: 380, damping: 28 }}
-              className="absolute bottom-full left-0 mb-2 w-[min(21rem,calc(100vw-1.5rem))] origin-bottom-left rounded-3xl rounded-bl-md border border-border bg-card p-4 text-sm shadow-2xl shadow-brand/20"
+              style={{ left: shift }}
+              className="absolute bottom-full mb-2 w-[min(21rem,calc(100vw-1.5rem))] origin-bottom rounded-3xl border border-border bg-card p-4 text-sm shadow-2xl shadow-brand/20"
             >
-              <button type="button" onClick={close} aria-label="Close Juju" className="absolute right-1.5 top-1.5 grid size-10 place-items-center rounded-full text-muted-foreground hover:bg-muted">
+              {speechOk && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    store.set(VOICE_KEY, voice ? null : "1");
+                    if (voice) stopSpeaking();
+                  }}
+                  aria-label={voice ? "Turn BGee's voice off" : "Turn BGee's voice on"}
+                  aria-pressed={voice}
+                  className="absolute right-11 top-1.5 grid size-10 place-items-center rounded-full text-muted-foreground hover:bg-muted"
+                >
+                  {voice ? <Volume2 className="size-4 text-brand" /> : <VolumeX className="size-4" />}
+                </button>
+              )}
+              <button type="button" onClick={close} aria-label="Close BGee" className="absolute right-1.5 top-1.5 grid size-10 place-items-center rounded-full text-muted-foreground hover:bg-muted">
                 <X className="size-4" />
               </button>
-              <p className="pr-8 font-semibold leading-relaxed">
+              {walkActive && <p className="pr-20 text-[11px] font-bold uppercase tracking-wider text-brand">{station.title}</p>}
+              <p className={cn("pr-20 font-semibold leading-relaxed", walkActive && "mt-1")}>
                 {typed.shown}
                 {!typed.done && <span aria-hidden className="ml-0.5 inline-block h-4 w-0.5 animate-pulse bg-brand align-middle" />}
               </p>
 
               {mode === "menu" && (
                 <div className="mt-3 grid gap-2">
+                  <button type="button" onClick={() => void runWalk()} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl bg-brand-strong px-4 font-semibold text-white transition active:scale-[0.98]">
+                    <Footprints className="size-4" aria-hidden /> Walk me through the site
+                  </button>
                   {hasTour && (
-                    <button type="button" onClick={startTour} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl bg-brand-strong px-4 font-semibold text-white transition active:scale-[0.98]">
+                    <button type="button" onClick={startTour} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl border border-brand/40 px-4 text-[13px] font-semibold text-brand transition active:scale-[0.98]">
                       <Compass className="size-4" aria-hidden /> Show me around this page
                     </button>
                   )}
@@ -365,16 +488,26 @@ export function Juju() {
                       type="button"
                       onClick={() => {
                         close();
-                        window.dispatchEvent(new Event("bgee:open-chat"));
+                        window.dispatchEvent(new CustomEvent("bgee:open-chat", { detail: { listen: false } }));
                       }}
                       className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-2xl border border-border text-[13px] font-medium transition hover:border-brand/60 active:scale-[0.98]"
                     >
-                      <MessageCircle className="size-4 text-brand" aria-hidden /> Ask the AI
+                      <Sparkles className="size-4 text-brand" aria-hidden /> Ask me anything
                     </button>
-                    <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center justify-center rounded-2xl bg-[#25D366] text-[13px] font-semibold text-white transition active:scale-[0.98]">
-                      WhatsApp
-                    </a>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        close();
+                        window.dispatchEvent(new CustomEvent("bgee:open-chat", { detail: { listen: true } }));
+                      }}
+                      className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-2xl border border-border text-[13px] font-medium transition hover:border-brand/60 active:scale-[0.98]"
+                    >
+                      <Mic className="size-4 text-brand" aria-hidden /> Speak to me
+                    </button>
                   </div>
+                  <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center justify-center rounded-2xl bg-[#25D366] text-[13px] font-semibold text-white transition active:scale-[0.98]">
+                    WhatsApp
+                  </a>
                   <button
                     type="button"
                     onClick={() => {
@@ -383,8 +516,31 @@ export function Juju() {
                     }}
                     className="min-h-9 text-xs font-medium text-muted-foreground underline-offset-4 hover:underline"
                   >
-                    Hide Juju
+                    Hide BGee
                   </button>
+                </div>
+              )}
+
+              {mode === "walk" && (
+                <div className="mt-3 space-y-2.5">
+                  <span className="flex items-center gap-1" aria-label={`Stop ${walkIdx + 1} of ${walk.length}`}>
+                    {walk.map((_, i) => (
+                      <span key={i} className={cn("h-1.5 rounded-full transition-all", i === walkIdx ? "w-5 bg-accent" : "w-1.5 bg-border")} />
+                    ))}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    {station.href && (
+                      <button type="button" onClick={() => go(station.href!)} className="inline-flex min-h-11 flex-1 items-center justify-center rounded-full bg-brand-strong px-4 text-[13px] font-semibold text-white active:scale-[0.98]">
+                        {station.cta}
+                      </button>
+                    )}
+                    <button type="button" onClick={() => nextRef.current?.()} className="inline-flex min-h-11 items-center gap-1 rounded-full border border-border px-4 text-[13px] font-semibold active:scale-[0.98]">
+                      {walkIdx === walk.length - 1 ? "Finish" : "Next"} <ChevronRight className="size-4" />
+                    </button>
+                    <button type="button" onClick={close} className="min-h-11 px-2 text-xs font-medium text-muted-foreground hover:underline">
+                      Stop
+                    </button>
+                  </div>
                 </div>
               )}
 
@@ -427,13 +583,21 @@ export function Juju() {
         <button
           type="button"
           onClick={onCharacterClick}
-          aria-label="Juju, your site guide. Open the help menu"
+          aria-label="BGee, your site guide. Open the help menu"
           aria-expanded={mode === "menu"}
           className="group relative block rounded-3xl outline-offset-4 transition-transform active:scale-95"
         >
-          <JujuCharacter mood={mood} look={look} blink={blink} className={cn("h-24 w-auto transition-transform duration-300 group-hover:scale-110 lg:h-28", spin && "juju-spin")} />
+          <span className="block" style={{ transform: `scaleX(${facing})` }}>
+            <BGeeCharacter
+              mood={mood}
+              look={walking ? { x: 0.85, y: 0 } : { x: facing === -1 ? -look.x : look.x, y: look.y }}
+              blink={blink}
+              walking={walking}
+              className={cn("h-24 w-auto transition-transform duration-300 group-hover:scale-110 lg:h-28", spin && "bgee-spin")}
+            />
+          </span>
         </button>
-      </div>
+      </motion.div>
     </>
   );
 }

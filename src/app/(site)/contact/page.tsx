@@ -53,12 +53,12 @@ export default function ContactPage() {
               Within one business day
             </Item>
           </ul>
-          <div data-juju="contact-map">
+          <div data-bgee="contact-map">
             <ContactMap label={site.address.label} query={site.address.mapQuery} />
           </div>
         </Reveal>
         <Reveal delay={0.1}>
-          <div data-juju="contact-form">
+          <div data-bgee="contact-form">
             <LeadForm source="contact" message="required" submitLabel="Send message" />
           </div>
         </Reveal>

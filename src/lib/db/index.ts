@@ -5,6 +5,7 @@ import { DataTypes, Sequelize, type Model, type ModelStatic } from "sequelize";
 import { posts as staticPosts } from "@/lib/content";
 import { seedDemos } from "@/lib/db/seed";
 import { seedPostsV2 } from "@/lib/db/seed-posts";
+import { seedPostsV3 } from "@/lib/db/seed-posts-3";
 
 export type DB = {
   sequelize: Sequelize;
@@ -161,6 +162,15 @@ async function seed(db: DB) {
       });
     }
     await db.Setting.create({ key: "seed_posts_v2", value: "1" });
+  }
+  if (!(await db.Setting.findOne({ where: { key: "seed_posts_v3" } }))) {
+    for (const { date, ...p } of seedPostsV3) {
+      await db.Post.findOrCreate({
+        where: { slug: p.slug },
+        defaults: { ...p, published: true, publishedAt: new Date(date), readMinutes: Math.max(2, Math.round(p.body.split(/s+/).length / 200)) },
+      });
+    }
+    await db.Setting.create({ key: "seed_posts_v3", value: "1" });
   }
   if ((await db.Demo.count()) === 0) {
     for (const d of seedDemos) await db.Demo.create({ ...d, published: true });

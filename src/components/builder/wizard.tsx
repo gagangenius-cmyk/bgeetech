@@ -14,6 +14,7 @@ import {
 } from "@/lib/builder/config";
 import { getIndustry, industries, industryGroups } from "@/lib/builder/industries";
 import { contrast, isHex, textOn, themes } from "@/lib/builder/themes";
+import { track } from "@/lib/track";
 import { cn } from "@/lib/utils";
 
 const STEPS = ["Your business", "Business type", "Colours", "Style", "Plan & payment"] as const;
@@ -91,6 +92,7 @@ export default function BuilderWizard() {
     mutationFn: () => createOrder({ ...data, currency: code, industry: data.industry ?? "", terms: true as const, business: { ...data.business, domain: cleanDomain(data.business.domain) } }),
     onSuccess: (r) => {
       if (!r.ok) return setErrors({ pay: r.error });
+      track("form_submit", { form_name: "website_builder_order", plan: data.plan.tier, cycle: data.plan.cycle });
       try {
         localStorage.removeItem(KEY);
       } catch {

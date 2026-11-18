@@ -7,14 +7,14 @@ Website for a web and software services company (websites, apps, CRM, ERP, AI an
 - Product catalogue (15): websites, web and mobile apps, CRM, ERP, POS and HRMS, e-commerce, AI, automation, bug fixing and maintenance, design, SEO, hosting, security and consulting
 - **Free first 30-minute consultation** (no payment); 60-minute deep-dives are paid via Stripe
 - Pricing with 6 packages plus a **custom package calculator**; project estimator; animated **AI-style hero slider**
-- **Dynamic blog** and **product demos** (CRM, POS, HRMS...) managed from the admin panel
+- **Dynamic blog** (37 starter articles) and **product demos** (CRM, POS, HRMS...) managed from the admin panel
 - **Website builder** (`/builder`): business details, 90+ business types, 100 colour themes + custom colours, 8 styles, live Desktop/Tablet/Mobile preview, plans from $10/month (monthly, quarterly, annual)
 - **Admin panel** (`/admin`): blog posts, demos, leads, website orders (search, create, edit, delete, CSV export)
 - **Currency switcher** (USD / AED / INR) for all prices, with matching Stripe charges (rates in `src/lib/currency.ts`)
 - **Stripe Checkout**: website-builder subscriptions and paid consultation bookings, signature-verified webhook
 - **Search**: full results page (`/search`) over services, articles, demos, team and website types, plus a Cmd/Ctrl+K palette
 - **Team** page with vector avatars (`src/lib/team.ts`)
-- **Juju**, the animated site guide: a robot mascot whose eyes follow the cursor, who greets first-time visitors, gives a tip per page, offers shortcuts, and runs a spotlight tour of the current page. Content lives in `src/lib/juju-content.ts` (tips, tours, shortcuts); tour targets are `data-juju="..."` attributes on page sections. Visitors can hide Juju, and it respects reduced-motion settings.
+- **BGee**, the animated AI site guide (a girl robot mascot): walks left to right across the page introducing everything inside the site, gives an intro whenever a page opens, runs spotlight tours of sections, and doubles as the AI chat assistant (Claude) with voice: a microphone to speak questions and an optional spoken voice. Content lives in `src/lib/bgee-content.ts` (walk stops, page intros, tours); tour targets are `data-bgee="..."` attributes. Visitors can hide BGee; it respects reduced-motion settings.
 - Illustrated banners for every service, article and demo (`scripts/generate-page-images.mjs`), plus the hero artwork (`scripts/generate-hero-images.mjs`)
 - Contact page with a click-to-load Google Map (set the location in `site.address` in `src/lib/site.ts`; add a street address there for an exact pin)
 - **App-like on phones and tablets**: installable PWA (manifest, generated icons, offline page), bottom tab bar in the thumb zone, safe-area aware layout (`viewport-fit=cover`), sticky Back/Continue bars in multi-step flows, 16px+ form text (no iOS zoom), 44px touch targets, correct mobile keyboards
@@ -61,7 +61,7 @@ Your launch checklist (needs your accounts, so it cannot be automated):
 1. Add the site to **Google Search Console** and **Bing Webmaster Tools** (set `GOOGLE_SITE_VERIFICATION` / `BING_SITE_VERIFICATION`), then submit `https://bgeetech.com/sitemap.xml`.
 2. Add your real social profile URLs to `socials` in `src/lib/site.ts` (LinkedIn, Facebook, Instagram, X, YouTube). They become Organization `sameAs`, which helps search and AI engines recognise the brand.
 3. Create a **Google Business Profile** if you serve a local area, and keep the name, email and phone identical everywhere.
-4. Set `NEXT_PUBLIC_GA_ID` to enable Google Analytics 4 (loads only after the visitor accepts the cookie notice).
+4. Google Tag Manager (container `GTM-MJXK8SKQ`, override with `NEXT_PUBLIC_GTM_ID`) loads only after the visitor accepts the cookie notice. The site pushes `whatsapp_click`, `generate_lead`, `form_submit` (lead, consultation booking, website builder order) and `virtual_page_view` events to the data layer: in GTM add a Custom Event trigger per name and attach your GA4 or Ads tags. GA4 (`G-BTVYKMJJB6`) is added as a tag inside GTM; it is only loaded directly (`NEXT_PUBLIC_GA_ID`) when no GTM container is set, so visits are never counted twice.
 5. Publish new articles regularly from `/admin/posts`, and replace placeholder content (prices, demo links, team bios) with real details. Real reviews, case studies and client names are the strongest trust signals you can add.
 6. Test pages with the Rich Results Test and PageSpeed Insights after deploying.
 

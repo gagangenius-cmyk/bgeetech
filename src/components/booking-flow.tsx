@@ -11,6 +11,7 @@ import { ArrowLeft, ArrowRight, CalendarDays, Check, CheckCircle2, Loader2, Lock
 import { useMemo, useState, useSyncExternalStore } from "react";
 import { ServiceIcon } from "@/components/service-icon";
 import { Button } from "@/components/ui/button";
+import { track } from "@/lib/track";
 import { services } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -65,6 +66,7 @@ export function BookingFlow() {
       }),
     onSuccess: (r) => {
       if (!r.ok) return setError(r.error);
+      track("form_submit", { form_name: "consultation_booking", free: Boolean(r.free), minutes });
       if (r.url) window.location.href = r.url;
       else setDone({ ref: r.ref, free: Boolean(r.free) });
     },
