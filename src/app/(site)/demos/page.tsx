@@ -1,14 +1,16 @@
-import type { Metadata } from "next";
+import { JsonLd, webPage } from "@/lib/jsonld";
+import { pageMeta } from "@/lib/seo";
 import { Suspense } from "react";
 import { DemoGrid } from "@/components/demo-grid";
 import { PageHero } from "@/components/page-hero";
 import { FinalCta } from "@/components/sections/more";
 import { getDemos } from "@/lib/db/queries";
 
-export const metadata: Metadata = {
-  title: "Product demos",
-  description: "Explore live demos of our CRM, POS, HRMS and business software for real estate, immigration, retail, hospitality and more.",
-};
+export const metadata = pageMeta({
+  title: "Live Demos: CRM, POS, HRMS and ERP Software",
+  description: "Try working demos of CRM for real estate and immigration, POS, HRMS, hotel, school and inventory software, then get one tailored to you.",
+  path: "/demos",
+});
 
 async function Demos() {
   return <DemoGrid demos={await getDemos()} />;
@@ -17,7 +19,8 @@ async function Demos() {
 export default function DemosPage() {
   return (
     <>
-      <PageHero
+      <JsonLd data={webPage("CollectionPage", "Product demos", "Live demos of CRM, POS, HRMS and business software.", "/demos")} />
+      <PageHero crumbs={[{"name":"Demos","path":"/demos"}]}
         eyebrow="Demos"
         title="See our software in action"
         body="Browse working demos of CRMs, POS, HRMS and other business systems. Open a live demo or ask for a guided walkthrough."

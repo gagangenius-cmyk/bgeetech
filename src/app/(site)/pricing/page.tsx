@@ -1,4 +1,6 @@
-import type { Metadata } from "next";
+import { JsonLd, pricingSchema, faqPage } from "@/lib/jsonld";
+import { pageMeta } from "@/lib/seo";
+import { faqs } from "@/lib/site";
 import Link from "next/link";
 import { ArrowRight, Globe, ShieldCheck } from "lucide-react";
 import { PackageBuilder } from "@/components/package-builder";
@@ -7,16 +9,17 @@ import { Faq } from "@/components/sections/faq";
 import { FinalCta, PricingCards } from "@/components/sections/more";
 import { SectionHeading } from "@/components/sections/services-grid";
 
-export const metadata: Metadata = {
-  title: "Pricing & packages",
-  description:
-    "Transparent packages for websites, CRM, ERP, AI and bug fixing, a custom package calculator, and a free first 30-minute consultation.",
-};
+export const metadata = pageMeta({
+  title: "Pricing & Packages: Websites, CRM, ERP, AI",
+  description: "Clear starting prices for websites, CRM, ERP, AI and care plans, plus a custom package calculator. Your first 30-minute consultation is free.",
+  path: "/pricing",
+});
 
 export default function PricingPage() {
   return (
     <>
-      <PageHero
+      <JsonLd data={[pricingSchema(), faqPage(faqs)]} />
+      <PageHero crumbs={[{"name":"Pricing","path":"/pricing"}]}
         eyebrow="Pricing"
         title="Packages for every stage of your business"
         body="Websites, CRM, ERP, AI and ongoing care, with clear starting prices. Your first 30-minute consultation is free."

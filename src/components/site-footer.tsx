@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { whatsappUrl } from "@/lib/chat-knowledge";
+import { CookieSettingsLink } from "@/components/analytics";
 import { nav, services, site } from "@/lib/site";
 
 export function SiteFooter() {
@@ -21,13 +22,16 @@ export function SiteFooter() {
         <div>
           <h2 className="text-sm font-semibold text-white">Services</h2>
           <ul className="mt-4 space-y-2.5 text-sm">
-            {services.slice(0, 5).map((s) => (
+            {services.slice(0, 8).map((s) => (
               <li key={s.slug}>
                 <Link className="inline-block py-1.5 transition-colors hover:text-white" href={`/services/${s.slug}`}>
                   {s.title}
                 </Link>
               </li>
             ))}
+            <li>
+              <Link className="inline-block py-1.5 font-semibold text-white transition-colors" href="/services">All services</Link>
+            </li>
           </ul>
         </div>
         <div>
@@ -41,6 +45,9 @@ export function SiteFooter() {
               </li>
             ))}
             <li>
+              <Link className="inline-block py-1.5 transition-colors hover:text-white" href="/faq">FAQ</Link>
+            </li>
+            <li>
               <Link className="inline-block py-1.5 transition-colors hover:text-white" href="/estimate">Cost estimator</Link>
             </li>
             <li>
@@ -48,6 +55,12 @@ export function SiteFooter() {
             </li>
             <li>
               <Link className="inline-block py-1.5 transition-colors hover:text-white" href="/terms">Terms</Link>
+            </li>
+            <li>
+              <a className="inline-block py-1.5 transition-colors hover:text-white" href="/feed.xml">RSS feed</a>
+            </li>
+            <li>
+              <CookieSettingsLink className="inline-block py-1.5 text-left transition-colors hover:text-white" />
             </li>
           </ul>
         </div>

@@ -4,6 +4,7 @@ import mysql2 from "mysql2";
 import { DataTypes, Sequelize, type Model, type ModelStatic } from "sequelize";
 import { posts as staticPosts } from "@/lib/content";
 import { seedDemos } from "@/lib/db/seed";
+import { seedPostsV2 } from "@/lib/db/seed-posts";
 
 export type DB = {
   sequelize: Sequelize;
@@ -13,6 +14,7 @@ export type DB = {
   Post: ModelStatic<Model>;
   Demo: ModelStatic<Model>;
   Booking: ModelStatic<Model>;
+  Setting: ModelStatic<Model>;
 };
 
 const g = globalThis as unknown as { __bgeeDb?: Promise<DB> };
@@ -98,6 +100,10 @@ function defineModels(s: Sequelize): Omit<DB, "sequelize"> {
       stripeSessionId: str(255),
       notes: DataTypes.TEXT,
     }),
+    Setting: s.define("Setting", {
+      key: { type: str(80), allowNull: false, unique: true },
+      value: str(255),
+    }),
     Demo: s.define("Demo", {
       slug: { type: str(190), allowNull: false, unique: true },
       title: { type: str(200), allowNull: false },
@@ -145,6 +151,16 @@ async function seed(db: DB) {
         readMinutes: p.readMinutes,
       });
     }
+  }
+  // Extra starter articles, added once per database (a Settings flag stops them returning after you delete them).
+  if (!(await db.Setting.findOne({ where: { key: "seed_posts_v2" } }))) {
+    for (const p of seedPostsV2) {
+      await db.Post.findOrCreate({
+        where: { slug: p.slug },
+        defaults: { ...p, published: true, publishedAt: new Date("2026-11-18"), readMinutes: Math.max(2, Math.round(p.body.split(/\s+/).length / 200)) },
+      });
+    }
+    await db.Setting.create({ key: "seed_posts_v2", value: "1" });
   }
   if ((await db.Demo.count()) === 0) {
     for (const d of seedDemos) await db.Demo.create({ ...d, published: true });

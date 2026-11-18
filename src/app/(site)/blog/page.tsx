@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+import { JsonLd, webPage } from "@/lib/jsonld";
+import { pageMeta } from "@/lib/seo";
 import Link from "next/link";
 import { ArrowUpRight, Clock } from "lucide-react";
 import { Suspense } from "react";
@@ -7,10 +8,11 @@ import { Stagger, StaggerItem } from "@/components/motion/reveal";
 import { SpotlightCard } from "@/components/motion/spotlight-card";
 import { getPosts } from "@/lib/db/queries";
 
-export const metadata: Metadata = {
-  title: "Insights",
-  description: "Practical articles on engineering, performance, AI and digital strategy.",
-};
+export const metadata = pageMeta({
+  title: "Insights: Websites, CRM, ERP and AI Guides",
+  description: "Practical, plain-English guides on website costs, CRM vs ERP, bug fixing, AI chatbots and growing your business online.",
+  path: "/blog",
+});
 
 async function PostGrid() {
   const posts = await getPosts();
@@ -41,7 +43,8 @@ async function PostGrid() {
 export default function BlogPage() {
   return (
     <>
-      <PageHero eyebrow="Insights" title="Practical thinking on technology" body="Short, useful guides from our consulting work." />
+      <JsonLd data={webPage("CollectionPage", "BGeetech Insights", "Practical guides on websites, CRM, ERP and AI.", "/blog")} />
+      <PageHero crumbs={[{ name: "Insights", path: "/blog" }]} eyebrow="Insights" title="Practical thinking on technology" body="Short, useful guides from our consulting work." />
       <section className="mx-auto max-w-7xl px-5 pb-24 pt-16 sm:px-8">
         <Suspense fallback={<div className="h-64 animate-pulse rounded-3xl bg-muted" />}>
           <PostGrid />

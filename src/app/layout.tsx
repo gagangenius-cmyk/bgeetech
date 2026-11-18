@@ -13,6 +13,14 @@ export const metadata: Metadata = {
   openGraph: { title: site.name, description: site.description, type: "website", siteName: site.name },
   twitter: { card: "summary_large_image" },
   applicationName: site.name,
+  alternates: { types: { "application/rss+xml": [{ url: "/feed.xml", title: `${site.name} Insights` }] } },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },
+  // Search Console / Bing Webmaster verification: set the env vars and the meta tags appear automatically.
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION,
+    other: process.env.BING_SITE_VERIFICATION ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION } : undefined,
+  },
+  category: "technology",
   appleWebApp: { capable: true, title: site.name, statusBarStyle: "black-translucent" },
   formatDetection: { telephone: false },
 };

@@ -9,11 +9,14 @@ import { Prose } from "@/components/prose";
 import { FinalCta } from "@/components/sections/more";
 import { ButtonLink } from "@/components/ui/button";
 import { getDemo } from "@/lib/db/queries";
+import { JsonLd, softwareApplication } from "@/lib/jsonld";
+import { pageMeta } from "@/lib/seo";
 
 export async function generateMetadata({ params }: PageProps<"/demos/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const d = await getDemo(slug);
-  return d ? { title: `${d.title} demo`, description: d.summary } : {};
+  if (!d) return {};
+  return pageMeta({ title: `${d.title}: Live Demo`, description: `${d.summary} Try the live demo, or get a version tailored to your business.`.slice(0, 158), path: `/demos/${d.slug}`, image: d.imageUrl || undefined, ownOgImage: true });
 }
 
 async function Detail({ params }: { params: PageProps<"/demos/[slug]">["params"] }) {
@@ -23,7 +26,8 @@ async function Detail({ params }: { params: PageProps<"/demos/[slug]">["params"]
 
   return (
     <>
-      <PageHero eyebrow={d.category} title={d.title} body={d.summary}>
+      <JsonLd data={softwareApplication(d)} />
+      <PageHero crumbs={[{ name: "Demos", path: "/demos" }, { name: d.title, path: `/demos/${d.slug}` }]} eyebrow={d.category} title={d.title} body={d.summary}>
         <div className="flex flex-wrap items-center gap-3">
           {d.url ? (
             <ButtonLink href={d.url} target="_blank" rel="noopener noreferrer">

@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+import { JsonLd, teamSchema } from "@/lib/jsonld";
+import { pageMeta } from "@/lib/seo";
 import { PageHero } from "@/components/page-hero";
 import { Stagger, StaggerItem } from "@/components/motion/reveal";
 import { SpotlightCard } from "@/components/motion/spotlight-card";
@@ -6,15 +7,17 @@ import { FinalCta } from "@/components/sections/more";
 import { TeamAvatar } from "@/components/team-avatar";
 import { team } from "@/lib/team";
 
-export const metadata: Metadata = {
-  title: "Our team",
-  description: "Meet the BGeetech team: founder, CEO, project leadership, content, SEO and digital branding.",
-};
+export const metadata = pageMeta({
+  title: "Our Team: Founder, CEO and Specialists",
+  description: "Meet the BGeetech team: our founder, CEO, project leader, content writer, SEO specialist and digital branding manager.",
+  path: "/team",
+});
 
 export default function TeamPage() {
   return (
     <>
-      <PageHero
+      <JsonLd data={teamSchema()} />
+      <PageHero crumbs={[{"name":"Team","path":"/team"}]}
         eyebrow="Our team"
         title="The people behind BGeetech"
         body="Led by our founder and CEO, a small, focused team covering delivery, content, search and brand, so every project gets joined-up expertise."

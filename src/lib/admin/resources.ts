@@ -121,3 +121,11 @@ export async function modelFor(resource: string): Promise<{ def: Def; model: Mod
 
 export const searchWhere = (def: Def, q: string) =>
   q ? { [Op.or]: def.search.map((f) => ({ [f]: { [Op.like]: `%${q.replace(/[%_\\]/g, "\\$&")}%` } })) } : {};
+
+/** Public URL paths to announce via IndexNow after a post or demo is saved (published items only). */
+export function indexNowPaths(resource: string, row: Record<string, unknown>): string[] {
+  if (!row.published || !row.slug) return [];
+  if (resource === "posts") return [`/blog/${row.slug}`, "/blog", "/sitemap.xml"];
+  if (resource === "demos") return [`/demos/${row.slug}`, "/demos"];
+  return [];
+}

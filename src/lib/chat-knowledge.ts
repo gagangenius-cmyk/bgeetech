@@ -13,7 +13,7 @@ export function businessFacts() {
     "Services:",
     ...services.map((s) => `- ${s.title} (/services/${s.slug}): ${s.summary} ${priceText(s)}.`),
     "Packages:",
-    ...plans.map((p) => `- ${p.name}: ${p.price === null ? "custom quote" : `${p.price}${p.period === "month" ? " per month" : " one-off"}`}. ${p.blurb} Includes: ${p.features.join("; ")}.`),
+    ...plans.map((p) => `- ${p.name}: ${p.price === null ? "custom quote" : `$${p.price}${p.period === "month" ? " per month" : " one-off"}`}. ${p.blurb} Includes: ${p.features.join("; ")}.`),
     "A custom package calculator is available on /pricing, and a website builder with plans from $10/month at /builder.",
     "FAQ:",
     ...faqs.map((f) => `- ${f.q} ${f.a}`),

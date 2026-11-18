@@ -12,6 +12,7 @@ export type PostView = {
   category: string;
   readMinutes: number;
   date: string; // ISO
+  updated: string; // ISO (last edit)
   body: string; // markdown-lite
   coverUrl: string;
 };
@@ -39,6 +40,7 @@ const toPost = (r: Raw): PostView => ({
   category: s(r.category) || "General",
   readMinutes: Number(r.readMinutes) || 3,
   date: r.publishedAt ? new Date(s(r.publishedAt)).toISOString() : new Date(s(r.createdAt)).toISOString(),
+  updated: r.updatedAt ? new Date(s(r.updatedAt)).toISOString() : r.publishedAt ? new Date(s(r.publishedAt)).toISOString() : new Date(s(r.createdAt)).toISOString(),
   body: s(r.body),
   coverUrl: s(r.coverUrl),
 });
@@ -64,6 +66,7 @@ const fallbackPosts = (): PostView[] =>
     category: p.category,
     readMinutes: p.readMinutes,
     date: new Date(p.date).toISOString(),
+    updated: new Date(p.date).toISOString(),
     body: p.body.map((b) => (b.h ? `## ${b.h}\n\n${b.p}` : b.p)).join("\n\n"),
     coverUrl: "",
   }));

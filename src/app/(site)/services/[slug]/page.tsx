@@ -9,7 +9,9 @@ import { FinalCta } from "@/components/sections/more";
 import { ServiceIcon } from "@/components/service-icon";
 import { ButtonLink } from "@/components/ui/button";
 import { serviceDetails } from "@/lib/content";
-import { services } from "@/lib/site";
+import { priceText, services } from "@/lib/site";
+import { JsonLd, faqPage, serviceSchema } from "@/lib/jsonld";
+import { pageMeta } from "@/lib/seo";
 
 export function generateStaticParams() {
   return services.map((s) => ({ slug: s.slug }));
@@ -18,7 +20,8 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps<"/services/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const s = services.find((x) => x.slug === slug);
-  return s ? { title: s.title, description: s.summary } : {};
+  if (!s) return {};
+  return pageMeta({ title: `${s.title}: ${priceText(s)}`, description: `${s.summary} ${s.outcomes.join(", ")}.`.slice(0, 158), path: `/services/${s.slug}`, ownOgImage: true });
 }
 
 export default async function ServicePage({ params }: PageProps<"/services/[slug]">) {
@@ -30,7 +33,8 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
 
   return (
     <>
-      <PageHero eyebrow="Service" title={s.title} body={s.summary}>
+      <JsonLd data={[serviceSchema(s, d?.faqs), ...(d?.faqs.length ? [faqPage(d.faqs)] : [])]} />
+      <PageHero crumbs={[{ name: "Services", path: "/services" }, { name: s.title, path: `/services/${s.slug}` }]} eyebrow="Service" title={s.title} body={s.summary}>
         <div className="flex flex-wrap items-center gap-4">
           <ButtonLink href={`/book?service=${s.slug}`}>
             {s.from === 0 ? "Book your free consultation" : "Get started with a free call"} <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />

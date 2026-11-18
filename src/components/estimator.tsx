@@ -1,9 +1,10 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { Calculator, Check } from "lucide-react";
+import { Brain, Calculator, Check, Code2, Compass, Globe, Palette, ShieldCheck, ShoppingCart, Smartphone, TrendingUp, Workflow, type LucideIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useCurrency } from "@/components/currency";
+import { ImageTile } from "@/components/image-tile";
 import { LeadForm } from "@/components/lead-form";
 import { estimator } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -42,6 +43,8 @@ function Choice<T extends string>({
   );
 }
 
+const typeIcons: Record<string, LucideIcon> = { web: Globe, app: Code2, shop: ShoppingCart, mobile: Smartphone, ai: Brain, advisory: Compass };
+const extraIcons: Record<string, LucideIcon> = { design: Palette, seo: TrendingUp, security: ShieldCheck, integrations: Workflow };
 
 export function Estimator() {
   const { money } = useCurrency();
@@ -66,12 +69,24 @@ export function Estimator() {
   return (
     <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 lg:grid-cols-[1.4fr_1fr]">
       <div className="space-y-10">
-        <Choice
-          legend="What are you building?"
-          value={type}
-          onChange={setType}
-          options={Object.entries(estimator.types).map(([id, t]) => ({ id: id as keyof typeof estimator.types, label: t.label, note: t.note }))}
-        />
+        <fieldset>
+          <legend className="mb-3 font-display text-lg font-bold">What are you building?</legend>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {Object.entries(estimator.types).map(([id, t], i) => (
+              <ImageTile
+                key={id}
+                type="radio"
+                name="project-type"
+                variant={i}
+                checked={type === id}
+                onChange={() => setType(id as keyof typeof estimator.types)}
+                title={t.label}
+                note={t.note}
+                icon={typeIcons[id] ?? Globe}
+              />
+            ))}
+          </div>
+        </fieldset>
         <Choice
           legend="How big is the scope?"
           value={size}
@@ -87,25 +102,19 @@ export function Estimator() {
         <fieldset>
           <legend className="mb-3 font-display text-lg font-bold">Add-ons</legend>
           <div className="grid gap-3 sm:grid-cols-2">
-            {estimator.extras.map((e) => {
+            {estimator.extras.map((e, i) => {
               const on = extras.includes(e.id);
               return (
-                <label
+                <ImageTile
                   key={e.id}
-                  className={cn(
-                    "flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border p-4 transition-all hover:-translate-y-0.5",
-                    on ? "border-brand bg-brand/10 ring-2 ring-brand/30" : "border-border hover:border-brand/50",
-                  )}
-                >
-                  <input
-                    type="checkbox"
-                    checked={on}
-                    onChange={() => setExtras(on ? extras.filter((x) => x !== e.id) : [...extras, e.id])}
-                    className="size-5 accent-[var(--brand)]"
-                  />
-                  <span className="flex-1 font-medium">{e.label}</span>
-                  <span className="text-sm text-muted-foreground">+{fmt(e.price)}</span>
-                </label>
+                  variant={i + 1}
+                  checked={on}
+                  onChange={() => setExtras(on ? extras.filter((x) => x !== e.id) : [...extras, e.id])}
+                  title={e.label}
+                  price={`+${fmt(e.price)}`}
+                  icon={extraIcons[e.id] ?? Palette}
+                  className="min-h-32"
+                />
               );
             })}
           </div>

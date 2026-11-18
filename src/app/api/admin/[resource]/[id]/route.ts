@@ -1,5 +1,7 @@
 import { dbError, guard, json } from "@/lib/admin/api";
-import { modelFor } from "@/lib/admin/resources";
+import { after } from "next/server";
+import { indexNowPaths, modelFor } from "@/lib/admin/resources";
+import { submitIndexNow } from "@/lib/indexnow";
 
 type Ctx = { params: Promise<{ resource: string; id: string }> };
 
@@ -9,7 +11,7 @@ async function load({ params }: Ctx) {
   const numeric = Number(id);
   if (!m || !Number.isInteger(numeric)) return null;
   const row = await m.model.findByPk(numeric);
-  return row ? { m, row } : null;
+  return row ? { m, row, resource } : null;
 }
 
 export async function GET(req: Request, ctx: Ctx) {
@@ -37,7 +39,9 @@ export async function PUT(req: Request, ctx: Ctx) {
 
     const data = m.def.prepare ? m.def.prepare(parsed.data, false) : parsed.data;
     await row.update(data);
-    return json(row.get({ plain: true }));
+    const plain = row.get({ plain: true });
+    after(() => submitIndexNow(indexNowPaths(found.resource, plain)));
+    return json(plain);
   } catch (e) {
     return dbError(e);
   }

@@ -7,19 +7,8 @@ import { ServiceWorkerRegister } from "@/components/pwa/sw-register";
 import { CommandPalette } from "@/components/widgets/command-palette";
 import { LeadPopup } from "@/components/widgets/lead-popup";
 import { FloatingWidgets } from "@/components/widgets/floating-widgets";
-import { site } from "@/lib/site";
-
-const orgJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  name: site.name,
-  url: site.url,
-  description: site.description,
-  email: site.email,
-  telephone: `+${site.whatsappNumber}`,
-  logo: `${site.url}/brand/logo-mark.svg`,
-  areaServed: "Worldwide",
-};
+import { Analytics, ConsentBanner } from "@/components/analytics";
+import { JsonLd, organization, website } from "@/lib/jsonld";
 
 export default function SiteLayout({ children }: LayoutProps<"/">) {
   return (
@@ -49,7 +38,11 @@ export default function SiteLayout({ children }: LayoutProps<"/">) {
         <LeadPopup />
       </Suspense>
       <CommandPalette />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd).replace(/</g, "\\u003c") }} />
+      <JsonLd data={[organization(), website()]} />
+      <Suspense fallback={null}>
+        <Analytics />
+      </Suspense>
+      <ConsentBanner />
     </QueryProvider>
   );
 }

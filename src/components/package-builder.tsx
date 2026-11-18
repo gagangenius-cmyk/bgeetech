@@ -1,26 +1,14 @@
 "use client";
 
-import { Check, Gift, Package } from "lucide-react";
+import { Bug, Check, Cloud, Code2, Database, Gift, Globe, Headset, Package, Palette, Receipt, ShieldCheck, ShoppingCart, Smartphone, TrendingUp, Users, Workflow, Brain, type LucideIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { CurrencySwitcher, useCurrency } from "@/components/currency";
+import { ImageTile } from "@/components/image-tile";
 import { LeadForm } from "@/components/lead-form";
 import { Button } from "@/components/ui/button";
 import { cycles } from "@/lib/builder/config";
 import { packageCatalog as cat } from "@/lib/site";
 import { cn } from "@/lib/utils";
-
-function Choice({ checked, onChange, label, note, price, type = "checkbox", name }: { checked: boolean; onChange: () => void; label: string; note: string; price?: string; type?: "checkbox" | "radio"; name?: string }) {
-  return (
-    <label className={cn("relative flex min-h-16 cursor-pointer items-center gap-3 rounded-2xl border p-4 transition hover:-translate-y-0.5", checked ? "border-brand bg-brand/10 ring-2 ring-brand/30" : "border-border bg-card hover:border-brand/50")}>
-      <input type={type} name={name} checked={checked} onChange={onChange} className="size-5 shrink-0 accent-[var(--brand)]" />
-      <span className="flex-1">
-        <span className="block text-sm font-semibold">{label}</span>
-        <span className="block text-xs text-muted-foreground">{note}</span>
-      </span>
-      {price && <span className="shrink-0 text-sm font-bold tabular-nums text-brand">{price}</span>}
-    </label>
-  );
-}
 
 function Segmented<T extends string>({ legend, value, onChange, options }: { legend: string; value: T; onChange: (v: T) => void; options: { id: T; label: string; note: string }[] }) {
   return (
@@ -38,6 +26,9 @@ function Segmented<T extends string>({ legend, value, onChange, options }: { leg
     </fieldset>
   );
 }
+
+const projectIcons: Record<string, LucideIcon> = { website: Globe, ecommerce: ShoppingCart, webapp: Code2, mobile: Smartphone, crm: Users, erp: Database, pos: Receipt, ai: Brain, automation: Workflow, design: Palette, security: ShieldCheck };
+const monthlyIcons: Record<string, LucideIcon> = { care: Bug, hosting: Cloud, seo: TrendingUp, priority: Headset };
 
 const toggle = (set: string[], id: string) => (set.includes(id) ? set.filter((x) => x !== id) : [...set, id]);
 
@@ -77,8 +68,8 @@ export function PackageBuilder() {
         <fieldset>
           <legend className="mb-3 font-display text-lg font-bold">1. What do you need built?</legend>
           <div className="grid gap-3 sm:grid-cols-2">
-            {cat.projects.map((p) => (
-              <Choice key={p.id} checked={projects.includes(p.id)} onChange={() => setProjects((s) => toggle(s, p.id))} label={p.label} note={p.note} price={money(p.price)} />
+            {cat.projects.map((p, i) => (
+              <ImageTile key={p.id} variant={i} checked={projects.includes(p.id)} onChange={() => setProjects((s) => toggle(s, p.id))} title={p.label} note={p.note} price={money(p.price)} icon={projectIcons[p.id] ?? Package} />
             ))}
           </div>
         </fieldset>
@@ -91,8 +82,8 @@ export function PackageBuilder() {
         <fieldset>
           <legend className="mb-3 font-display text-lg font-bold">4. Ongoing monthly services (optional)</legend>
           <div className="grid gap-3 sm:grid-cols-2">
-            {cat.monthly.map((m) => (
-              <Choice key={m.id} checked={monthly.includes(m.id)} onChange={() => setMonthly((s) => toggle(s, m.id))} label={m.label} note={m.note} price={`${money(m.price)}/mo`} />
+            {cat.monthly.map((m, i) => (
+              <ImageTile key={m.id} variant={i + 2} checked={monthly.includes(m.id)} onChange={() => setMonthly((s) => toggle(s, m.id))} title={m.label} note={m.note} price={`${money(m.price)}/mo`} icon={monthlyIcons[m.id] ?? Package} />
             ))}
           </div>
           {monthly.length > 0 && (

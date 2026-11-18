@@ -10,10 +10,14 @@ export const site = {
   email: "hello@bgeetech.com",
   whatsappNumber: "919873334283", // international format, digits only
   whatsappDisplay: "+91 98733 34283",
+  /** Official profile URLs (LinkedIn, Facebook, Instagram, X, YouTube...). They feed Organization "sameAs", which helps search and AI engines recognise the brand. */
+  socials: [] as string[],
+  /** Allow AI model-training crawlers (GPTBot, ClaudeBot...) in robots.txt. Search and answer bots are always allowed. */
+  allowAiTraining: true,
 };
 
 /** Plain-text price for metadata, search and chat (USD). */
-export const priceText = (s: { from: number; unit: string }) => (s.from === 0 ? s.unit : `from ${s.from} ${s.unit}`);
+export const priceText = (s: { from: number; unit: string }) => (s.from === 0 ? s.unit : `from $${s.from} ${s.unit}`);
 
 /** Free consultation policy, shown across the site and enforced in the booking action. */
 export const consultation = { freeMinutes: 30, extendedMinutes: 60, extendedUsd: 60 } as const;

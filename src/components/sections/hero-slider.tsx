@@ -136,12 +136,12 @@ export function HeroSlider() {
                 <span className="size-2 animate-pulse-ring rounded-full bg-accent" aria-hidden />
                 {s.eyebrow}
               </span>
-              <h1 className="mt-6 font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl">
+              <div role="heading" aria-level={2} className="mt-6 font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl">
                 <SplitText text={s.title} />{" "}
                 <span className="text-gradient">
                   <SplitText text={s.accent} delay={0.3} />
                 </span>
-              </h1>
+              </div>
               <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/70">{s.body}</p>
               <div className="mt-9 flex flex-wrap items-center gap-3">
                 {s.primary.href ? (

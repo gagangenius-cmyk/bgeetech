@@ -1,5 +1,7 @@
 import { dbError, guard, json } from "@/lib/admin/api";
-import { modelFor, searchWhere } from "@/lib/admin/resources";
+import { after } from "next/server";
+import { indexNowPaths, modelFor, searchWhere } from "@/lib/admin/resources";
+import { submitIndexNow } from "@/lib/indexnow";
 
 type Ctx = { params: Promise<{ resource: string }> };
 
@@ -43,7 +45,9 @@ export async function POST(req: Request, { params }: Ctx) {
 
     const data = m.def.prepare ? m.def.prepare(parsed.data, true) : parsed.data;
     const row = await m.model.create(data);
-    return json(row.get({ plain: true }), 201);
+    const plain = row.get({ plain: true });
+    after(() => submitIndexNow(indexNowPaths(resource, plain)));
+    return json(plain, 201);
   } catch (e) {
     return dbError(e);
   }

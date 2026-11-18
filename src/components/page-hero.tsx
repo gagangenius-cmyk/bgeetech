@@ -1,8 +1,10 @@
 import type { ReactNode } from "react";
 import { SplitText } from "@/components/motion/split-text";
+import Link from "next/link";
 import { Reveal } from "@/components/motion/reveal";
+import { JsonLd, breadcrumbs } from "@/lib/jsonld";
 
-export function PageHero({ eyebrow, title, body, children }: { eyebrow: string; title: string; body?: string; children?: ReactNode }) {
+export function PageHero({ eyebrow, title, body, children, crumbs }: { eyebrow: string; title: string; body?: string; children?: ReactNode; crumbs?: { name: string; path: string }[] }) {
   return (
     <section className="relative isolate overflow-hidden bg-ink pb-20 pt-32 text-white sm:pt-40">
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
@@ -11,6 +13,24 @@ export function PageHero({ eyebrow, title, body, children }: { eyebrow: string; 
         <div className="grid-lines absolute inset-0" />
       </div>
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        {crumbs && crumbs.length > 0 && (
+          <>
+            <JsonLd data={breadcrumbs([{ name: "Home", path: "/" }, ...crumbs])} />
+            <nav aria-label="Breadcrumb" className="mb-5 text-sm text-white/60">
+              <ol className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                <li>
+                  <Link href="/" className="inline-block py-1 hover:text-white">Home</Link>
+                </li>
+                {crumbs.map((c, i) => (
+                  <li key={c.path} className="flex items-center gap-2">
+                    <span aria-hidden>/</span>
+                    {i === crumbs.length - 1 ? <span aria-current="page" className="text-white/90">{c.name}</span> : <Link href={c.path} className="inline-block py-1 hover:text-white">{c.name}</Link>}
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          </>
+        )}
         <Reveal y={10}>
           <p className="text-sm font-semibold uppercase tracking-widest text-amber-300">{eyebrow}</p>
         </Reveal>

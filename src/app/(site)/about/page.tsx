@@ -1,14 +1,17 @@
-import type { Metadata } from "next";
+import { JsonLd, webPage } from "@/lib/jsonld";
+import { pageMeta } from "@/lib/seo";
+import { site } from "@/lib/site";
 import { Eye, Handshake, Rocket } from "lucide-react";
 import { PageHero } from "@/components/page-hero";
 import { Stagger, StaggerItem } from "@/components/motion/reveal";
 import { SpotlightCard } from "@/components/motion/spotlight-card";
 import { FinalCta, Stats } from "@/components/sections/more";
 
-export const metadata: Metadata = {
-  title: "About",
-  description: "BGeetech is a web and software services company: websites, apps, CRM, ERP, AI and ongoing support.",
-};
+export const metadata = pageMeta({
+  title: "About Us: Web & Software Services Company",
+  description: "BGeetech designs, builds and supports websites, apps, CRM, ERP and AI solutions for businesses worldwide. Learn how we work.",
+  path: "/about",
+});
 
 const values = [
   { icon: Eye, title: "Clarity first", body: "Plain language, clear trade-offs and written outcomes you can share with your team." },
@@ -19,7 +22,8 @@ const values = [
 export default function AboutPage() {
   return (
     <>
-      <PageHero
+      <JsonLd data={webPage("AboutPage", "About BGeetech", site.description, "/about")} />
+      <PageHero crumbs={[{"name":"About","path":"/about"}]}
         eyebrow="About"
         title="A web and software company for growing businesses"
         body="BGeetech designs, builds and supports websites, apps, CRM, ERP and AI solutions, and offers your first 30-minute consultation free."

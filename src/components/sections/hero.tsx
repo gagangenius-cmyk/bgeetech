@@ -11,6 +11,7 @@ export function Hero() {
         <div className="grid-lines absolute inset-0" />
       </div>
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        <h1 className="sr-only">BGeetech: website, app, CRM, ERP and AI development, with your first 30-minute consultation free</h1>
         <HeroSlider />
       </div>
     </section>

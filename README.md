@@ -42,6 +42,26 @@ See [.env.example](.env.example). The essentials:
 
 Stripe: add a webhook endpoint at `/api/stripe/webhook` with events `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `checkout.session.async_payment_failed`, `checkout.session.expired` and `invoice.paid`. Amounts are calculated on the server in the chosen currency. AED and INR must be enabled on your Stripe account (INR subscriptions have extra Indian e-mandate rules). The INR rate in `src/lib/currency.ts` is a placeholder, so keep it current.
 
+## SEO, AEO and GEO
+
+What is built in:
+
+- **Technical SEO**: self-referencing canonicals, unique titles and descriptions on every page, `robots.txt` (private paths blocked), `sitemap.xml` (pages, services, demos, articles with real last-modified dates), noindex on utility pages, security headers, security.txt, RSS feed at `/feed.xml`, generated Open Graph and Twitter cards for every page, service, article and demo.
+- **Structured data (JSON-LD)**: Organization, WebSite (with site search), Service, BlogPosting, SoftwareApplication, Person, ItemList, FAQPage and BreadcrumbList, plus visible breadcrumbs. Helpers live in `src/lib/jsonld.tsx`. Note: Google has retired FAQ rich results, but the visible answers still feed search and AI answers.
+- **Answer engines (AEO/GEO)**: answer-first "at a glance" summary on the home page, a full `/faq` page, per-service FAQs, bylines and dates on articles, consistent brand facts everywhere, and four starter articles targeting real buyer questions.
+- **AI crawlers**: `robots.txt` always allows search and answer bots (OAI-SearchBot, ChatGPT-User, Claude-SearchBot, PerplexityBot...). Model-training bots (GPTBot, ClaudeBot, Google-Extended...) follow `allowAiTraining` in `src/lib/site.ts`.
+- **`/llms.txt` and `/llms-full.txt`**: curated index and full Markdown content, generated from the same data as the site. Honest note: studies so far show no measurable effect of llms.txt on AI citations or Google rankings. It is cheap and harmless, but the real levers are the content and structured data above.
+- **IndexNow**: set `INDEXNOW_KEY` and Bing and Yandex are notified whenever you publish a post or demo in the admin. Google ignores IndexNow and uses the sitemap.
+
+Your launch checklist (needs your accounts, so it cannot be automated):
+
+1. Add the site to **Google Search Console** and **Bing Webmaster Tools** (set `GOOGLE_SITE_VERIFICATION` / `BING_SITE_VERIFICATION`), then submit `https://bgeetech.com/sitemap.xml`.
+2. Add your real social profile URLs to `socials` in `src/lib/site.ts` (LinkedIn, Facebook, Instagram, X, YouTube). They become Organization `sameAs`, which helps search and AI engines recognise the brand.
+3. Create a **Google Business Profile** if you serve a local area, and keep the name, email and phone identical everywhere.
+4. Set `NEXT_PUBLIC_GA_ID` to enable Google Analytics 4 (loads only after the visitor accepts the cookie notice).
+5. Publish new articles regularly from `/admin/posts`, and replace placeholder content (prices, demo links, team bios) with real details. Real reviews, case studies and client names are the strongest trust signals you can add.
+6. Test pages with the Rich Results Test and PageSpeed Insights after deploying.
+
 ## Scripts
 
 - `npm run dev`, `npm run build`, `npm run lint`
