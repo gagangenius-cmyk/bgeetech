@@ -1,4 +1,4 @@
-import { Price } from "@/components/currency";
+import { ServiceFrom } from "@/components/currency";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
@@ -43,9 +43,8 @@ export function ServicesGrid({ limit }: { limit?: number }) {
               </div>
               <h3 className="mt-6 font-display text-xl font-bold">{s.title}</h3>
               <p className="mt-2 leading-relaxed text-muted-foreground">{s.summary}</p>
-              <p className="mt-5 text-sm font-semibold">
-                From <span className="text-brand"><Price usd={s.from} /></span>
-                <span className="font-normal text-muted-foreground"> · {s.duration}</span>
+              <p className="mt-5 text-sm font-semibold text-brand">
+                <ServiceFrom s={s} />
               </p>
             </SpotlightCard>
           </Link>

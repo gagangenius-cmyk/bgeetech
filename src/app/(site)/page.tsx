@@ -13,13 +13,13 @@ export default function HomePage() {
       <section className="mx-auto max-w-7xl px-5 pt-24 sm:px-8">
         <SectionHeading
           eyebrow="Services"
-          title="Specialist help for every stage of delivery"
-          body="Focused, outcome-led sessions with senior practitioners. Pick what you need, see the price, book instantly."
+          title="Products and services for every stage of your business"
+          body="Websites, apps, CRM, ERP, AI and ongoing support from one team, with clear starting prices."
         />
         <ServicesGrid limit={6} />
         <div className="mt-10 text-center">
           <ButtonLink href="/services" variant="secondary">
-            View all 12 services <ArrowRight className="size-4" />
+            View all services <ArrowRight className="size-4" />
           </ButtonLink>
         </div>
       </section>

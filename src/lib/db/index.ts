@@ -85,6 +85,7 @@ function defineModels(s: Sequelize): Omit<DB, "sequelize"> {
       status: { type: str(20), defaultValue: "pending" }, // pending | paid | cancelled
       serviceSlug: str(120),
       service: str(200),
+      minutes: { type: DataTypes.INTEGER, defaultValue: 30 },
       slotDate: { type: DataTypes.DATEONLY, allowNull: false },
       slotTime: { type: str(5), allowNull: false },
       timezone: str(60),
@@ -112,6 +113,13 @@ function defineModels(s: Sequelize): Omit<DB, "sequelize"> {
       sortOrder: { type: DataTypes.INTEGER, defaultValue: 0 },
     }),
   };
+}
+
+/** Additive upgrades for tables created by an earlier version (sync() never alters existing tables). */
+async function addMissingColumns(db: DB) {
+  const qi = db.sequelize.getQueryInterface();
+  const bookings = await qi.describeTable("Bookings");
+  if (!bookings.minutes) await qi.addColumn("Bookings", "minutes", { type: DataTypes.INTEGER, defaultValue: 30 });
 }
 
 async function seed(db: DB) {
@@ -150,6 +158,7 @@ export function getDb(): Promise<DB> {
     const db: DB = { sequelize, ...defineModels(sequelize) };
     await sequelize.authenticate();
     await sequelize.sync(); // creates missing tables; use migrations once the schema stabilises
+    await addMissingColumns(db);
     await seed(db);
     return db;
   })().catch((e) => {

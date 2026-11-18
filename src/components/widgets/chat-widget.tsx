@@ -48,6 +48,13 @@ export function ChatWidget() {
 
   useEffect(() => () => abortRef.current?.abort(), []);
 
+  // Lets other parts of the site (e.g. the hero) open the assistant.
+  useEffect(() => {
+    const onOpen = () => setOpen(true);
+    window.addEventListener("bgee:open-chat", onOpen);
+    return () => window.removeEventListener("bgee:open-chat", onOpen);
+  }, []);
+
   async function send(raw: string) {
     const content = raw.trim();
     if (!content || busy) return;

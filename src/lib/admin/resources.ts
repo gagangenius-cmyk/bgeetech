@@ -96,7 +96,7 @@ export const defs: Record<string, Def> = {
   },
   bookings: {
     model: "Booking",
-    schema: z.object({ status: z.enum(["pending", "paid", "cancelled"]).optional(), notes: z.string().max(5000).optional() }),
+    schema: z.object({ status: z.enum(["pending", "paid", "confirmed", "cancelled"]).optional(), notes: z.string().max(5000).optional() }),
     search: ["ref", "name", "email", "service"],
     order: [["id", "DESC"]],
     canCreate: false,
@@ -104,7 +104,7 @@ export const defs: Record<string, Def> = {
   },
   orders: {
     model: "Order",
-    schema: z.object({ status: z.enum(["pending", "paid", "cancelled"]).optional(), notes: z.string().max(5000).optional() }),
+    schema: z.object({ status: z.enum(["pending", "paid", "confirmed", "cancelled"]).optional(), notes: z.string().max(5000).optional() }),
     search: ["ref", "businessName", "domain", "email"],
     order: [["id", "DESC"]],
     canCreate: false,

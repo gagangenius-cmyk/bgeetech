@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { createBooking } from "@/actions/booking";
 import { CurrencySwitcher, Price, useCurrency } from "@/components/currency";
 import { BOOKING_TIMES } from "@/lib/booking";
+import { consultation } from "@/lib/site";
 
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowLeft, ArrowRight, CalendarDays, Check, CheckCircle2, Loader2, Lock } from "lucide-react";
@@ -46,7 +47,8 @@ export function BookingFlow() {
   const [details, setDetails] = useState({ name: "", email: "", goal: "" });
   const { code } = useCurrency();
   const [error, setError] = useState<string | null>(null);
-  const [done, setDone] = useState<string | null>(null);
+  const [done, setDone] = useState<{ ref: string; free: boolean } | null>(null);
+  const [minutes, setMinutes] = useState<30 | 60>(30);
 
   const pay = useMutation({
     mutationFn: () =>
@@ -59,11 +61,12 @@ export function BookingFlow() {
         name: details.name,
         email: details.email,
         goal: details.goal,
+        minutes: String(minutes) as "30" | "60",
       }),
     onSuccess: (r) => {
       if (!r.ok) return setError(r.error);
       if (r.url) window.location.href = r.url;
-      else setDone(r.ref);
+      else setDone({ ref: r.ref, free: Boolean(r.free) });
     },
     onError: () => setError("Something went wrong. Please try again or message us on WhatsApp."),
   });
@@ -84,10 +87,14 @@ export function BookingFlow() {
     return (
       <div className="mx-auto max-w-xl rounded-3xl border border-border bg-card p-10 text-center shadow-xl shadow-brand/5">
         <CheckCircle2 className="mx-auto size-14 text-accent" aria-hidden />
-        <h2 className="mt-5 font-display text-2xl font-extrabold">Booking received</h2>
+        <h2 className="mt-5 font-display text-2xl font-extrabold">{done.free ? "Your free consultation is booked" : "Booking received"}</h2>
         <p className="mt-2 text-muted-foreground">
-          Your reference is <strong className="text-foreground">{done}</strong>. Online payment is not switched on yet, so we will email a secure
-          payment link to <strong className="text-foreground">{details.email}</strong> to confirm your slot.
+          Your reference is <strong className="text-foreground">{done.ref}</strong>.{" "}
+          {done.free ? (
+            <>We will email a confirmation with your video link to <strong className="text-foreground">{details.email}</strong> shortly.</>
+          ) : (
+            <>Online payment is not switched on yet, so we will email a secure payment link to <strong className="text-foreground">{details.email}</strong> to confirm your slot.</>
+          )}
         </p>
       </div>
     );
@@ -137,7 +144,7 @@ export function BookingFlow() {
           >
             {step === 0 && (
               <div>
-                <h2 className="font-display text-2xl font-bold">Choose a service</h2>
+                <h2 className="font-display text-2xl font-bold">What would you like to discuss?</h2>
                 <div className="mt-6 grid gap-3 sm:grid-cols-2">
                   {services.map((s) => (
                     <button
@@ -155,7 +162,7 @@ export function BookingFlow() {
                       </span>
                       <span>
                         <span className="block font-semibold">{s.title}</span>
-                        <span className="text-sm text-muted-foreground">{s.duration} · from <Price usd={s.from} /></span>
+                        <span className="line-clamp-1 text-sm text-muted-foreground">{s.summary}</span>
                       </span>
                     </button>
                   ))}
@@ -241,11 +248,29 @@ export function BookingFlow() {
             {step === 3 && service && (
               <div>
                 <h2 className="font-display text-2xl font-bold">Review your booking</h2>
+                <div role="radiogroup" aria-label="Call length" className="mt-5 grid gap-3 sm:grid-cols-2">
+                  {([30, 60] as const).map((m) => (
+                    <button
+                      key={m}
+                      type="button"
+                      role="radio"
+                      aria-checked={minutes === m}
+                      onClick={() => setMinutes(m)}
+                      className={cn("rounded-2xl border p-4 text-left transition", minutes === m ? "border-brand bg-brand/10 ring-2 ring-brand/30" : "border-border hover:border-brand/50")}
+                    >
+                      <span className="flex items-center justify-between font-semibold">
+                        {m} minutes
+                        <span className="rounded-full bg-accent/20 px-2.5 py-0.5 text-xs font-bold">{m === 30 ? "FREE" : <Price usd={consultation.extendedUsd} />}</span>
+                      </span>
+                      <span className="mt-1 block text-sm text-muted-foreground">{m === 30 ? "Your first consultation. No obligation." : "A longer deep-dive with a written summary."}</span>
+                    </button>
+                  ))}
+                </div>
                 <dl className="mt-6 divide-y divide-border rounded-2xl border border-border">
                   {[
-                    ["Service", service.title],
+                    ["Topic", service.title],
                     ["When", `${date} at ${time}`],
-                    ["Duration", service.duration],
+                    ["Length", `${minutes} minutes`],
                     ["Name", details.name],
                     ["Email", details.email],
                   ].map(([k, v]) => (
@@ -256,13 +281,15 @@ export function BookingFlow() {
                   ))}
                   <div className="flex justify-between bg-muted px-5 py-4">
                     <dt className="font-semibold">Total</dt>
-                    <dd className="font-display text-xl font-extrabold text-brand"><Price usd={service.from} /></dd>
+                    <dd className="font-display text-xl font-extrabold text-brand">{minutes === 30 ? "Free" : <Price usd={consultation.extendedUsd} />}</dd>
                   </div>
                 </dl>
-                <div className="mt-4 flex items-center justify-between gap-3 text-sm">
-                  <span className="text-muted-foreground">Pay in</span>
-                  <CurrencySwitcher />
-                </div>
+                {minutes === 60 && (
+                  <div className="mt-4 flex items-center justify-between gap-3 text-sm">
+                    <span className="text-muted-foreground">Pay in</span>
+                    <CurrencySwitcher />
+                  </div>
+                )}
                 {error && (
                   <p role="alert" className="mt-4 rounded-xl border border-red-500/40 bg-red-500/10 p-3 text-sm">
                     {error}
@@ -276,9 +303,10 @@ export function BookingFlow() {
                     pay.mutate();
                   }}
                 >
-                  {pay.isPending ? <Loader2 className="size-4 animate-spin" /> : <Lock className="size-4" />} Continue to secure payment
+                  {pay.isPending ? <Loader2 className="size-4 animate-spin" /> : minutes === 30 ? <CalendarDays className="size-4" /> : <Lock className="size-4" />}{" "}
+                  {minutes === 30 ? "Confirm my free consultation" : "Continue to secure payment"}
                 </Button>
-                <p className="mt-3 text-center text-xs text-muted-foreground">Card details are entered on Stripe&rsquo;s secure page, never on this site.</p>
+                {minutes === 60 && <p className="mt-3 text-center text-xs text-muted-foreground">Card details are entered on Stripe&rsquo;s secure page, never on this site.</p>}
               </div>
             )}
           </motion.div>

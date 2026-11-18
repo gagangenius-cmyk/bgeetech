@@ -5,7 +5,7 @@ import { ServicesGrid } from "@/components/sections/services-grid";
 
 export const metadata: Metadata = {
   title: "Services",
-  description: "Technology consulting services: engineering, cloud, AI, design, security and strategy, delivered online.",
+  description: "Websites, web and mobile apps, CRM, ERP, POS, HRMS, e-commerce, AI, automation, bug fixing, SEO, hosting and security.",
 };
 
 export default function ServicesPage() {
@@ -13,8 +13,8 @@ export default function ServicesPage() {
     <>
       <PageHero
         eyebrow="Services"
-        title="Consulting that moves your product forward"
-        body="Choose a focused session with a senior specialist. Every service shows its price and duration up front."
+        title="Everything your business needs online"
+        body="Websites, apps, CRM, ERP, AI and ongoing support, all from one team. Every product shows its starting price, and your first 30-minute consultation is free."
       />
       <section className="mx-auto max-w-7xl px-5 pb-24 sm:px-8">
         <ServicesGrid />

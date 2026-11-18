@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { openLeadPopup } from "@/components/widgets/lead-popup";
 import { whatsappUrl } from "@/lib/chat-knowledge";
-import { nav, services } from "@/lib/site";
+import { nav, priceText, services } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 export const OPEN_SEARCH_EVENT = "bgee:open-search";
@@ -39,14 +39,14 @@ export function CommandPalette() {
 
   const items = useMemo<Item[]>(
     () => [
-      { id: "book", group: "Actions", label: "Book a consultation", hint: "/book", icon: <CalendarCheck className="size-4" />, run: go("/book") },
+      { id: "book", group: "Actions", label: "Book a free consultation", hint: "/book", icon: <CalendarCheck className="size-4" />, run: go("/book") },
       { id: "quote", group: "Actions", label: "Get a free quote", hint: "Opens form", icon: <Mail className="size-4" />, run: () => { close(); openLeadPopup(); } },
       { id: "builder", group: "Actions", label: "Build your website", hint: "/builder", icon: <Sparkles className="size-4" />, run: go("/builder") },
       { id: "estimate", group: "Actions", label: "Estimate your project cost", hint: "/estimate", icon: <Calculator className="size-4" />, run: go("/estimate") },
       { id: "wa", group: "Actions", label: "Chat on WhatsApp", hint: "Opens WhatsApp", icon: <MessageCircle className="size-4" />, run: () => { close(); window.open(whatsappUrl(), "_blank", "noopener,noreferrer"); } },
       { id: "home", group: "Pages", label: "Home", hint: "/", icon: <Home className="size-4" />, run: go("/") },
       ...nav.map((n) => ({ id: n.href, group: "Pages", label: n.label, hint: n.href, icon: <FileText className="size-4" />, run: go(n.href) })),
-      ...services.map((s) => ({ id: s.slug, group: "Services", label: s.title, hint: `from $${s.from}`, icon: <Tag className="size-4" />, run: go(`/services/${s.slug}`) })),
+      ...services.map((s) => ({ id: s.slug, group: "Services", label: s.title, hint: priceText(s), icon: <Tag className="size-4" />, run: go(`/services/${s.slug}`) })),
       ...(idx.data?.demos ?? []).map((d) => ({ id: "d-" + d.href, group: "Demos", label: d.label, hint: d.hint ?? "", icon: <MonitorPlay className="size-4" />, run: go(d.href) })),
       ...(idx.data?.posts ?? []).map((p) => ({ id: "p-" + p.href, group: "Insights", label: p.label, hint: p.hint ?? "", icon: <FileText className="size-4" />, run: go(p.href) })),
     ],

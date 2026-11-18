@@ -8,7 +8,7 @@ import { BOOKING_TIMES } from "@/lib/booking";
 import { currencyCodes, toMinor, type CurrencyCode } from "@/lib/currency";
 import { getDb } from "@/lib/db";
 import { appendJsonl, postWebhook, rateLimit, sendEmail } from "@/lib/leads";
-import { services } from "@/lib/site";
+import { consultation, services } from "@/lib/site";
 import { createCheckoutSession } from "@/lib/stripe";
 
 
@@ -22,10 +22,11 @@ const schema = z.object({
   name: z.string().trim().min(2, "Enter your name").max(120),
   email: z.string().trim().email("Enter a valid email").max(190),
   goal: z.string().trim().max(2000).optional(),
+  minutes: z.enum(["30", "60"]).default("30"),
 });
 
 export type BookingInput = z.input<typeof schema>;
-export type BookingResult = { ok: true; ref: string; url?: string } | { ok: false; error: string };
+export type BookingResult = { ok: true; ref: string; url?: string; free?: boolean } | { ok: false; error: string };
 
 export async function createBooking(input: BookingInput): Promise<BookingResult> {
   const parsed = schema.safeParse(input);
@@ -45,12 +46,14 @@ export async function createBooking(input: BookingInput): Promise<BookingResult>
   if (!rateLimit(`booking:${ip}`, 6, 30 * 60_000)) return { ok: false, error: "Too many attempts. Please try again later." };
 
   const service = services.find((s) => s.slug === d.serviceSlug)!;
-  const amountMinor = toMinor(service.from, d.currency);
+  const free = d.minutes === "30"; // the first 30 minutes are free; the 60-minute deep-dive is paid
+  const amountMinor = free ? 0 : toMinor(consultation.extendedUsd, d.currency);
   const ref = `BK-${randomBytes(5).toString("hex").toUpperCase()}`;
 
   const record = {
     ref,
-    status: "pending",
+    status: free ? "confirmed" : "pending",
+    minutes: Number(d.minutes),
     serviceSlug: service.slug,
     service: service.title,
     slotDate: d.date,
@@ -71,7 +74,7 @@ export async function createBooking(input: BookingInput): Promise<BookingResult>
       where: {
         slotDate: d.date,
         slotTime: d.time,
-        [Op.or]: [{ status: "paid" }, { status: "pending", createdAt: { [Op.gt]: new Date(Date.now() - 15 * 60_000) } }],
+        [Op.or]: [{ status: { [Op.in]: ["paid", "confirmed"] } }, { status: "pending", createdAt: { [Op.gt]: new Date(Date.now() - 15 * 60_000) } }],
       },
     });
     if (taken) return { ok: false, error: "That time was just taken. Please choose another slot." };
@@ -82,9 +85,11 @@ export async function createBooking(input: BookingInput): Promise<BookingResult>
   }
   if (!saved) return { ok: false, error: "We could not save your booking. Please contact us on WhatsApp." };
 
-  const total = `${(amountMinor / 100).toFixed(2)} ${d.currency}`;
+  const total = free ? "Free" : `${(amountMinor / 100).toFixed(2)} ${d.currency}`;
   void postWebhook({ type: "booking", ...record }).catch(() => {});
   void sendEmail(`New booking ${ref}: ${service.title}`, { ...record, total }, d.email).catch(() => {});
+
+  if (free) return { ok: true, ref, free: true }; // nothing to pay, so no checkout
 
   let url: string | undefined;
   try {
@@ -92,7 +97,7 @@ export async function createBooking(input: BookingInput): Promise<BookingResult>
       mode: "payment",
       ref,
       email: d.email,
-      productName: `${service.title} (${service.duration}) on ${d.date} at ${d.time}`,
+      productName: `${consultation.extendedMinutes}-minute consultation: ${service.title} on ${d.date} at ${d.time}`,
       amountMinor,
       currency: d.currency,
       successPath: `/book/success?ref=${ref}`,

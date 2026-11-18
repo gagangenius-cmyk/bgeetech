@@ -1,10 +1,12 @@
 # BGeetech
 
-Technology consulting website built with Next.js 16 (App Router), Tailwind CSS 4, Motion, TanStack Query and MySQL (Sequelize).
+Website for a web and software services company (websites, apps, CRM, ERP, AI and support), built with Next.js 16 (App Router), Tailwind CSS 4, Motion, TanStack Query and MySQL (Sequelize).
 
 ## Features
 
-- Marketing site: services (12), pricing, estimator, about, contact, booking flow (UI)
+- Product catalogue (15): websites, web and mobile apps, CRM, ERP, POS and HRMS, e-commerce, AI, automation, bug fixing and maintenance, design, SEO, hosting, security and consulting
+- **Free first 30-minute consultation** (no payment); 60-minute deep-dives are paid via Stripe
+- Pricing with 6 packages plus a **custom package calculator**; project estimator; animated **AI-style hero slider**
 - **Dynamic blog** and **product demos** (CRM, POS, HRMS...) managed from the admin panel
 - **Website builder** (`/builder`): business details, 90+ business types, 100 colour themes + custom colours, 8 styles, live Desktop/Tablet/Mobile preview, plans from $10/month (monthly, quarterly, annual)
 - **Admin panel** (`/admin`): blog posts, demos, leads, website orders (search, create, edit, delete, CSV export)

@@ -1,4 +1,4 @@
-import { Price } from "@/components/currency";
+import { ServiceFrom } from "@/components/currency";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -33,10 +33,10 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
       <PageHero eyebrow="Service" title={s.title} body={s.summary}>
         <div className="flex flex-wrap items-center gap-4">
           <ButtonLink href={`/book?service=${s.slug}`}>
-            Book this session <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+            {s.from === 0 ? "Book your free consultation" : "Get started with a free call"} <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
           </ButtonLink>
           <span className="inline-flex items-center gap-2 text-sm text-white/70">
-            <Clock className="size-4" aria-hidden /> {s.duration} · from <Price usd={s.from} />
+            <Clock className="size-4" aria-hidden /> <ServiceFrom s={s} />
           </span>
         </div>
       </PageHero>
@@ -78,7 +78,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
         {d && (
           <section>
             <Reveal>
-              <h2 className="font-display text-3xl font-extrabold tracking-tight">How a session works</h2>
+              <h2 className="font-display text-3xl font-extrabold tracking-tight">How it works</h2>
             </Reveal>
             <Stagger className="mt-8 grid gap-5 sm:grid-cols-3">
               {d.process.map((p, i) => (
@@ -128,7 +128,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
                   <ServiceIcon name={r.icon} className="size-5" />
                 </span>
                 <p className="mt-3 font-semibold group-hover:text-brand">{r.title}</p>
-                <p className="text-sm text-muted-foreground">from <Price usd={r.from} /></p>
+                <p className="text-sm text-muted-foreground"><ServiceFrom s={r} /></p>
               </Link>
             ))}
           </div>

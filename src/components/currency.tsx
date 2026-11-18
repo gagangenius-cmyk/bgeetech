@@ -1,8 +1,8 @@
 "use client";
 
 import { Coins } from "lucide-react";
-import { useSyncExternalStore } from "react";
-import { convert, currencies, currencyCodes, formatMoney, isCurrency, type CurrencyCode } from "@/lib/currency";
+import { useId, useSyncExternalStore } from "react";
+import { convert, currencyCodes, formatMoney, isCurrency, type CurrencyCode } from "@/lib/currency";
 import { cn } from "@/lib/utils";
 
 const KEY = "bgee_currency";
@@ -53,14 +53,16 @@ export function Price({ usd, className }: { usd: number; className?: string }) {
 
 export function CurrencySwitcher({ className, onDark = false }: { className?: string; onDark?: boolean }) {
   const { code } = useCurrency();
+  const id = useId(); // several switchers can be on one page (header, menu, checkout)
   return (
     <div className={cn("relative inline-flex items-center", className)}>
       <Coins className={cn("pointer-events-none absolute left-2.5 size-4", onDark ? "text-white/70" : "text-muted-foreground")} aria-hidden />
-      <label htmlFor="currency-select" className="sr-only">
+      <label htmlFor={id} className="sr-only">
         Currency
       </label>
       <select
-        id="currency-select"
+        id={id}
+        title="Display prices in"
         value={code}
         onChange={(e) => isCurrency(e.target.value) && setCurrency(e.target.value)}
         className={cn(
@@ -70,10 +72,20 @@ export function CurrencySwitcher({ className, onDark = false }: { className?: st
       >
         {currencyCodes.map((c) => (
           <option key={c} value={c}>
-            {c} ({currencies[c].symbol})
+            {c}
           </option>
         ))}
       </select>
     </div>
+  );
+}
+
+/** "From $299 per project", or "First 30 minutes free" for free items. */
+export function ServiceFrom({ s, className }: { s: { from: number; unit: string }; className?: string }) {
+  if (s.from === 0) return <span className={className}>{s.unit.charAt(0).toUpperCase() + s.unit.slice(1)}</span>;
+  return (
+    <span className={className}>
+      From <Price usd={s.from} /> {s.unit}
+    </span>
   );
 }

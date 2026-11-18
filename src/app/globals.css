@@ -154,3 +154,11 @@ body {
 
 /* Native dialogs take focus when opened; the modal itself should not show a focus ring. */
 dialog:focus-visible { outline: none; }
+
+/* Hero slider visuals */
+@keyframes dash-flow { to { stroke-dashoffset: -48; } }
+@keyframes node-pulse { 0%, 100% { transform: scale(1); opacity: .85; } 50% { transform: scale(1.5); opacity: 1; } }
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+.neural-line { stroke-dasharray: 3 9; animation: dash-flow 2.4s linear infinite; }
+.neural-node { transform-box: fill-box; transform-origin: center; animation: node-pulse 3.2s ease-in-out infinite; }
+.spin-slow { animation: spin-slow 24s linear infinite; transform-origin: center; }

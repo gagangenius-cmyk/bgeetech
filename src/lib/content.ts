@@ -8,166 +8,547 @@ export type ServiceDetail = {
 };
 
 export const serviceDetails: Record<string, ServiceDetail> = {
-  "web-product-engineering": {
-    audience: ["Founders planning a first release", "Teams migrating to Next.js or a modern stack", "Products with slow pages or fragile deployments"],
-    process: [
-      { title: "Context", body: "A short intake form tells us your goals, stack and constraints before we meet." },
-      { title: "Review", body: "We walk through your architecture, codebase or plan and flag the biggest risks." },
-      { title: "Plan", body: "You leave with prioritised actions, trade-offs explained in plain language." },
+  "website-development": {
+    "audience": [
+      "Businesses launching or refreshing their website",
+      "Freelancers and professionals who need a portfolio",
+      "Brands that want to rank in search"
     ],
-    deliverables: ["Written summary with prioritised recommendations", "Architecture notes or diagram where useful", "A short list of quick wins you can ship this week"],
-    faqs: [
-      { q: "Do you write code for us?", a: "Sessions are advisory. We can recommend approaches and review work, and discuss delivery support separately." },
-      { q: "Which stacks do you cover?", a: "Most work is TypeScript, React and Next.js with Node back ends and SQL databases. We will say so if something is outside our depth." },
+    "process": [
+      {
+        "title": "Free call",
+        "body": "A free 30-minute conversation to understand your goals, users and budget."
+      },
+      {
+        "title": "Proposal",
+        "body": "You receive a fixed scope, timeline and price to approve before any work starts."
+      },
+      {
+        "title": "Design and build",
+        "body": "We design, build and test your site on every device, then launch it."
+      }
     ],
+    "deliverables": [
+      "Responsive website, ready to publish",
+      "Basic SEO set-up and analytics",
+      "Training so you can edit your content"
+    ],
+    "faqs": [
+      {
+        "q": "How long does a website take?",
+        "a": "A typical business website takes 1 to 3 weeks once content is ready. Larger sites take longer."
+      },
+      {
+        "q": "Can I update it myself?",
+        "a": "Yes. We set it up so you can edit text and images without a developer."
+      }
+    ]
   },
-  "cloud-devops": {
-    audience: ["Teams with rising cloud bills", "Companies without a reliable deploy pipeline", "Products that need better monitoring before launch"],
-    process: [
-      { title: "Inventory", body: "We map what runs where, how it deploys and what it costs." },
-      { title: "Assess", body: "We look at reliability, security basics, cost and developer experience." },
-      { title: "Roadmap", body: "A sequenced plan separates urgent fixes from longer-term improvements." },
+  "web-app-development": {
+    "audience": [
+      "Companies replacing spreadsheets with software",
+      "Startups building a web product",
+      "Teams that need a client or staff portal"
     ],
-    deliverables: ["Findings report with risk ranking", "CI/CD and environment recommendations", "Monitoring and alerting checklist"],
-    faqs: [
-      { q: "Do you need access to our cloud account?", a: "Not for a first session. Screen-sharing and exported cost or architecture data is usually enough." },
-      { q: "Which providers do you work with?", a: "AWS, Azure, Google Cloud and Vercel-style platforms. The principles carry across providers." },
+    "process": [
+      {
+        "title": "Free call",
+        "body": "A free 30-minute conversation to understand your goals, users and budget."
+      },
+      {
+        "title": "Proposal",
+        "body": "You receive a fixed scope, timeline and price to approve before any work starts."
+      },
+      {
+        "title": "Build in sprints",
+        "body": "We build in short cycles with demos, so you see progress and can steer."
+      }
     ],
+    "deliverables": [
+      "Working web application with admin dashboard",
+      "User accounts, roles and permissions",
+      "Documentation and handover"
+    ],
+    "faqs": [
+      {
+        "q": "Do I own the software?",
+        "a": "Ownership and licensing are agreed in your proposal, and we are happy to explain the options."
+      },
+      {
+        "q": "Can you add features later?",
+        "a": "Yes. Many clients continue with monthly improvements after launch."
+      }
+    ]
   },
-  "data-ai": {
-    audience: ["Teams exploring AI features for the first time", "Leaders deciding where AI is worth the investment", "Products with data that is hard to use"],
-    process: [
-      { title: "Use cases", body: "We list candidate ideas and score them on value, feasibility and risk." },
-      { title: "Approach", body: "We discuss build versus buy, data needs, evaluation and cost." },
-      { title: "Guardrails", body: "We agree how to test quality, handle errors and protect user data." },
-    ],
-    deliverables: ["Ranked use-case shortlist", "Build, buy or wait recommendation", "Evaluation and safety checklist"],
-    faqs: [
-      { q: "Will you build us a model?", a: "This session is about strategy and scoping. It helps you decide what to build and how to measure it." },
-      { q: "Is our data shared with anyone?", a: "We only discuss what you choose to share, and handle it under our privacy policy." },
-    ],
-  },
-  "ux-ui-design": {
-    audience: ["Products with low sign-up or booking conversion", "Teams without a consistent design system", "Founders validating a new interface"],
-    process: [
-      { title: "Observe", body: "We review key journeys on desktop and mobile using your analytics and feedback." },
-      { title: "Diagnose", body: "We identify friction, accessibility gaps and unclear messaging." },
-      { title: "Prioritise", body: "You receive fixes ranked by impact and effort." },
-    ],
-    deliverables: ["UX audit with annotated screenshots", "Quick-win list with effort estimates", "Design system starting points (tokens, components)"],
-    faqs: [
-      { q: "Do you do accessibility reviews?", a: "Yes. We check against WCAG 2.2 AA basics such as contrast, focus, target size and keyboard use." },
-      { q: "Can you work from our Figma files?", a: "Yes, share a view link or screen-share during the session." },
-    ],
-  },
-  "security-compliance": {
-    audience: ["Teams preparing for customer security reviews", "Startups handling personal or payment data", "Companies starting privacy and compliance work"],
-    process: [
-      { title: "Scope", body: "We agree what data and systems matter most." },
-      { title: "Model", body: "We walk through realistic threats and where current controls fall short." },
-      { title: "Sequence", body: "We build a practical order of work you can fit around delivery." },
-    ],
-    deliverables: ["Threat model summary", "Privacy and data-handling observations", "Readiness roadmap with owners and priorities"],
-    faqs: [
-      { q: "Is this a formal audit or certification?", a: "No. It is advisory and does not replace an independent audit or legal advice." },
-      { q: "Do you cover GDPR?", a: "We can discuss practical measures. For legal interpretation, speak to a qualified privacy lawyer." },
-    ],
-  },
-  "digital-strategy": {
-    audience: ["Leaders setting next-year priorities", "Teams with too many ideas and too little focus", "Businesses moving services online"],
-    process: [
-      { title: "Goals", body: "We clarify outcomes, constraints and who needs to be aligned." },
-      { title: "Options", body: "We map opportunities and compare them honestly." },
-      { title: "Roadmap", body: "We turn the chosen direction into milestones and measurable KPIs." },
-    ],
-    deliverables: ["One-page strategy summary", "Roadmap with milestones and KPIs", "Stakeholder alignment notes"],
-    faqs: [
-      { q: "Can you run a workshop for our wider team?", a: "Yes, a longer session can be arranged. Contact us with the group size and goals." },
-      { q: "How soon can we start?", a: "Most sessions can be booked within a few days." },
-    ],
-  },
-};
-
-Object.assign(serviceDetails, {
   "mobile-app-development": {
-    audience: ["Founders deciding between native and cross-platform", "Teams extending a web product to mobile", "Businesses preparing a first app store launch"],
-    process: [
-      { title: "Goals", body: "We clarify users, key journeys and what the app must do on day one." },
-      { title: "Options", body: "We compare native, cross-platform and web-app approaches against your constraints." },
-      { title: "Launch plan", body: "You get an MVP scope, release plan and store-readiness checklist." },
+    "audience": [
+      "Businesses taking their service mobile",
+      "Startups validating an app idea",
+      "Companies needing a staff or customer app"
     ],
-    deliverables: ["Platform and framework recommendation", "MVP scope and phased roadmap", "App store and privacy-label checklist"],
-    faqs: [
-      { q: "Should we build native or cross-platform?", a: "It depends on performance needs, team skills and budget. We walk through the trade-offs for your case." },
-      { q: "Can you help with store approval?", a: "We can review your readiness against store guidelines and common rejection reasons." },
+    "process": [
+      {
+        "title": "Free call",
+        "body": "A free 30-minute conversation to understand your goals, users and budget."
+      },
+      {
+        "title": "Proposal",
+        "body": "You receive a fixed scope, timeline and price to approve before any work starts."
+      },
+      {
+        "title": "Design, build, publish",
+        "body": "We design the screens, build for Android and iOS, and handle store submission."
+      }
     ],
+    "deliverables": [
+      "Android and iOS app",
+      "Backend and API integration",
+      "Store listing and launch support"
+    ],
+    "faqs": [
+      {
+        "q": "Native or cross-platform?",
+        "a": "We recommend what fits your budget and performance needs during the free call."
+      },
+      {
+        "q": "Do you publish to the app stores?",
+        "a": "Yes. We prepare and submit the listings and help with review feedback."
+      }
+    ]
   },
-  "ecommerce-payments": {
-    audience: ["Stores with high cart abandonment", "Businesses taking payments online for the first time", "Teams choosing between platforms"],
-    process: [
-      { title: "Journey", body: "We walk the path from product page to confirmation on desktop and mobile." },
-      { title: "Friction", body: "We find where customers drop off and which payment options are missing." },
-      { title: "Fixes", body: "You receive ranked changes for checkout, payments, tax and fraud basics." },
+  "crm-software": {
+    "audience": [
+      "Real estate agencies managing leads and listings",
+      "Immigration and education consultants tracking cases",
+      "Sales teams that need one source of truth"
     ],
-    deliverables: ["Checkout and payment flow review", "Platform comparison for your needs", "Tax, invoicing and fraud-prevention checklist"],
-    faqs: [
-      { q: "Which payment providers do you cover?", a: "Stripe and other major gateways, plus regional methods. Advice focuses on fit, not vendor promotion." },
-      { q: "Do you handle tax advice?", a: "We cover the technical side such as automatic tax calculation. For tax law, consult a qualified accountant." },
+    "process": [
+      {
+        "title": "Free call",
+        "body": "A free 30-minute conversation to understand your goals, users and budget."
+      },
+      {
+        "title": "Proposal",
+        "body": "You receive a fixed scope, timeline and price to approve before any work starts."
+      },
+      {
+        "title": "Configure and build",
+        "body": "We map your process, build the CRM around it and migrate your existing data."
+      }
     ],
+    "deliverables": [
+      "CRM with lead and client management",
+      "Pipelines, tasks and reminders",
+      "Reports, dashboards and team training"
+    ],
+    "faqs": [
+      {
+        "q": "Can you build a CRM for my industry?",
+        "a": "Yes. See our live demos for real estate and immigration, and we tailor the fields and workflow to you."
+      },
+      {
+        "q": "Can it connect to WhatsApp or email?",
+        "a": "Yes. We can integrate messaging, email and forms so leads flow in automatically."
+      }
+    ]
   },
-  "seo-growth": {
-    audience: ["Sites that are not ranking as expected", "Businesses launching a new site or redesign", "Teams who want to be cited by AI search tools"],
-    process: [
-      { title: "Crawl", body: "We review indexing, speed, structured data and site structure." },
-      { title: "Content", body: "We map search intent to pages and spot gaps and overlaps." },
-      { title: "Measure", body: "We set up tracking so you can see what actually drives enquiries." },
+  "erp-software": {
+    "audience": [
+      "Manufacturers, distributors and retailers",
+      "Growing companies outgrowing separate tools",
+      "Businesses needing inventory and accounting together"
     ],
-    deliverables: ["Technical SEO findings", "Content and keyword plan", "Analytics and conversion tracking checklist"],
-    faqs: [
-      { q: "Can you guarantee rankings?", a: "No one honestly can. We focus on fixes that improve quality, visibility and measurable results." },
-      { q: "What about AI search?", a: "We cover clear structure, accurate summaries and llms.txt so assistants can describe your business correctly." },
+    "process": [
+      {
+        "title": "Free call",
+        "body": "A free 30-minute conversation to understand your goals, users and budget."
+      },
+      {
+        "title": "Proposal",
+        "body": "You receive a fixed scope, timeline and price to approve before any work starts."
+      },
+      {
+        "title": "Phase and roll out",
+        "body": "We deliver in phases, starting with your highest-value modules, with data migration and training."
+      }
     ],
+    "deliverables": [
+      "Integrated ERP modules",
+      "Role-based access and audit trails",
+      "Data migration, training and support"
+    ],
+    "faqs": [
+      {
+        "q": "Do we need every module at once?",
+        "a": "No. We usually start with the most important modules and add others over time."
+      },
+      {
+        "q": "Can you import our existing data?",
+        "a": "Yes. We clean and migrate data from spreadsheets and older systems."
+      }
+    ]
   },
-  "ai-automation": {
-    audience: ["Teams buried in repetitive manual work", "Support or sales teams exploring assistants", "Operations leads connecting many tools"],
-    process: [
-      { title: "Map", body: "We list repetitive tasks and rank them by time saved and risk." },
-      { title: "Design", body: "We choose the right mix of workflows, integrations and AI assistance." },
-      { title: "Safeguard", body: "We define review steps, fallbacks and monitoring so automation stays trustworthy." },
+  "pos-hrms-software": {
+    "audience": [
+      "Shops, cafes and restaurants",
+      "Multi-branch retail businesses",
+      "Companies managing staff attendance and payroll"
     ],
-    deliverables: ["Automation opportunity map", "Tooling and integration plan", "Human-in-the-loop and monitoring checklist"],
-    faqs: [
-      { q: "Will automation replace our team?", a: "The aim is to remove tedious work so people focus on judgment and relationships." },
-      { q: "Which tools do you use?", a: "We stay tool-agnostic: workflow platforms, APIs and AI models chosen for your needs." },
+    "process": [
+      {
+        "title": "Free call",
+        "body": "A free 30-minute conversation to understand your goals, users and budget."
+      },
+      {
+        "title": "Proposal",
+        "body": "You receive a fixed scope, timeline and price to approve before any work starts."
+      },
+      {
+        "title": "Set up and train",
+        "body": "We configure the system for your products or staff policies and train your team."
+      }
     ],
+    "deliverables": [
+      "POS billing or HRMS system",
+      "Stock, attendance and payroll reports",
+      "Training and go-live support"
+    ],
+    "faqs": [
+      {
+        "q": "Does the POS work with barcode scanners and printers?",
+        "a": "Yes, common barcode scanners and receipt printers are supported."
+      },
+      {
+        "q": "Can HRMS handle leave and payroll rules?",
+        "a": "Yes. We configure your leave types, shifts and payroll rules."
+      }
+    ]
   },
-  "crm-business-systems": {
-    audience: ["Teams juggling spreadsheets and disconnected tools", "Businesses outgrowing their first CRM", "Leaders who need reliable reporting"],
-    process: [
-      { title: "Audit", body: "We map your systems, data flow and where information gets stuck." },
-      { title: "Select", body: "We compare CRM and workflow options against real requirements." },
-      { title: "Plan", body: "You get a phased set-up, migration and reporting plan." },
+  "ecommerce-development": {
+    "audience": [
+      "Brands selling products online",
+      "Local shops going online",
+      "Sellers wanting their own store, not just marketplaces"
     ],
-    deliverables: ["Systems and data-flow map", "CRM selection and set-up plan", "Reporting and dashboard design"],
-    faqs: [
-      { q: "Which CRMs do you work with?", a: "We advise across popular options and custom builds, and recommend what fits your size and process." },
-      { q: "Can you help migrate data?", a: "We can plan the migration and quality checks. Larger migrations can be scoped separately." },
+    "process": [
+      {
+        "title": "Free call",
+        "body": "A free 30-minute conversation to understand your goals, users and budget."
+      },
+      {
+        "title": "Proposal",
+        "body": "You receive a fixed scope, timeline and price to approve before any work starts."
+      },
+      {
+        "title": "Build and launch",
+        "body": "We build your store, connect payments and shipping, and test the full checkout."
+      }
     ],
+    "deliverables": [
+      "Online store with catalogue and checkout",
+      "Payment gateway and shipping set-up",
+      "Order, stock and sales reports"
+    ],
+    "faqs": [
+      {
+        "q": "Which payment methods can you add?",
+        "a": "Cards, wallets and regional methods through gateways such as Stripe and others, depending on your country."
+      },
+      {
+        "q": "Can you move my existing store?",
+        "a": "Yes. We can migrate products, customers and orders."
+      }
+    ]
   },
-  "fractional-cto": {
-    audience: ["Founders without a technical co-founder", "Teams scaling engineering for the first time", "Investors and buyers needing a technical review"],
-    process: [
-      { title: "Situation", body: "We review your product, team, spend and risks." },
-      { title: "Priorities", body: "We agree what matters most over the next 3 to 12 months." },
-      { title: "Cadence", body: "We set up a regular advisory rhythm for decisions, hiring and vendors." },
+  "ai-solutions": {
+    "audience": [
+      "Businesses wanting a 24/7 customer assistant",
+      "Teams exploring AI features in their product",
+      "Companies with knowledge bases or FAQs to automate"
     ],
-    deliverables: ["Technical roadmap and priorities", "Hiring and team-structure advice", "Vendor and technical due-diligence notes"],
-    faqs: [
-      { q: "Is this a full-time role?", a: "No. It is part-time senior guidance, available as a one-off session or an ongoing retainer." },
-      { q: "Can you speak to our investors?", a: "Yes, we can prepare technical summaries and join discussions where helpful." },
+    "process": [
+      {
+        "title": "Free call",
+        "body": "A free 30-minute conversation to understand your goals, users and budget."
+      },
+      {
+        "title": "Proposal",
+        "body": "You receive a fixed scope, timeline and price to approve before any work starts."
+      },
+      {
+        "title": "Prototype, test, launch",
+        "body": "We build a prototype on your content, test it for accuracy and safety, then launch and monitor."
+      }
     ],
+    "deliverables": [
+      "AI chatbot or assistant on your site or WhatsApp",
+      "Connection to your knowledge and tools",
+      "Testing, safety checks and monitoring"
+    ],
+    "faqs": [
+      {
+        "q": "Will the AI make things up?",
+        "a": "We ground answers in your approved content, add guardrails and hand off to a human when unsure."
+      },
+      {
+        "q": "Is my data kept private?",
+        "a": "We agree data handling in your proposal and use providers with suitable privacy terms."
+      }
+    ]
   },
-} satisfies Record<string, ServiceDetail>);
+  "automation-integrations": {
+    "audience": [
+      "Teams doing repetitive manual work",
+      "Businesses with many disconnected tools",
+      "Operations wanting automatic reports and alerts"
+    ],
+    "process": [
+      {
+        "title": "Free call",
+        "body": "A free 30-minute conversation to understand your goals, users and budget."
+      },
+      {
+        "title": "Proposal",
+        "body": "You receive a fixed scope, timeline and price to approve before any work starts."
+      },
+      {
+        "title": "Automate and monitor",
+        "body": "We build the workflows, test them with real data and add alerts for failures."
+      }
+    ],
+    "deliverables": [
+      "Automated workflows and approvals",
+      "Integrations between your tools",
+      "Reports and alerts"
+    ],
+    "faqs": [
+      {
+        "q": "Which tools can you connect?",
+        "a": "Most tools with an API: CRMs, accounting, WhatsApp, email, payment and spreadsheet tools."
+      },
+      {
+        "q": "What if an automation fails?",
+        "a": "We add monitoring and alerts so problems are noticed and fixed quickly."
+      }
+    ]
+  },
+  "bug-fixing-maintenance": {
+    "audience": [
+      "Websites or apps with errors or slow pages",
+      "Software built by a previous developer",
+      "Businesses that want ongoing updates and security"
+    ],
+    "process": [
+      {
+        "title": "Report the issue",
+        "body": "Send us a description, screenshots or access, and we confirm the problem."
+      },
+      {
+        "title": "Diagnose and quote",
+        "body": "We find the cause and give a fixed price per fix before starting."
+      },
+      {
+        "title": "Fix and verify",
+        "body": "We fix, test and confirm with you. Care plans cover ongoing updates and priority support."
+      }
+    ],
+    "deliverables": [
+      "Fixed bug with a summary of the cause",
+      "Updates, security patches and backups",
+      "Optional monthly care plan with priority replies"
+    ],
+    "faqs": [
+      {
+        "q": "Can you fix software you did not build?",
+        "a": "Yes. We review the code, fix the problem and document what we changed."
+      },
+      {
+        "q": "How fast can you respond?",
+        "a": "Care plan customers get a reply within 1 business day, or faster with the priority upgrade."
+      }
+    ]
+  },
+  "ui-ux-design": {
+    "audience": [
+      "Products with low sign-up or conversion",
+      "Teams without a consistent design system",
+      "Founders validating an interface"
+    ],
+    "process": [
+      {
+        "title": "Free call",
+        "body": "A free 30-minute conversation to understand your goals, users and budget."
+      },
+      {
+        "title": "Proposal",
+        "body": "You receive a fixed scope, timeline and price to approve before any work starts."
+      },
+      {
+        "title": "Design and test",
+        "body": "We design the screens, build a clickable prototype and test it with real users."
+      }
+    ],
+    "deliverables": [
+      "User flows and wireframes",
+      "Clickable prototype",
+      "Design system and brand kit"
+    ],
+    "faqs": [
+      {
+        "q": "Do you design for mobile too?",
+        "a": "Yes. Every design covers desktop, tablet and mobile."
+      },
+      {
+        "q": "Can you work with our existing brand?",
+        "a": "Yes. We follow your brand or help create one."
+      }
+    ]
+  },
+  "seo-digital-marketing": {
+    "audience": [
+      "Businesses not showing up in search",
+      "New websites that need traffic",
+      "Brands that want consistent content"
+    ],
+    "process": [
+      {
+        "title": "Free call",
+        "body": "A free 30-minute conversation to understand your goals, users and budget."
+      },
+      {
+        "title": "Proposal",
+        "body": "You receive a fixed scope, timeline and price to approve before any work starts."
+      },
+      {
+        "title": "Optimise monthly",
+        "body": "We fix technical issues, publish content and report on results every month."
+      }
+    ],
+    "deliverables": [
+      "Technical SEO fixes and keyword plan",
+      "Blog or content articles each month",
+      "Monthly performance report"
+    ],
+    "faqs": [
+      {
+        "q": "Can you guarantee rankings?",
+        "a": "No one honestly can. We focus on proven improvements and measurable growth in qualified traffic."
+      },
+      {
+        "q": "Do you handle social media?",
+        "a": "Yes, content planning and posting can be included."
+      }
+    ]
+  },
+  "cloud-hosting-devops": {
+    "audience": [
+      "Businesses needing reliable hosting",
+      "Teams without automated deployments",
+      "Apps that need backups and monitoring"
+    ],
+    "process": [
+      {
+        "title": "Free call",
+        "body": "A free 30-minute conversation to understand your goals, users and budget."
+      },
+      {
+        "title": "Proposal",
+        "body": "You receive a fixed scope, timeline and price to approve before any work starts."
+      },
+      {
+        "title": "Set up and monitor",
+        "body": "We set up hosting, deployment and backups, then monitor uptime."
+      }
+    ],
+    "deliverables": [
+      "Managed hosting with SSL",
+      "Automated deployments",
+      "Backups and uptime monitoring"
+    ],
+    "faqs": [
+      {
+        "q": "Can you move my site to better hosting?",
+        "a": "Yes. We migrate with minimal downtime."
+      },
+      {
+        "q": "Do you provide backups?",
+        "a": "Yes. Automated backups are included and can be restored on request."
+      }
+    ]
+  },
+  "security-audit": {
+    "audience": [
+      "Websites handling customer data",
+      "Businesses preparing for client security reviews",
+      "Teams worried after a suspected breach"
+    ],
+    "process": [
+      {
+        "title": "Free call",
+        "body": "A free 30-minute conversation to understand your goals, users and budget."
+      },
+      {
+        "title": "Proposal",
+        "body": "You receive a fixed scope, timeline and price to approve before any work starts."
+      },
+      {
+        "title": "Review and harden",
+        "body": "We review your site or software, fix what we can and report the rest by priority."
+      }
+    ],
+    "deliverables": [
+      "Vulnerability review",
+      "Hardening of key issues",
+      "Report with prioritised recommendations"
+    ],
+    "faqs": [
+      {
+        "q": "Is this a formal certification?",
+        "a": "No. It is a practical security review and does not replace an independent audit."
+      },
+      {
+        "q": "Will testing disrupt my site?",
+        "a": "We plan reviews to avoid downtime and agree timing with you first."
+      }
+    ]
+  },
+  "technology-consulting": {
+    "audience": [
+      "Founders deciding what to build",
+      "Teams unsure about technology, vendors or costs",
+      "Anyone who wants an expert opinion before committing"
+    ],
+    "process": [
+      {
+        "title": "Book your free call",
+        "body": "Pick a time for your free 30-minute consultation, with no obligation."
+      },
+      {
+        "title": "Talk it through",
+        "body": "We listen, ask questions and give honest advice on the best approach."
+      },
+      {
+        "title": "Decide what next",
+        "body": "Leave with clear next steps, and a proposal if you want us to build it."
+      }
+    ],
+    "deliverables": [
+      "30 minutes free, with an expert on video",
+      "Honest recommendations and rough scope",
+      "Optional 60-minute deep-dive with written summary"
+    ],
+    "faqs": [
+      {
+        "q": "Is the first 30 minutes really free?",
+        "a": "Yes, with no obligation and no card required."
+      },
+      {
+        "q": "What if I need more time?",
+        "a": "You can book a 60-minute deep-dive at a fixed price, with a written summary."
+      }
+    ]
+  }
+};
 
 export type Post = {
   slug: string;

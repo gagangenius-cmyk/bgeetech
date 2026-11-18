@@ -56,7 +56,7 @@ export async function searchSite(query: string): Promise<{ terms: string[]; hits
   for (const n of nav) push({ kind: "Page", title: n.label, href: n.href, snippet: "" }, score(terms, { title: n.label }));
   push({ kind: "Page", title: "Pricing and plans", href: "/pricing", snippet: plans.map((p) => p.name).join(", ") }, score(terms, { title: "pricing plans cost price", body: plans.map((p) => p.name + " " + p.blurb).join(" ") }));
   push({ kind: "Page", title: "Project cost estimator", href: "/estimate", snippet: "Get an instant planning range for your project." }, score(terms, { title: "estimator estimate quote cost" }));
-  push({ kind: "Page", title: "Book a consultation", href: "/book", snippet: "Choose a service, pick a time and book online." }, score(terms, { title: "book booking consultation appointment" }));
+  push({ kind: "Page", title: "Book a free consultation", href: "/book", snippet: "Choose a service, pick a time and book online." }, score(terms, { title: "book booking consultation appointment" }));
   for (const m of team) push({ kind: "Team", title: m.name, href: "/team", snippet: `${m.role}. ${m.bio}` }, score(terms, { title: m.name, keys: `${m.role} ${m.skills.join(" ")}`, body: m.bio }));
   for (const i of industries) push({ kind: "Website type", title: `${i.label} website`, href: "/builder", snippet: `Design a ${i.label.toLowerCase()} website in the Site Builder.` }, score(terms, { title: i.label, keys: i.group, body: i.services.join(" ") }) * 0.6);
 

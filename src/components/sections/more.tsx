@@ -50,7 +50,7 @@ export function TechMarquee() {
 export function Process() {
   return (
     <section className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
-      <SectionHeading eyebrow="How it works" title="From booking to a clear plan in three steps" center />
+      <SectionHeading eyebrow="How it works" title="From idea to launch in three steps" center />
       <Stagger className="relative mt-16 grid gap-8 md:grid-cols-3">
         <div
           aria-hidden
@@ -110,10 +110,11 @@ export function Industries() {
   );
 }
 
-export function PricingCards() {
+export function PricingCards({ limit }: { limit?: number }) {
+  const list = limit ? plans.slice(0, limit) : plans;
   return (
-    <Stagger className="mt-14 grid items-stretch gap-5 lg:grid-cols-3">
-      {plans.map((p) => (
+    <Stagger className="mt-14 grid items-stretch gap-5 md:grid-cols-2 lg:grid-cols-3">
+      {list.map((p) => (
         <StaggerItem key={p.name}>
           <div
             className={cn(
@@ -131,9 +132,9 @@ export function PricingCards() {
             <h3 className="font-display text-xl font-bold">{p.name}</h3>
             <p className={cn("mt-2 text-sm", p.highlight ? "text-white/65" : "text-muted-foreground")}>{p.blurb}</p>
             <p className="mt-6 font-display text-5xl font-extrabold">
-              <Price usd={p.price} />
+              {p.price === null ? "Custom" : p.price === 0 ? "Free" : <Price usd={p.price} />}
               <span className={cn("text-base font-medium", p.highlight ? "text-white/55" : "text-muted-foreground")}>
-                {p.name === "Partner" ? " /month" : " /one-off"}
+                {p.period === "month" ? " /month" : p.period === "one-off" ? " starting" : p.period === "free" ? " first 30 min" : " /quote"}
               </span>
             </p>
             <ul className="mt-7 flex-1 space-y-3 text-sm">
@@ -144,8 +145,8 @@ export function PricingCards() {
                 </li>
               ))}
             </ul>
-            <ButtonLink href="/book" variant={p.highlight ? "primary" : "secondary"} className="mt-8 w-full">
-              Get started
+            <ButtonLink href={p.price === null ? "/contact" : p.price === 0 ? "/book" : `/book?service=${p.name === "Care Plan" ? "bug-fixing-maintenance" : "technology-consulting"}`} variant={p.highlight ? "primary" : "secondary"} className="mt-8 w-full">
+              {p.price === null ? "Talk to us" : p.price === 0 ? "Book free call" : "Get started with a free call"}
             </ButtonLink>
           </div>
         </StaggerItem>
@@ -159,11 +160,11 @@ export function PricingTeaser() {
     <section className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
       <SectionHeading
         eyebrow="Pricing"
-        title="Transparent pricing, no surprises"
-        body="Pick a package, see the total up front. Corporate invoices and tax IDs supported."
+        title="Clear starting prices for every product"
+        body="Websites, CRM, ERP, AI and ongoing care. Start with a free 30-minute consultation, then get a fixed-scope proposal."
         center
       />
-      <PricingCards />
+      <PricingCards limit={3} />
     </section>
   );
 }
@@ -176,14 +177,14 @@ export function FinalCta() {
           <div aria-hidden className="absolute -left-20 -top-20 -z-10 size-96 animate-aurora rounded-full bg-blue-600/40 blur-[100px]" />
           <div aria-hidden className="absolute -bottom-24 -right-16 -z-10 size-96 animate-aurora rounded-full bg-amber-400/30 blur-[100px] [animation-delay:-8s]" />
           <h2 className="mx-auto max-w-2xl font-display text-3xl font-extrabold tracking-tight sm:text-5xl">
-            Ready to turn your idea into a plan?
+            Ready to build something great?
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-white/70">
-            Book a session today and get expert guidance within days, not weeks.
+            Book your free 30-minute consultation today. No obligation, just honest advice.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <ButtonLink href="/book">
-              Book a consultation <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+              Book a free consultation <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
             </ButtonLink>
             <Link
               href="/contact"

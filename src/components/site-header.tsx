@@ -86,9 +86,9 @@ export function SiteHeader() {
           >
             <Search className="size-5" />
           </button>
-          <CurrencySwitcher onDark={!scrolled && !open} className="hidden sm:inline-flex" />
+          <CurrencySwitcher onDark={!scrolled && !open} className="inline-flex" />
           <ButtonLink href="/book" className="hidden min-h-10! sm:inline-flex">
-            Book a consultation <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+            Free consultation <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
           </ButtonLink>
           <button
             type="button"
@@ -143,7 +143,7 @@ export function SiteHeader() {
               ))}
               <CurrencySwitcher className="mt-4 self-start" />
               <ButtonLink href="/book" onClick={() => setOpen(false)} className="mt-4 min-h-12!">
-                Book a consultation
+                Free consultation
               </ButtonLink>
             </nav>
           </motion.div>

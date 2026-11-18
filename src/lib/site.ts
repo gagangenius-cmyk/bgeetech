@@ -4,13 +4,19 @@
 export const site = {
   name: "BGeetech",
   url: "https://bgeetech.com",
-  tagline: "Technology consulting, delivered online.",
+  tagline: "Websites, software and AI, built for your business.",
   description:
-    "BGeetech helps ambitious teams plan, design and ship digital products with expert consulting delivered online. Book a consultation in under a minute.",
+    "BGeetech builds websites, web and mobile apps, CRM, ERP, POS, HRMS and AI solutions, and fixes and maintains your existing software. Your first 30-minute consultation is free.",
   email: "hello@bgeetech.com",
   whatsappNumber: "919873334283", // international format, digits only
   whatsappDisplay: "+91 98733 34283",
 };
+
+/** Plain-text price for metadata, search and chat (USD). */
+export const priceText = (s: { from: number; unit: string }) => (s.from === 0 ? s.unit : `from ${s.from} ${s.unit}`);
+
+/** Free consultation policy, shown across the site and enforced in the booking action. */
+export const consultation = { freeMinutes: 30, extendedMinutes: 60, extendedUsd: 60 } as const;
 
 export const nav = [
   { href: "/services", label: "Services" },
@@ -23,124 +29,155 @@ export const nav = [
   { href: "/contact", label: "Contact" },
 ] as const;
 
+export type ServiceIcon =
+  | "code" | "cloud" | "brain" | "palette" | "shield" | "compass" | "phone" | "cart" | "trend" | "bot" | "workflow" | "crown"
+  | "globe" | "database" | "bug" | "users" | "receipt";
+
 export type Service = {
   slug: string;
   title: string;
-  icon: "code" | "cloud" | "brain" | "palette" | "shield" | "compass" | "phone" | "cart" | "trend" | "bot" | "workflow" | "crown";
+  icon: ServiceIcon;
   summary: string;
   outcomes: string[];
-  from: number; // USD
-  duration: string;
+  from: number; // USD starting price (0 = free)
+  unit: string; // e.g. "per project", "per month", "per fix"
 };
 
 export const services: Service[] = [
   {
-    slug: "web-product-engineering",
-    title: "Web & Product Engineering",
+    slug: "website-development",
+    title: "Website Development",
+    icon: "globe",
+    summary: "Fast, SEO-ready business websites, landing pages and portfolios, designed around your brand.",
+    outcomes: ["Custom responsive design", "SEO-ready, fast-loading pages", "Easy content management"],
+    from: 299,
+    unit: "per project",
+  },
+  {
+    slug: "web-app-development",
+    title: "Web Application Development",
     icon: "code",
-    summary: "Fast, accessible web products built on modern frameworks and shipped with confidence.",
-    outcomes: ["Architecture review and roadmap", "Next.js and TypeScript delivery", "Performance and Core Web Vitals audit"],
-    from: 150,
-    duration: "60 min",
-  },
-  {
-    slug: "cloud-devops",
-    title: "Cloud & DevOps",
-    icon: "cloud",
-    summary: "Reliable infrastructure, CI/CD and observability that scale with your team.",
-    outcomes: ["Cloud cost and reliability review", "CI/CD pipeline design", "Monitoring and incident readiness"],
-    from: 180,
-    duration: "60 min",
-  },
-  {
-    slug: "data-ai",
-    title: "Data & AI Strategy",
-    icon: "brain",
-    summary: "Turn data and AI into practical features with clear scope, risk and ROI.",
-    outcomes: ["Use-case prioritisation", "Build vs buy assessment", "Responsible AI guardrails"],
-    from: 200,
-    duration: "75 min",
-  },
-  {
-    slug: "ux-ui-design",
-    title: "UX / UI Design",
-    icon: "palette",
-    summary: "Research-led interfaces and design systems that convert and delight.",
-    outcomes: ["UX audit and quick wins", "Design system foundations", "Conversion-focused flows"],
-    from: 140,
-    duration: "60 min",
-  },
-  {
-    slug: "security-compliance",
-    title: "Security & Compliance",
-    icon: "shield",
-    summary: "Practical security posture and compliance readiness without the theatre.",
-    outcomes: ["Threat modelling session", "Privacy and data-handling review", "Readiness roadmap"],
-    from: 220,
-    duration: "75 min",
-  },
-  {
-    slug: "digital-strategy",
-    title: "Digital Strategy",
-    icon: "compass",
-    summary: "Clear priorities, sharper positioning and a roadmap your team can execute.",
-    outcomes: ["Opportunity mapping", "Roadmap and KPIs", "Stakeholder alignment workshop"],
-    from: 160,
-    duration: "60 min",
+    summary: "Custom web applications, portals and dashboards built to match the way you work.",
+    outcomes: ["Requirements and UX planning", "Secure accounts and user roles", "Admin dashboards and reporting"],
+    from: 1500,
+    unit: "per project",
   },
   {
     slug: "mobile-app-development",
-    title: "Mobile App Strategy",
+    title: "Mobile App Development",
     icon: "phone",
-    summary: "Native, cross-platform or web app? Scope, architecture and launch planning for iOS and Android.",
-    outcomes: ["Platform and framework choice", "MVP scope and release plan", "App store readiness checklist"],
-    from: 170,
-    duration: "60 min",
+    summary: "Android and iOS apps, native or cross-platform, from MVP to app store launch.",
+    outcomes: ["iOS and Android builds", "API and backend integration", "App store submission support"],
+    from: 2500,
+    unit: "per project",
   },
   {
-    slug: "ecommerce-payments",
-    title: "E-commerce & Payments",
+    slug: "crm-software",
+    title: "CRM Software",
+    icon: "users",
+    summary: "CRM systems for real estate, immigration, education and more: leads, pipelines, documents and follow-ups.",
+    outcomes: ["Lead capture and pipeline", "Client records and documents", "Automated reminders and reports"],
+    from: 1200,
+    unit: "per project",
+  },
+  {
+    slug: "erp-software",
+    title: "ERP Software",
+    icon: "database",
+    summary: "ERP systems that connect inventory, accounting, sales, HR and operations in one place.",
+    outcomes: ["Inventory, purchase and sales", "Accounting and invoicing", "Role-based access and reports"],
+    from: 3000,
+    unit: "per project",
+  },
+  {
+    slug: "pos-hrms-software",
+    title: "POS & HRMS Software",
+    icon: "receipt",
+    summary: "POS billing for shops and restaurants, and HRMS for attendance, leave and payroll.",
+    outcomes: ["Billing, stock and receipts", "Attendance, leave and payroll", "Multi-branch reports"],
+    from: 900,
+    unit: "per project",
+  },
+  {
+    slug: "ecommerce-development",
+    title: "E-commerce Development",
     icon: "cart",
-    summary: "Storefront, checkout and payment flows designed to reduce friction and cart abandonment.",
-    outcomes: ["Checkout and payment flow review", "Platform selection guidance", "Tax, invoicing and fraud basics"],
-    from: 160,
-    duration: "60 min",
+    summary: "Online stores with catalogue, checkout, payments and shipping, built to convert.",
+    outcomes: ["Store design and catalogue", "Payment and shipping set-up", "Orders, inventory and analytics"],
+    from: 1200,
+    unit: "per project",
   },
   {
-    slug: "seo-growth",
-    title: "SEO & Growth",
-    icon: "trend",
-    summary: "Technical SEO, content structure and AI-search readiness to earn qualified traffic.",
-    outcomes: ["Technical SEO audit", "Content and keyword plan", "Analytics and conversion tracking setup"],
-    from: 140,
-    duration: "60 min",
+    slug: "ai-solutions",
+    title: "AI Solutions & Chatbots",
+    icon: "brain",
+    summary: "AI chatbots, assistants and smart features that save time and answer customers 24/7.",
+    outcomes: ["Custom AI chatbot or assistant", "Knowledge-base and data integration", "Safety, testing and monitoring"],
+    from: 800,
+    unit: "per project",
   },
   {
-    slug: "ai-automation",
-    title: "AI & Process Automation",
-    icon: "bot",
-    summary: "Automate repetitive work with workflows, assistants and integrations that stay reliable.",
-    outcomes: ["Automation opportunity map", "Tooling and integration plan", "Human-in-the-loop safeguards"],
-    from: 180,
-    duration: "60 min",
-  },
-  {
-    slug: "crm-business-systems",
-    title: "CRM & Business Systems",
+    slug: "automation-integrations",
+    title: "Automation & Integrations",
     icon: "workflow",
-    summary: "Connect sales, support and operations with systems your team will actually use.",
-    outcomes: ["Systems and data-flow audit", "CRM selection and set-up plan", "Reporting and dashboards design"],
-    from: 150,
-    duration: "60 min",
+    summary: "Connect your tools and automate repetitive work with workflows, APIs and automatic reports.",
+    outcomes: ["Workflow and approval automation", "Integrations: CRM, WhatsApp, payments", "Automated reports and alerts"],
+    from: 500,
+    unit: "per project",
   },
   {
-    slug: "fractional-cto",
-    title: "Fractional CTO Advisory",
-    icon: "crown",
-    summary: "Senior technical leadership on demand: roadmaps, hiring, vendors and due diligence.",
-    outcomes: ["Technical roadmap and priorities", "Hiring and team structure advice", "Vendor and due-diligence review"],
-    from: 250,
-    duration: "90 min",
+    slug: "bug-fixing-maintenance",
+    title: "Bug Fixing & Maintenance",
+    icon: "bug",
+    summary: "Fast fixes, updates and ongoing care for websites, apps and software, even ones built by someone else.",
+    outcomes: ["Bug diagnosis and fixes", "Security and performance updates", "Care plans with priority support"],
+    from: 30,
+    unit: "per fix",
+  },
+  {
+    slug: "ui-ux-design",
+    title: "UI / UX Design",
+    icon: "palette",
+    summary: "Research-led interface design, clickable prototypes and design systems that convert and delight.",
+    outcomes: ["UX audit and user flows", "Clickable prototypes", "Design system and brand kit"],
+    from: 400,
+    unit: "per project",
+  },
+  {
+    slug: "seo-digital-marketing",
+    title: "SEO & Digital Marketing",
+    icon: "trend",
+    summary: "SEO, content and social media that bring in qualified visitors and enquiries.",
+    outcomes: ["Technical SEO and keyword plan", "Content and blog writing", "Reporting and conversion tracking"],
+    from: 150,
+    unit: "per month",
+  },
+  {
+    slug: "cloud-hosting-devops",
+    title: "Cloud, Hosting & DevOps",
+    icon: "cloud",
+    summary: "Reliable hosting, deployment pipelines, backups and monitoring for your software.",
+    outcomes: ["Managed hosting and SSL", "Automated deployments", "Backups and uptime monitoring"],
+    from: 100,
+    unit: "per month",
+  },
+  {
+    slug: "security-audit",
+    title: "Security Audit & Hardening",
+    icon: "shield",
+    summary: "Security reviews and hardening for websites and business software, with a clear fix list.",
+    outcomes: ["Vulnerability review", "Hardening and fixes", "Security report with priorities"],
+    from: 400,
+    unit: "per audit",
+  },
+  {
+    slug: "technology-consulting",
+    title: "Technology Consulting",
+    icon: "compass",
+    summary: "Expert advice on technology choices, architecture and roadmaps. Your first 30 minutes are free.",
+    outcomes: ["Free 30-minute first consultation", "Written recommendations and roadmap", "Extended 60-minute deep-dive sessions"],
+    from: 0,
+    unit: "first 30 minutes free",
   },
 ];
 
@@ -150,24 +187,24 @@ export const industries = [
 ];
 
 export const whyUs = [
-  { title: "Senior-only sessions", body: "You speak with experienced practitioners, never a hand-off to juniors." },
-  { title: "Clear written outcomes", body: "Every session ends with a plain-language summary and prioritised next steps." },
-  { title: "Fully online, globally", body: "Secure video sessions across time zones, with invoices for companies." },
-  { title: "Honest advice", body: "If something is not worth doing, we say so. Our recommendations are independent." },
+  { title: "Free first consultation", body: "Talk to an expert for 30 minutes at no cost, with honest advice and no obligation." },
+  { title: "One team, end to end", body: "Design, development, AI, hosting and support from the same people, so nothing falls between the cracks." },
+  { title: "Clear, upfront pricing", body: "Starting prices are published, and every proposal is a fixed scope you approve before work begins." },
+  { title: "Support after launch", body: "Bug fixing, updates and care plans keep your website and software running smoothly." },
 ];
 
-// Facts about how the service is run (not performance claims). Adjust to match your real offer.
+// Facts about how the company is run (not performance claims). Adjust to match your real offer.
 export const stats = [
-  { value: 12, suffix: "", label: "Specialist services" },
+  { value: services.length, suffix: "", label: "Products & services" },
+  { value: 30, suffix: "min", label: "Free first consultation" },
   { value: 100, suffix: "%", label: "Delivered online" },
   { value: 24, suffix: "h", label: "Reply target" },
-  { value: 60, suffix: "min", label: "Focused sessions" },
 ];
 
 export const steps = [
-  { title: "Book online", body: "Choose a service and pick a time that suits you. Price and duration are shown up front." },
-  { title: "Meet your expert", body: "Join a secure video session. We arrive prepared from your short intake form." },
-  { title: "Get a clear plan", body: "Leave with a written summary, priorities and next steps you can act on." },
+  { title: "Tell us what you need", body: "Book a free 30-minute call or send a message. We listen, ask questions and explain your options in plain language." },
+  { title: "Get a clear proposal", body: "You receive a fixed scope, timeline and price for approval before any work begins." },
+  { title: "We build, launch and support", body: "We design, build and launch, then stay on hand with updates, bug fixing and care plans." },
 ];
 
 export const tech = [
@@ -175,36 +212,115 @@ export const tech = [
   "Docker", "Kubernetes", "Stripe", "OpenAI", "Figma", "Terraform",
 ];
 
-export const plans = [
+export type Plan = {
+  name: string;
+  /** USD list price: 0 = free, null = custom quote. */
+  price: number | null;
+  period: "free" | "one-off" | "month" | "custom";
+  blurb: string;
+  features: string[];
+  highlight: boolean;
+};
+
+// PLACEHOLDER prices (USD). Replace with your real offers.
+export const plans: Plan[] = [
   {
-    name: "Starter",
-    price: 150,
-    blurb: "A focused one-off session to unblock a decision.",
-    features: ["60-minute video consultation", "Written summary", "Email follow-up for 7 days"],
+    name: "Free Consultation",
+    price: 0,
+    period: "free",
+    blurb: "Talk to an expert about your idea. The first 30 minutes are on us.",
+    features: ["30-minute video call", "Honest advice on the best approach", "Rough scope and next steps", "No obligation"],
     highlight: false,
   },
   {
-    name: "Growth",
-    price: 450,
-    blurb: "Deep-dive review with a prioritised plan.",
-    features: ["3 sessions over 2 weeks", "Audit and prioritised roadmap", "Slack or email access", "Recorded sessions"],
+    name: "Website Launch",
+    price: 299,
+    period: "one-off",
+    blurb: "A professional, mobile-friendly website, live fast.",
+    features: ["Up to 5 responsive pages", "SEO-ready and fast-loading", "Contact form and WhatsApp button", "1 month free support"],
+    highlight: false,
+  },
+  {
+    name: "CRM & Business App",
+    price: 1200,
+    period: "one-off",
+    blurb: "A custom CRM or web app tailored to how you work.",
+    features: ["Requirements workshop", "Leads, clients and pipelines", "Dashboards and reports", "Training and 3 months support"],
     highlight: true,
   },
   {
-    name: "Partner",
-    price: 1200,
-    blurb: "Ongoing advisory for teams shipping continuously.",
-    features: ["Monthly advisory retainer", "Priority scheduling", "Architecture and hiring support", "Quarterly roadmap review"],
+    name: "ERP Suite",
+    price: 3000,
+    period: "one-off",
+    blurb: "One integrated system for your whole operation.",
+    features: ["Inventory, sales and purchase", "Accounting and invoicing", "HR and role-based access", "Data migration and training"],
+    highlight: false,
+  },
+  {
+    name: "AI & Automation",
+    price: 800,
+    period: "one-off",
+    blurb: "Chatbots, assistants and automated workflows.",
+    features: ["AI chatbot or assistant", "WhatsApp and CRM integrations", "Workflow automation", "Testing and monitoring"],
+    highlight: false,
+  },
+  {
+    name: "Care Plan",
+    price: 49,
+    period: "month",
+    blurb: "Bug fixing, updates and priority support for your existing website or software.",
+    features: ["Bug fixes and updates", "Security patches and backups", "Uptime and performance checks", "Reply within 1 business day"],
     highlight: false,
   },
 ];
 
+// PLACEHOLDER catalogue for the custom package calculator at /pricing (USD).
+export type CatalogItem = { id: string; label: string; note: string; price: number };
+export const packageCatalog = {
+  projects: [
+    { id: "website", label: "Website", note: "Business site, landing pages", price: 299 },
+    { id: "ecommerce", label: "E-commerce store", note: "Catalogue, checkout, payments", price: 1200 },
+    { id: "webapp", label: "Web application", note: "Portal, dashboard, SaaS", price: 1500 },
+    { id: "mobile", label: "Mobile app", note: "Android and iOS", price: 2500 },
+    { id: "crm", label: "CRM software", note: "Leads, clients, pipeline", price: 1200 },
+    { id: "erp", label: "ERP software", note: "Inventory, accounts, HR", price: 3000 },
+    { id: "pos", label: "POS or HRMS", note: "Billing or people management", price: 900 },
+    { id: "ai", label: "AI chatbot / assistant", note: "Answers customers 24/7", price: 800 },
+    { id: "automation", label: "Automation & integrations", note: "Connect tools, save time", price: 500 },
+    { id: "design", label: "UI / UX design", note: "Prototype and design system", price: 400 },
+    { id: "security", label: "Security audit", note: "Review and hardening", price: 400 },
+  ] satisfies CatalogItem[],
+  monthly: [
+    { id: "care", label: "Care plan: bug fixing & updates", note: "Fixes, patches, backups", price: 49 },
+    { id: "hosting", label: "Cloud hosting & DevOps", note: "Hosting, SSL, monitoring", price: 100 },
+    { id: "seo", label: "SEO & content", note: "Monthly SEO and blog posts", price: 150 },
+    { id: "priority", label: "Priority support upgrade", note: "Reply within 4 hours", price: 80 },
+  ] satisfies CatalogItem[],
+  scale: [
+    { id: "small", label: "Small", note: "Core features", mult: 1 },
+    { id: "medium", label: "Medium", note: "Typical scope", mult: 1.6 },
+    { id: "large", label: "Large", note: "Many features", mult: 2.6 },
+  ],
+  timeline: [
+    { id: "flexible", label: "Flexible", note: "3+ months", mult: 0.95 },
+    { id: "standard", label: "Standard", note: "6 to 12 weeks", mult: 1 },
+    { id: "fast", label: "Fast-track", note: "Under 6 weeks", mult: 1.25 },
+  ],
+  // Bundle discount on one-off projects by number of projects chosen
+  bundle: [
+    { min: 4, off: 0.15 },
+    { min: 3, off: 0.1 },
+    { min: 2, off: 0.05 },
+  ],
+} as const;
+
 export const faqs = [
-  { q: "How does an online consultation work?", a: "You book a slot, pay securely, and receive a calendar invite with a video link. Sessions run on Google Meet, Zoom or Teams." },
-  { q: "Can I reschedule or cancel?", a: "Yes. Use the secure link in your confirmation email. Our cancellation terms are shown before you pay." },
+  { q: "Is the first consultation really free?", a: "Yes. Your first 30 minutes with an expert are free, with no obligation. If you want a longer deep-dive, 60-minute sessions are available at a fixed price." },
+  { q: "What do you build?", a: "Websites, web and mobile apps, CRM, ERP, POS and HRMS software, e-commerce stores, AI chatbots and automations, plus design, SEO, hosting and security." },
+  { q: "Can you fix or take over software built by someone else?", a: "Yes. We diagnose and fix bugs, update outdated code and provide ongoing care plans, even for projects we did not build." },
+  { q: "How does pricing and payment work?", a: "Starting prices are published. After your free call you get a fixed-scope proposal. Projects are paid in agreed milestones, and care plans are billed monthly, quarterly or annually." },
   { q: "Do you provide invoices for companies?", a: "Yes. Corporate buyers can add a tax ID at checkout and receive a compliant PDF invoice." },
-  { q: "Is my information kept private?", a: "Your details are used only to deliver the service and are handled under our privacy policy." },
-  { q: "Can you work with our existing team?", a: "Absolutely. Most engagements pair us with in-house engineers, designers and product owners." },
+  { q: "What happens after launch?", a: "We offer bug fixing, updates, hosting and monitoring. Choose a care plan or call on us as needed." },
 ];
 
 // PLACEHOLDER rates for the /estimate planning tool (USD). Replace with your real pricing logic.

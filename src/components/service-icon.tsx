@@ -1,7 +1,7 @@
-import { Bot, Brain, Cloud, Code2, Compass, Crown, Palette, ShieldCheck, ShoppingCart, Smartphone, TrendingUp, Workflow, type LucideIcon } from "lucide-react";
-import type { Service } from "@/lib/site";
+import { Bot, Brain, Bug, Database, Globe, Receipt, Users, Cloud, Code2, Compass, Crown, Palette, ShieldCheck, ShoppingCart, Smartphone, TrendingUp, Workflow, type LucideIcon } from "lucide-react";
+import type { ServiceIcon as IconName } from "@/lib/site";
 
-const map: Record<Service["icon"], LucideIcon> = {
+const map: Record<IconName, LucideIcon> = {
   code: Code2,
   cloud: Cloud,
   brain: Brain,
@@ -14,9 +14,14 @@ const map: Record<Service["icon"], LucideIcon> = {
   bot: Bot,
   workflow: Workflow,
   crown: Crown,
+  globe: Globe,
+  database: Database,
+  bug: Bug,
+  users: Users,
+  receipt: Receipt,
 };
 
-export function ServiceIcon({ name, className }: { name: Service["icon"]; className?: string }) {
+export function ServiceIcon({ name, className }: { name: IconName; className?: string }) {
   const Icon = map[name];
   return <Icon className={className} aria-hidden />;
 }

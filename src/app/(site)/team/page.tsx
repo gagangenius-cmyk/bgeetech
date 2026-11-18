@@ -8,7 +8,7 @@ import { team } from "@/lib/team";
 
 export const metadata: Metadata = {
   title: "Our team",
-  description: "Meet the BGeetech team: project leadership, content, SEO and digital branding.",
+  description: "Meet the BGeetech team: founder, CEO, project leadership, content, SEO and digital branding.",
 };
 
 export default function TeamPage() {
@@ -17,10 +17,10 @@ export default function TeamPage() {
       <PageHero
         eyebrow="Our team"
         title="The people behind BGeetech"
-        body="A small, focused team covering delivery, content, search and brand, so every project gets joined-up expertise."
+        body="Led by our founder and CEO, a small, focused team covering delivery, content, search and brand, so every project gets joined-up expertise."
       />
       <section className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
-        <Stagger className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <Stagger className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {team.map((m) => (
             <StaggerItem key={m.slug}>
               <SpotlightCard className="flex h-full flex-col items-center p-8 text-center">

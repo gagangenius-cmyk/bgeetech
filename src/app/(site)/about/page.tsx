@@ -7,7 +7,7 @@ import { FinalCta, Stats } from "@/components/sections/more";
 
 export const metadata: Metadata = {
   title: "About",
-  description: "Who we are and how BGeetech works with teams.",
+  description: "BGeetech is a web and software services company: websites, apps, CRM, ERP, AI and ongoing support.",
 };
 
 const values = [
@@ -21,18 +21,18 @@ export default function AboutPage() {
     <>
       <PageHero
         eyebrow="About"
-        title="A small team of senior practitioners"
-        body="BGeetech brings hands-on engineering, design and strategy experience to teams that want expert input without long contracts."
+        title="A web and software company for growing businesses"
+        body="BGeetech designs, builds and supports websites, apps, CRM, ERP and AI solutions, and offers your first 30-minute consultation free."
       />
       <Stats />
       <section className="mx-auto max-w-3xl px-5 pt-24 sm:px-8">
         <h2 className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">Our story</h2>
         <div aria-hidden className="gold-rule mt-5 max-w-24" />
         <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-          Good technology decisions are rarely about tools. They are about timing, trade-offs and people. We started BGeetech to give teams direct access to experienced practitioners without long contracts or sales cycles.
+          We started BGeetech to make professional technology simple and affordable for every business, from a neighbourhood barber to a growing enterprise. Many companies struggle to find one trustworthy team that can design, build and look after their software.
         </p>
         <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-          Every engagement is online, focused and documented. You bring the question, we bring the experience, and you leave with a plan written in plain language that your whole team can follow.
+          So we bring it all together: websites, mobile and web apps, CRM, ERP, POS, HRMS, AI and automation, plus bug fixing and care plans after launch. Every relationship begins with a free 30-minute conversation, and every project with a fixed scope and price you approve first.
         </p>
       </section>
       <section className="mx-auto max-w-7xl px-5 py-24 sm:px-8">

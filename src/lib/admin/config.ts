@@ -24,7 +24,7 @@ export type ResourceConfig = {
 };
 
 const statusLead = ["new", "contacted", "won", "lost"];
-const statusOrder = ["pending", "paid", "cancelled"];
+const statusOrder = ["pending", "paid", "confirmed", "cancelled"];
 
 export const resourceConfigs: Record<string, ResourceConfig> = {
   posts: {
@@ -94,6 +94,7 @@ export const resourceConfigs: Record<string, ResourceConfig> = {
       { key: "service", label: "Service" },
       { key: "slotDate", label: "Session date" },
       { key: "slotTime", label: "Time" },
+      { key: "minutes", label: "Minutes" },
       { key: "name", label: "Client" },
       { key: "amountCents", label: "Total", kind: "money" },
       { key: "status", label: "Status", kind: "badge" },
