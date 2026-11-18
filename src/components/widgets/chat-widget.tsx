@@ -21,7 +21,7 @@ const SUGGESTIONS = [
   "How can AI help my business?",
 ];
 
-export function ChatWidget() {
+export function ChatWidget({ hideLauncherOnMobile = false }: { hideLauncherOnMobile?: boolean }) {
   const reduce = useReducedMotion();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([GREETING]);
@@ -103,7 +103,7 @@ export function ChatWidget() {
         aria-expanded={open}
         aria-controls="chat-panel"
         onClick={() => setOpen((v) => !v)}
-        className="fixed bottom-24 right-5 z-40 grid size-14 place-items-center rounded-full bg-brand-strong text-white shadow-xl shadow-black/30 ring-2 ring-accent/70 transition-transform duration-300 hover:scale-110 active:scale-95"
+        className={cn("fixed bottom-[calc(9.5rem+env(safe-area-inset-bottom))] right-5 z-40 grid size-14 place-items-center rounded-full bg-brand-strong text-white shadow-xl shadow-black/30 ring-2 ring-accent/70 transition-transform duration-300 hover:scale-110 active:scale-95 lg:bottom-24", hideLauncherOnMobile && "max-lg:hidden")}
       >
         <AnimatePresence mode="wait" initial={false}>
           <motion.span
@@ -128,7 +128,7 @@ export function ChatWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.97 }}
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed inset-x-3 bottom-40 z-40 flex h-[min(34rem,calc(100dvh-11rem))] flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-2xl sm:inset-x-auto sm:right-5 sm:w-[24rem]"
+            className="fixed inset-x-3 bottom-[calc(5.25rem+env(safe-area-inset-bottom))] z-[49] flex h-[min(38rem,calc(100dvh-9rem))] flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-2xl sm:inset-x-auto sm:right-5 sm:w-[24rem] lg:bottom-40 lg:z-40 lg:h-[min(34rem,calc(100dvh-11rem))]"
           >
             <header className="flex items-center gap-3 bg-ink px-4 py-3.5 text-white">
               <span className="grid size-10 place-items-center rounded-full bg-gradient-to-br from-blue-600 to-amber-400">
@@ -140,6 +140,9 @@ export function ChatWidget() {
                   <span className="size-2 rounded-full bg-blue-400" aria-hidden /> AI assistant · replies instantly
                 </p>
               </div>
+              <button type="button" onClick={() => setOpen(false)} aria-label="Close chat" className="grid size-11 place-items-center rounded-full hover:bg-white/10">
+                <X className="size-5" />
+              </button>
             </header>
 
             <div role="log" aria-live="polite" aria-label="Conversation" className="flex-1 space-y-3 overflow-y-auto p-4">
@@ -178,7 +181,7 @@ export function ChatWidget() {
                       key={s}
                       type="button"
                       onClick={() => send(s)}
-                      className="min-h-9 rounded-full border border-accent/50 px-3 text-left text-xs font-medium transition-colors hover:bg-accent/10"
+                      className="min-h-11 rounded-full border border-accent/50 px-4 text-left text-sm font-medium transition-colors hover:bg-accent/10 active:bg-accent/10"
                     >
                       {s}
                     </button>

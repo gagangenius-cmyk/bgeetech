@@ -2,10 +2,11 @@ import { Suspense } from "react";
 import { AdminProviders as QueryProvider } from "@/components/admin/providers";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { ChatWidget } from "@/components/widgets/chat-widget";
+import { BottomNav } from "@/components/bottom-nav";
+import { ServiceWorkerRegister } from "@/components/pwa/sw-register";
 import { CommandPalette } from "@/components/widgets/command-palette";
 import { LeadPopup } from "@/components/widgets/lead-popup";
-import { WhatsAppButton } from "@/components/widgets/whatsapp-button";
+import { FloatingWidgets } from "@/components/widgets/floating-widgets";
 import { site } from "@/lib/site";
 
 const orgJsonLd = {
@@ -37,8 +38,13 @@ export default function SiteLayout({ children }: LayoutProps<"/">) {
         {children}
       </main>
       <SiteFooter />
-      <WhatsAppButton />
-      <ChatWidget />
+      {/* spacer so the last content is never hidden behind the bottom tab bar on phones and tablets */}
+      <div aria-hidden className="h-[calc(4.25rem+env(safe-area-inset-bottom))] lg:hidden" />
+      <Suspense fallback={null}>
+        <FloatingWidgets />
+        <BottomNav />
+      </Suspense>
+      <ServiceWorkerRegister />
       <Suspense fallback={null}>
         <LeadPopup />
       </Suspense>

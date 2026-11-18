@@ -162,3 +162,23 @@ dialog:focus-visible { outline: none; }
 .neural-line { stroke-dasharray: 3 9; animation: dash-flow 2.4s linear infinite; }
 .neural-node { transform-box: fill-box; transform-origin: center; animation: node-pulse 3.2s ease-in-out infinite; }
 .spin-slow { animation: spin-slow 24s linear infinite; transform-origin: center; }
+
+/* ---------- Mobile / touch ergonomics ---------- */
+html { -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+/* removes the double-tap-to-zoom delay on controls without disabling pinch zoom */
+button, a, input, select, textarea, label, summary, [role="button"], [role="tab"] { touch-action: manipulation; }
+/* iOS Safari zooms the page when a focused field is under 16px; keep text at 16px+ on touch devices */
+@media (pointer: coarse) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
+  select,
+  textarea {
+    font-size: max(16px, 1em);
+  }
+}
+/* no rubber-band scroll chaining out of scrollable panels */
+.overscroll-contain { overscroll-behavior: contain; }
+/* installed (standalone) app: no text selection on chrome */
+@media (display-mode: standalone) {
+  body { -webkit-user-select: none; user-select: none; }
+  input, textarea, [contenteditable], article, p { -webkit-user-select: text; user-select: text; }
+}

@@ -225,7 +225,7 @@ export function BookingFlow() {
                     <input
                       id={`b-${k}`}
                       type={k === "email" ? "email" : "text"}
-                      autoComplete={k}
+                      autoComplete={k} inputMode={k === "email" ? "email" : "text"} autoCapitalize={k === "email" ? "none" : "words"} spellCheck={false}
                       value={details[k]}
                       onChange={(e) => setDetails({ ...details, [k]: e.target.value })}
                       className="min-h-12 w-full rounded-xl border border-border bg-background px-4 outline-none transition-all focus:border-brand focus:ring-4 focus:ring-brand/15"
@@ -313,7 +313,7 @@ export function BookingFlow() {
         </AnimatePresence>
       </div>
 
-      <div className="mt-6 flex items-center justify-between">
+      <div className="mt-6 flex items-center justify-between max-lg:sticky max-lg:bottom-[calc(4.75rem+env(safe-area-inset-bottom))] max-lg:z-30 max-lg:rounded-2xl max-lg:border max-lg:border-border max-lg:bg-background/90 max-lg:p-2 max-lg:shadow-lg max-lg:backdrop-blur">
         <Button variant="ghost" onClick={() => setStep(Math.max(0, step - 1))} className={cn(step === 0 && "invisible")}>
           <ArrowLeft className="size-4" /> Back
         </Button>

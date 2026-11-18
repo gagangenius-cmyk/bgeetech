@@ -12,9 +12,15 @@ export const metadata: Metadata = {
   description: site.description,
   openGraph: { title: site.name, description: site.description, type: "website", siteName: site.name },
   twitter: { card: "summary_large_image" },
+  applicationName: site.name,
+  appleWebApp: { capable: true, title: site.name, statusBarStyle: "black-translucent" },
+  formatDetection: { telephone: false },
 };
 
 export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover", // draw edge to edge; fixed UI pads itself with env(safe-area-inset-*)
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
     { media: "(prefers-color-scheme: dark)", color: "#060a16" },

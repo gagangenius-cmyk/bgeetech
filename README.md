@@ -14,6 +14,7 @@ Website for a web and software services company (websites, apps, CRM, ERP, AI an
 - **Stripe Checkout**: website-builder subscriptions and paid consultation bookings, signature-verified webhook
 - **Search**: full results page (`/search`) over services, articles, demos, team and website types, plus a Cmd/Ctrl+K palette
 - **Team** page with vector avatars (`src/lib/team.ts`)
+- **App-like on phones and tablets**: installable PWA (manifest, generated icons, offline page), bottom tab bar in the thumb zone, safe-area aware layout (`viewport-fit=cover`), sticky Back/Continue bars in multi-step flows, 16px+ form text (no iOS zoom), 44px touch targets, correct mobile keyboards
 - AI chatbot (Claude), WhatsApp button, lead popup
 
 ## Setup

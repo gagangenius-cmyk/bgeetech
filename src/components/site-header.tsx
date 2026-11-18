@@ -3,8 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useScroll, useSpring } from "motion/react";
-import { ArrowRight, Menu, Search, X } from "lucide-react";
+import { ArrowRight, MessageCircle, Search } from "lucide-react";
 import { CurrencySwitcher } from "@/components/currency";
+import { InstallButton } from "@/components/pwa/install-button";
+import { whatsappUrl } from "@/lib/chat-knowledge";
 import { OPEN_SEARCH_EVENT } from "@/components/widgets/command-palette";
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/logo";
@@ -33,11 +35,21 @@ export function SiteHeader() {
     };
   }, [open]);
 
+  // The bottom tab bar's "More" button toggles this menu; broadcast its state back so the tab can show as active.
+  useEffect(() => {
+    const toggle = () => setOpen((v) => !v);
+    window.addEventListener("bgee:toggle-menu", toggle);
+    return () => window.removeEventListener("bgee:toggle-menu", toggle);
+  }, []);
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent("bgee:menu-state", { detail: open }));
+  }, [open]);
+
   return (
     <>
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
+        "fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top)] transition-all duration-300",
         scrolled || open ? "glass border-b border-border shadow-sm" : "border-b border-transparent",
       )}
     >
@@ -46,7 +58,7 @@ export function SiteHeader() {
           <Logo onDark={!scrolled && !open} />
         </Link>
 
-        <nav aria-label="Main" className="hidden items-center gap-1 xl:flex">
+        <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
           {nav.map((item) => {
             const active = pathname.startsWith(item.href);
             const dark = !scrolled;
@@ -87,21 +99,9 @@ export function SiteHeader() {
             <Search className="size-5" />
           </button>
           <CurrencySwitcher onDark={!scrolled && !open} className="inline-flex" />
-          <ButtonLink href="/book" className="hidden min-h-10! sm:inline-flex">
+          <ButtonLink href="/book" className="hidden min-h-10! xl:inline-flex">
             Free consultation <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
           </ButtonLink>
-          <button
-            type="button"
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-            onClick={() => setOpen((v) => !v)}
-            className={cn(
-              "grid size-11 place-items-center rounded-full xl:hidden",
-              !scrolled && !open ? "text-white" : "text-foreground",
-            )}
-          >
-            {open ? <X className="size-6" /> : <Menu className="size-6" />}
-          </button>
         </div>
       </div>
 
@@ -122,7 +122,7 @@ export function SiteHeader() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-x-0 top-16 bottom-0 z-[45] overflow-y-auto border-t border-border bg-background xl:hidden"
+            className="fixed inset-x-0 top-[calc(4rem+env(safe-area-inset-top))] bottom-[calc(4.25rem+env(safe-area-inset-bottom))] z-[45] overflow-y-auto overscroll-contain border-t border-border bg-background lg:hidden"
           >
             <nav aria-label="Mobile" className="mx-auto flex max-w-7xl flex-col gap-1 px-5 py-6">
               {nav.map((item, i) => (
@@ -145,6 +145,27 @@ export function SiteHeader() {
               <ButtonLink href="/book" onClick={() => setOpen(false)} className="mt-4 min-h-12!">
                 Free consultation
               </ButtonLink>
+              <div className="mt-3 grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpen(false);
+                    window.dispatchEvent(new Event("bgee:open-chat"));
+                  }}
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-border bg-card text-sm font-semibold transition active:scale-[0.98]"
+                >
+                  <MessageCircle className="size-4 text-brand" aria-hidden /> Chat with AI
+                </button>
+                <a
+                  href={whatsappUrl()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-[#25D366] text-sm font-semibold text-white transition active:scale-[0.98]"
+                >
+                  WhatsApp
+                </a>
+              </div>
+              <InstallButton className="mt-3" />
             </nav>
           </motion.div>
         )}

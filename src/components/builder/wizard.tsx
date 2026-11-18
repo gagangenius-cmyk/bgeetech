@@ -191,7 +191,7 @@ export default function BuilderWizard() {
                 </Field>
                 <div className="grid gap-5 sm:grid-cols-2">
                   <Field htmlFor="b-email" label="Email" error={errors.email}>
-                    <input id="b-email" type="email" value={data.business.email} onChange={(e) => setBiz("email", e.target.value)} autoComplete="email" aria-invalid={!!errors.email} className={inputCls} />
+                    <input id="b-email" type="email" inputMode="email" autoCapitalize="none" spellCheck={false} value={data.business.email} onChange={(e) => setBiz("email", e.target.value)} autoComplete="email" aria-invalid={!!errors.email} className={inputCls} />
                   </Field>
                   <Field htmlFor="b-phone" label="Phone number" error={errors.phone}>
                     <input id="b-phone" type="tel" value={data.business.phone} onChange={(e) => setBiz("phone", e.target.value)} autoComplete="tel" aria-invalid={!!errors.phone} className={inputCls} />
@@ -430,7 +430,7 @@ export default function BuilderWizard() {
         </motion.div>
       </AnimatePresence>
 
-      <div className="mx-auto mt-10 flex max-w-3xl items-center justify-between">
+      <div className="mx-auto mt-10 flex max-w-3xl items-center justify-between max-lg:sticky max-lg:bottom-[calc(4.75rem+env(safe-area-inset-bottom))] max-lg:z-30 max-lg:rounded-2xl max-lg:border max-lg:border-border max-lg:bg-background/90 max-lg:p-2 max-lg:shadow-lg max-lg:backdrop-blur">
         <Button variant="ghost" onClick={() => go(step - 1)} className={cn(step === 0 && "invisible")}>
           <ArrowLeft className="size-4" /> Back
         </Button>

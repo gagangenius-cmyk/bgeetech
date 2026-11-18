@@ -23,7 +23,7 @@ export function SiteFooter() {
           <ul className="mt-4 space-y-2.5 text-sm">
             {services.slice(0, 5).map((s) => (
               <li key={s.slug}>
-                <Link className="transition-colors hover:text-white" href={`/services/${s.slug}`}>
+                <Link className="inline-block py-1.5 transition-colors hover:text-white" href={`/services/${s.slug}`}>
                   {s.title}
                 </Link>
               </li>
@@ -35,19 +35,19 @@ export function SiteFooter() {
           <ul className="mt-4 space-y-2.5 text-sm">
             {nav.map((n) => (
               <li key={n.href}>
-                <Link className="transition-colors hover:text-white" href={n.href}>
+                <Link className="inline-block py-1.5 transition-colors hover:text-white" href={n.href}>
                   {n.label}
                 </Link>
               </li>
             ))}
             <li>
-              <Link className="transition-colors hover:text-white" href="/estimate">Cost estimator</Link>
+              <Link className="inline-block py-1.5 transition-colors hover:text-white" href="/estimate">Cost estimator</Link>
             </li>
             <li>
-              <Link className="transition-colors hover:text-white" href="/privacy">Privacy</Link>
+              <Link className="inline-block py-1.5 transition-colors hover:text-white" href="/privacy">Privacy</Link>
             </li>
             <li>
-              <Link className="transition-colors hover:text-white" href="/terms">Terms</Link>
+              <Link className="inline-block py-1.5 transition-colors hover:text-white" href="/terms">Terms</Link>
             </li>
           </ul>
         </div>

@@ -1,14 +1,15 @@
 import { whatsappUrl } from "@/lib/chat-knowledge";
+import { cn } from "@/lib/utils";
 
 /** Floating WhatsApp button (official brand green). Opens a chat with the business number. */
-export function WhatsAppButton() {
+export function WhatsAppButton({ hideOnMobile = false }: { hideOnMobile?: boolean }) {
   return (
     <a
       href={whatsappUrl()}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat with us on WhatsApp (opens in a new tab)"
-      className="group fixed bottom-5 right-5 z-40 grid size-14 place-items-center rounded-full bg-[#25D366] text-white shadow-xl shadow-black/30 transition-transform duration-300 hover:scale-110 active:scale-95"
+      className={cn("group fixed bottom-[calc(5.75rem+env(safe-area-inset-bottom))] right-5 z-40 grid size-14 place-items-center rounded-full bg-[#25D366] text-white shadow-xl shadow-black/30 transition-transform duration-300 hover:scale-110 active:scale-95 lg:bottom-5", hideOnMobile && "max-lg:hidden")}
     >
       <span aria-hidden className="absolute inset-0 animate-pulse-ring rounded-full" style={{ color: "#25D366" }} />
       <svg viewBox="0 0 32 32" className="relative size-8" aria-hidden fill="currentColor">

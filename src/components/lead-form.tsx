@@ -12,7 +12,7 @@ const initial: LeadState = { ok: false };
 const inputBase =
   "w-full rounded-xl border border-border bg-background px-4 text-base outline-none transition-all placeholder:text-muted-foreground/70 focus:border-brand focus:ring-4 focus:ring-brand/15 aria-[invalid=true]:border-red-500";
 const sizeFull = "min-h-12 text-base px-4";
-const sizeCompact = "min-h-11 text-sm px-3.5";
+const sizeCompact = "min-h-11 text-base sm:text-sm px-3.5";
 
 function Field({ id, label, error, hint, compact, children }: { id: string; label: string; error?: string; hint?: string; compact?: boolean; children: ReactNode }) {
   return (
@@ -92,7 +92,7 @@ export function LeadForm({
             </Field>
           </div>
           <Field compact={compact} id={id("email")} label="Email" error={err("email")}>
-            <input id={id("email")} name="email" type="email" autoComplete="email" required className={input} {...aria("email")} />
+            <input id={id("email")} name="email" type="email" inputMode="email" autoCapitalize="none" spellCheck={false} autoComplete="email" required className={input} {...aria("email")} />
           </Field>
           <Field compact={compact} id={id("service")} label="Interested in">
             <select id={id("service")} name="service" defaultValue={defaultService} className={input}>
