@@ -19,6 +19,8 @@ type Slide = {
   primary: { label: string; href?: string; event?: string };
   secondary: { label: string; href?: string; event?: string };
   visual: ReactNode;
+  /** Background artwork in /public/hero and the focal point to keep when cropped on narrow screens. */
+  bg: { name: string; position: string };
 };
 
 const slides: Slide[] = [
@@ -30,6 +32,7 @@ const slides: Slide[] = [
     primary: { label: "Book a free consultation", href: "/book" },
     secondary: { label: "Explore services", href: "/services" },
     visual: <NeuralVisual />,
+    bg: { name: "slide-1", position: "72% 50%" },
   },
   {
     eyebrow: "Website builder",
@@ -39,6 +42,7 @@ const slides: Slide[] = [
     primary: { label: "Build your website", href: "/builder" },
     secondary: { label: "See pricing", href: "/pricing" },
     visual: <BuilderVisual />,
+    bg: { name: "slide-2", position: "68% 50%" },
   },
   {
     eyebrow: "CRM, ERP, POS & HRMS",
@@ -48,6 +52,7 @@ const slides: Slide[] = [
     primary: { label: "Explore live demos", href: "/demos" },
     secondary: { label: "Talk to us", href: "/contact" },
     visual: <DashboardVisual />,
+    bg: { name: "slide-3", position: "60% 60%" },
   },
   {
     eyebrow: "First 30 minutes free",
@@ -57,6 +62,7 @@ const slides: Slide[] = [
     primary: { label: "Book free consultation", href: "/book" },
     secondary: { label: "Chat with our AI", event: "bgee:open-chat" },
     visual: <HeroPanel />,
+    bg: { name: "slide-4", position: "74% 50%" },
   },
 ];
 
@@ -111,6 +117,33 @@ export function HeroSlider() {
         if (e.key === "ArrowLeft") prev();
       }}
     >
+      {/* Full-bleed artwork. This root is not positioned, so the layer anchors to the hero section behind it. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden bg-ink">
+        <AnimatePresence initial={false}>
+          <motion.div key={index} className="absolute inset-0" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 1.2, ease: "easeInOut" }}>
+            {/* Plain <img> with srcset: works on any host (no image optimiser needed) and stays sharp on retina screens. */}
+            <motion.img
+              src={`/hero/${s.bg.name}.webp`}
+              srcSet={`/hero/${s.bg.name}-sm.webp 1280w, /hero/${s.bg.name}.webp 2400w`}
+              sizes="100vw"
+              alt=""
+              width={2400}
+              height={1350}
+              decoding="async"
+              fetchPriority={index === 0 ? "high" : "auto"}
+              className="size-full object-cover"
+              style={{ objectPosition: s.bg.position }}
+              initial={{ scale: 1.02 }}
+              animate={reduce ? { scale: 1.02 } : { scale: 1.1 }}
+              transition={{ duration: 16, ease: "linear" }}
+            />
+          </motion.div>
+        </AnimatePresence>
+        {/* Legibility: darker behind the copy, lighter toward the visual, fading into the next section. */}
+        <div className="absolute inset-0 bg-linear-to-r from-ink/90 via-ink/55 to-ink/15 max-lg:from-ink/80 max-lg:via-ink/65 max-lg:to-ink/50" />
+        <div className="absolute inset-x-0 top-0 h-36 bg-linear-to-b from-ink/70 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-44 bg-linear-to-t from-ink to-transparent" />
+      </div>
       <div className="relative min-h-[46rem] sm:min-h-[40rem] lg:min-h-[35rem]">
         <AnimatePresence mode="wait" custom={dir} initial={false}>
           <motion.div

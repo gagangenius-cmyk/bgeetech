@@ -7,10 +7,11 @@ import { JsonLd, breadcrumbs } from "@/lib/jsonld";
 export function PageHero({ eyebrow, title, body, children, crumbs }: { eyebrow: string; title: string; body?: string; children?: ReactNode; crumbs?: { name: string; path: string }[] }) {
   return (
     <section className="relative isolate overflow-hidden bg-ink pb-20 pt-32 text-white sm:pt-40">
-      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute -left-32 -top-32 size-[34rem] animate-aurora rounded-full bg-blue-600/35 blur-[110px]" />
-        <div className="absolute -right-24 top-10 size-[28rem] animate-aurora rounded-full bg-amber-400/25 blur-[110px] [animation-delay:-7s]" />
-        <div className="grid-lines absolute inset-0" />
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/hero/page.webp" srcSet="/hero/page-sm.webp 1280w, /hero/page.webp 2400w" sizes="100vw" alt="" width={2400} height={1350} decoding="async" className="size-full object-cover object-[70%_50%]" />
+        <div className="absolute inset-0 bg-linear-to-r from-ink/85 via-ink/55 to-ink/25" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-linear-to-t from-ink/80 to-transparent" />
       </div>
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         {crumbs && crumbs.length > 0 && (

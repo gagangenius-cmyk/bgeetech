@@ -102,12 +102,12 @@ body {
   animation: var(--animate-shimmer);
 }
 
+/* Soft ambient light (kept under the old class name). No squares or lines. */
 .grid-lines {
   background-image:
-    linear-gradient(to right, color-mix(in srgb, #fff 7%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in srgb, #fff 7%, transparent) 1px, transparent 1px);
-  background-size: 56px 56px;
-  mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+    radial-gradient(ellipse 60% 50% at 15% 0%, color-mix(in srgb, #7aa2ff 22%, transparent), transparent 70%),
+    radial-gradient(ellipse 50% 45% at 95% 100%, color-mix(in srgb, #ffb020 12%, transparent), transparent 70%);
+  mask-image: none;
 }
 
 .glass {
