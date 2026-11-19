@@ -12,6 +12,10 @@ Website for a web and software services company (websites, apps, CRM, ERP, AI an
 - **Admin panel** (`/admin`): blog posts, demos, leads, website orders (search, create, edit, delete, CSV export)
 - **Free website audit** (`/audit`): scores any public site for SEO, speed, mobile and security (`src/lib/audit.ts`), blocks private and internal addresses (SSRF-safe), is rate limited, and turns results into leads (source `audit`)
 - **Proof section** on the home page (`src/components/sections/proof.tsx`): things visitors can verify themselves. Add real testimonials and case studies in `src/lib/proof.ts` and they appear automatically (none are invented)
+- **Industry pages** (`/industries`, `src/lib/verticals.ts`): real estate, immigration, clinics, restaurants, retail, education, logistics and startups, each with problems, solutions, demos and FAQs
+- **ROI calculator** (`/roi`), **blog search and category filter** with related articles, **newsletter** signup (footer) and a **referral** page (`/referral`)
+- **Dark mode toggle** (remembered per device, starts from the system setting) and a **next free consultation slot** pill
+- Lead **auto-replies**: when Resend is configured, visitors get an acknowledgement email (leads from `audit`, `newsletter`, `referral` are tagged by source in the admin)
 - **Currency switcher** (USD / AED / INR) for all prices, with matching Stripe charges (rates in `src/lib/currency.ts`)
 - **Stripe Checkout**: website-builder subscriptions and paid consultation bookings, signature-verified webhook
 - **Search**: full results page (`/search`) over services, articles, demos, team and website types, plus a Cmd/Ctrl+K palette

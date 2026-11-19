@@ -10,7 +10,7 @@ export type Lead = {
   service?: string;
   budget?: string;
   message?: string;
-  source: "popup" | "contact" | "estimator" | "chat" | "audit";
+  source: "popup" | "contact" | "estimator" | "chat" | "audit" | "newsletter" | "referral";
   createdAt: string;
 };
 
@@ -30,6 +30,7 @@ export async function saveLead(lead: Lead): Promise<boolean> {
     ),
     postWebhook({ type: "lead", ...lead }),
     sendEmail(`New ${lead.source} lead: ${lead.name.slice(0, 60)}`, lead, lead.email),
+    sendAutoReply(lead),
   ]);
   const dbOk = dbRes.status === "fulfilled";
   let fileOk = false;
@@ -69,6 +70,25 @@ export async function sendEmail(subject: string, fields: Record<string, unknown>
     method: "POST",
     headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
     body: JSON.stringify({ from, to: [to], ...(replyTo ? { reply_to: replyTo } : {}), subject, html: `<table>${rows}</table>` }),
+    signal: AbortSignal.timeout(8000),
+  });
+  return res.ok;
+}
+
+/** Friendly acknowledgement to the visitor, so they know we received it and what happens next. */
+export async function sendAutoReply(lead: Lead) {
+  const { RESEND_API_KEY: key, LEAD_FROM_EMAIL: from } = process.env;
+  if (!key || !from || !lead.email) return false;
+  const site = process.env.NEXT_PUBLIC_SITE_URL || "https://bgeetech.com";
+  const news = lead.source === "newsletter";
+  const first = esc(lead.name.split(" ")[0] || "there");
+  const html = news
+    ? `<p>Thanks for subscribing to BGeetech's tech tips.</p><p>Each week we share one practical idea for your website or software. Unsubscribe any time by replying to this email.</p>`
+    : `<p>Hi ${first},</p><p>Thanks for contacting BGeetech. We received your message and will reply within one business day.</p><p>While you wait: <a href="${site}/audit">check your website for free</a>, or <a href="${site}/book">book a free 30-minute consultation</a>.</p><p>BGeetech</p>`;
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ from, to: [lead.email], subject: news ? "You're subscribed to BGeetech tips" : "We received your message", html }),
     signal: AbortSignal.timeout(8000),
   });
   return res.ok;

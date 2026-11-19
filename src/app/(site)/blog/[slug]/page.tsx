@@ -7,7 +7,8 @@ import { PageHero } from "@/components/page-hero";
 import { Prose } from "@/components/prose";
 import { FinalCta } from "@/components/sections/more";
 import { blogArt } from "@/lib/art";
-import { getPost } from "@/lib/db/queries";
+import { PostCard } from "@/components/post-browser";
+import { getPost, getPosts } from "@/lib/db/queries";
 import { JsonLd, blogPosting } from "@/lib/jsonld";
 import { pageMeta } from "@/lib/seo";
 import { services } from "@/lib/site";
@@ -62,12 +63,29 @@ async function Article({ params }: { params: PageProps<"/blog/[slug]">["params"]
           </ul>
           <p className="mt-4 text-sm text-muted-foreground">Not sure what you need? Book a free 30-minute consultation and get honest advice.</p>
         </section>
+        <RelatedPosts slug={p.slug} category={p.category} />
         <div className="gold-rule mt-14" aria-hidden />
         <Link href="/blog" className="mt-8 inline-flex min-h-11 items-center gap-2 font-semibold text-brand hover:underline">
           <ArrowLeft className="size-4" aria-hidden /> All insights
         </Link>
       </article>
     </>
+  );
+}
+
+async function RelatedPosts({ slug, category }: { slug: string; category: string }) {
+  const all = (await getPosts()).filter((x) => x.slug !== slug);
+  const picks = [...all.filter((x) => x.category === category), ...all.filter((x) => x.category !== category)].slice(0, 3);
+  if (picks.length === 0) return null;
+  return (
+    <section aria-labelledby="more-reading" className="mt-14">
+      <h2 id="more-reading" className="font-display text-2xl font-bold">Keep reading</h2>
+      <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {picks.map((x) => (
+          <PostCard key={x.slug} p={x} />
+        ))}
+      </div>
+    </section>
   );
 }
 

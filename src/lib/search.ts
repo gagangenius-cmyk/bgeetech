@@ -55,6 +55,8 @@ export async function searchSite(query: string): Promise<{ terms: string[]; hits
   }
   for (const n of nav) push({ kind: "Page", title: n.label, href: n.href, snippet: "" }, score(terms, { title: n.label }));
   push({ kind: "Page", title: "Pricing and plans", href: "/pricing", snippet: plans.map((p) => p.name).join(", ") }, score(terms, { title: "pricing plans cost price", body: plans.map((p) => p.name + " " + p.blurb).join(" ") }));
+  push({ kind: "Page", title: "ROI calculator", href: "/roi", snippet: "Estimate the time and money automation could save you." }, score(terms, { title: "roi calculator savings automation payback" }));
+  push({ kind: "Page", title: "Industries", href: "/industries", snippet: "Solutions for real estate, immigration, clinics, restaurants, retail, education and more." }, score(terms, { title: "industries real estate immigration clinic restaurant retail education logistics startup" }));
   push({ kind: "Page", title: "Free website audit", href: "/audit", snippet: "Check any website for SEO, speed, mobile and security issues." }, score(terms, { title: "website audit check seo speed score test analyzer" }));
   push({ kind: "Page", title: "Project cost estimator", href: "/estimate", snippet: "Get an instant planning range for your project." }, score(terms, { title: "estimator estimate quote cost" }));
   push({ kind: "Page", title: "Frequently asked questions", href: "/faq", snippet: "Answers about pricing, process, support and the free consultation." }, score(terms, { title: "faq frequently asked questions help", body: "pricing process support free consultation" }));

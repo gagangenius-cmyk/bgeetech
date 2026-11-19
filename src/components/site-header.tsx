@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useScroll, useSpring } from "motion/react";
 import { ArrowRight, MessageCircle, Search } from "lucide-react";
 import { CurrencySwitcher } from "@/components/currency";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { InstallButton } from "@/components/pwa/install-button";
 import { whatsappUrl } from "@/lib/chat-knowledge";
 import { OPEN_SEARCH_EVENT } from "@/components/widgets/command-palette";
@@ -99,6 +100,7 @@ export function SiteHeader() {
             <Search className="size-5" />
           </button>
           <CurrencySwitcher onDark={!scrolled && !open} className="inline-flex" />
+          <ThemeToggle onDark={!scrolled && !open} className="hidden lg:grid" />
           <ButtonLink href="/book" className="hidden min-h-10! xl:inline-flex">
             Free consultation <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
           </ButtonLink>
@@ -141,7 +143,10 @@ export function SiteHeader() {
                   </Link>
                 </motion.div>
               ))}
-              <CurrencySwitcher className="mt-4 self-start" />
+              <div className="mt-4 flex items-center gap-3">
+                <CurrencySwitcher className="self-start" />
+                <ThemeToggle />
+              </div>
               <ButtonLink href="/book" onClick={() => setOpen(false)} className="mt-4 min-h-12!">
                 Free consultation
               </ButtonLink>

@@ -3,6 +3,7 @@ import { connection } from "next/server";
 import { Op } from "sequelize";
 import { posts as staticPosts } from "@/lib/content";
 import { getDb, plain } from "@/lib/db";
+import { BOOKING_TIMES } from "@/lib/booking";
 import { seedDemos } from "@/lib/db/seed";
 
 export type PostView = {
@@ -103,6 +104,30 @@ export async function getPost(slug: string): Promise<PostView | null> {
     warn("post");
     return fallbackPosts().find((p) => p.slug === slug) ?? null;
   }
+}
+
+/** The next free consultation slot (weekdays, same times the booking page offers), skipping slots already taken. */
+export async function getNextFreeSlot(): Promise<{ date: string; time: string } | null> {
+  await connection();
+  const days: string[] = [];
+  const d = new Date();
+  while (days.length < 10) {
+    d.setDate(d.getDate() + 1);
+    if (d.getDay() !== 0 && d.getDay() !== 6) days.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`);
+  }
+  let taken = new Set<string>();
+  try {
+    const db = await getDb();
+    const rows = await db.Booking.findAll({
+      where: { slotDate: { [Op.in]: days }, [Op.or]: [{ status: { [Op.in]: ["paid", "confirmed"] } }, { status: "pending", createdAt: { [Op.gt]: new Date(Date.now() - 15 * 60_000) } }] },
+      attributes: ["slotDate", "slotTime"],
+    });
+    taken = new Set(rows.map((r) => { const x = plain<{ slotDate: string; slotTime: string }>(r)!; return x.slotDate + " " + x.slotTime; }));
+  } catch {
+    warn("next slot");
+  }
+  for (const day of days) for (const time of BOOKING_TIMES) if (!taken.has(day + " " + time)) return { date: day, time };
+  return null;
 }
 
 export async function getDemos(): Promise<DemoView[]> {

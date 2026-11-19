@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { whatsappUrl } from "@/lib/chat-knowledge";
 import { CookieSettingsLink } from "@/components/analytics";
+import { NewsletterForm } from "@/components/newsletter-form";
 import { nav, services, site } from "@/lib/site";
 
 export function SiteFooter() {
@@ -12,6 +13,9 @@ export function SiteFooter() {
         <div className="md:col-span-2">
           <Logo onDark />
           <p className="mt-5 max-w-sm text-sm leading-relaxed">{site.description}</p>
+          <div className="mt-6 max-w-sm">
+            <NewsletterForm />
+          </div>
           <a href={`mailto:${site.email}`} className="mt-5 inline-block text-sm font-medium text-white underline-offset-4 hover:underline">
             {site.email}
           </a>
@@ -52,6 +56,15 @@ export function SiteFooter() {
               </li>
               <li>
                 <Link className="inline-block py-1.5 transition-colors hover:text-white" href="/audit">Free website audit</Link>
+              </li>
+              <li>
+                <Link className="inline-block py-1.5 transition-colors hover:text-white" href="/roi">ROI calculator</Link>
+              </li>
+              <li>
+                <Link className="inline-block py-1.5 transition-colors hover:text-white" href="/industries">Industries</Link>
+              </li>
+              <li>
+                <Link className="inline-block py-1.5 transition-colors hover:text-white" href="/referral">Referral program</Link>
             </li>
             <li>
               <Link className="inline-block py-1.5 transition-colors hover:text-white" href="/privacy">Privacy</Link>

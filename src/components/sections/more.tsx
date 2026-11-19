@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+import { NextSlot } from "@/components/next-slot";
 import { Price } from "@/components/currency";
 import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
@@ -170,6 +172,11 @@ export function PricingTeaser() {
 }
 
 export function FinalCta() {
+  const slot = (
+    <Suspense fallback={null}>
+      <NextSlot />
+    </Suspense>
+  );
   return (
     <section className="mx-auto max-w-7xl px-5 sm:px-8">
       <Reveal>
@@ -182,6 +189,7 @@ export function FinalCta() {
           <p className="mx-auto mt-4 max-w-xl text-white/70">
             Book your free 30-minute consultation today. No obligation, just honest advice.
           </p>
+          <div className="mt-4 flex justify-center">{slot}</div>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <ButtonLink href="/book">
               Book a free consultation <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />

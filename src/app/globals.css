@@ -16,7 +16,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --background: #050a1c;
     --foreground: #e7ecf8;
     --muted: #0a1330;
@@ -28,6 +28,19 @@
     --accent: #e6c25a;
     --ring: #7aa2ff;
   }
+}
+
+:root[data-theme="dark"] {
+  --background: #050a1c;
+  --foreground: #e7ecf8;
+  --muted: #0a1330;
+  --muted-foreground: #9aa9c9;
+  --border: #1a2850;
+  --card: #08112b;
+  --brand: #7aa2ff;
+  --brand-strong: #2a52d4;
+  --accent: #e6c25a;
+  --ring: #7aa2ff;
 }
 
 @theme inline {

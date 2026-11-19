@@ -16,7 +16,7 @@ const base = z.object({
   service: z.string().trim().max(120).optional(),
   budget: z.string().trim().max(60).optional(),
   message: z.string().trim().max(2000).optional(),
-  source: z.enum(["popup", "contact", "estimator", "chat", "audit"]).default("contact"),
+  source: z.enum(["popup", "contact", "estimator", "chat", "audit", "newsletter", "referral"]).default("contact"),
   consent: z.literal("on", { error: "Please agree so we can contact you" }),
   company: z.string().max(0).optional(), // honeypot: must stay empty
 });
@@ -44,7 +44,7 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
   }
 
   const d = parsed.data;
-  if (d.source === "contact" && (d.message?.length ?? 0) < 10) {
+  if ((d.source === "contact" || d.source === "referral") && (d.message?.length ?? 0) < 10) {
     return { ok: false, errors: { message: "Tell us a little more (10+ characters)" } };
   }
 

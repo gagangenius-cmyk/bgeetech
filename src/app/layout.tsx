@@ -37,7 +37,10 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${sans.variable} ${display.variable} h-full`}>
+    <html lang="en" className={`${sans.variable} ${display.variable} h-full`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `try{var t=localStorage.getItem("bgee_theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}` }} />
+      </head>
       <body className="flex min-h-full flex-col">{children}</body>
     </html>
   );
