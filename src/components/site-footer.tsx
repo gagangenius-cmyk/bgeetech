@@ -49,6 +49,9 @@ export function SiteFooter() {
             </li>
             <li>
               <Link className="inline-block py-1.5 transition-colors hover:text-white" href="/estimate">Cost estimator</Link>
+              </li>
+              <li>
+                <Link className="inline-block py-1.5 transition-colors hover:text-white" href="/audit">Free website audit</Link>
             </li>
             <li>
               <Link className="inline-block py-1.5 transition-colors hover:text-white" href="/privacy">Privacy</Link>

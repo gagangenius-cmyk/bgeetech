@@ -32,7 +32,7 @@ function Field({ id, label, error, hint, compact, children }: { id: string; labe
 }
 
 type Props = {
-  source: "popup" | "contact" | "estimator" | "chat";
+  source: "popup" | "contact" | "estimator" | "chat" | "audit";
   /** Show the free-text message box. */
   message?: "none" | "optional" | "required";
   defaultService?: string;

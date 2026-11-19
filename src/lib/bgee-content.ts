@@ -12,6 +12,7 @@ export const walk: Station[] = [
   { title: "Pricing", text: "Six clear packages, plus a custom package builder that prices your own mix live.", href: "/pricing", cta: "See pricing" },
   { title: "Website builder", text: "Design your own website in 5 steps with a live preview. Plans start from $10 a month.", href: "/builder", cta: "Build my site" },
   { title: "Live demos", text: "Try working demos of our CRM, POS, HRMS and more before you decide.", href: "/demos", cta: "Open demos" },
+  { title: "Free website audit", text: "Enter any website address and get an instant score for SEO, speed, mobile and security.", href: "/audit", cta: "Check my site" },
   { title: "Free consultation", text: "Book a 30-minute video call with an expert. The first one is free.", href: "/book", cta: "Book free call" },
   { title: "Blog and team", text: "Read our plain-English guides, and meet the people who will build your project.", href: "/team", cta: "Meet the team" },
   { title: "Ask me anything", text: "Questions about services, pricing or tech? Just ask me here, or message the team on WhatsApp.", href: "/contact", cta: "Contact us" },
@@ -28,6 +29,7 @@ const intros: [match: (p: string) => boolean, text: string][] = [
   [(p) => p === "/contact", "This is Contact. Send the form, WhatsApp us, or ask me. You'll also find our location on the map. We reply within one business day."],
   [(p) => p === "/demos", "Demos! Try working versions of our CRM, POS, HRMS and more. Filter by category, then open one."],
   [(p) => p.startsWith("/demos/"), "This is the {h1} demo. Open the live demo, or ask us for a guided walkthrough."],
+  [(p) => p === "/audit", "This is the free website audit. Type any website address and I will score its SEO, speed, mobile and security in seconds."],
   [(p) => p === "/estimate", "The estimator gives an instant planning price. Pick what you're building, the size and the timeline. It's a range, not a quote."],
   [(p) => p === "/blog", "Our blog: short, practical guides on costs, CRM vs ERP, AI and more. Pick the one that matches your question."],
   [(p) => p.startsWith("/blog/"), "You're reading '{h1}'. The related services at the bottom help you act on it."],
@@ -49,6 +51,7 @@ const tours: [match: (p: string) => boolean, steps: TourStep[]][] = [
       { selector: '[data-bgee="hero"]', text: "This is BGeetech: websites, apps, CRM, ERP and AI, all from one team. The slider shows each one." },
       { selector: '[data-bgee="services"]', text: "Here are our products with starting prices. Tap a card to see what's included." },
       { selector: '[data-bgee="process"]', text: "How it works: a free call, a fixed-scope proposal, then we build, launch and support." },
+      { selector: '[data-bgee="proof"]', text: "Don't take our word for it: open a live demo, or test your own website with the free audit." },
       { selector: '[data-bgee="glance"]', text: "The short version of who we are and what it costs." },
       { selector: '[data-bgee="pricing"]', text: "Clear starting prices. See the full list, and a custom package builder, on the pricing page." },
       { selector: '[data-bgee="faq"]', text: "Quick answers to common questions. That's the tour! Ready to book your free call?" },
@@ -73,6 +76,7 @@ const tours: [match: (p: string) => boolean, steps: TourStep[]][] = [
     ],
   ],
   [(p) => p === "/demos", [{ selector: '[data-bgee="demo-grid"]', text: "Working demos of our software. Filter by category, then open a live demo." }]],
+  [(p) => p === "/audit", [{ selector: '[data-bgee="audit"]', text: "Type a website address here. In a few seconds you get a score and the top fixes. Then our team can fix them for you." }]],
   [(p) => p === "/estimate", [{ selector: '[data-bgee="estimator"]', text: "Pick what you're building, the size and timeline. Your price range updates as you choose." }]],
 ];
 

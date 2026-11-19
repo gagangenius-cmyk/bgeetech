@@ -10,7 +10,7 @@ export type Lead = {
   service?: string;
   budget?: string;
   message?: string;
-  source: "popup" | "contact" | "estimator" | "chat";
+  source: "popup" | "contact" | "estimator" | "chat" | "audit";
   createdAt: string;
 };
 

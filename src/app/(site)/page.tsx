@@ -5,6 +5,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { Faq } from "@/components/sections/faq";
 import { Hero } from "@/components/sections/hero";
 import { FinalCta, Industries, PricingTeaser, Process, Stats, TechMarquee, WhyUs } from "@/components/sections/more";
+import { ProofSection } from "@/components/sections/proof";
 import { SectionHeading, ServicesGrid } from "@/components/sections/services-grid";
 import { JsonLd, faqPage } from "@/lib/jsonld";
 import { pageMeta } from "@/lib/seo";
@@ -72,6 +73,7 @@ export default function HomePage() {
       </section>
       <TechMarquee />
       <Process />
+      <ProofSection />
       <WhyUs />
       <AtAGlance />
       <Industries />

@@ -16,7 +16,7 @@ const base = z.object({
   service: z.string().trim().max(120).optional(),
   budget: z.string().trim().max(60).optional(),
   message: z.string().trim().max(2000).optional(),
-  source: z.enum(["popup", "contact", "estimator", "chat"]).default("contact"),
+  source: z.enum(["popup", "contact", "estimator", "chat", "audit"]).default("contact"),
   consent: z.literal("on", { error: "Please agree so we can contact you" }),
   company: z.string().max(0).optional(), // honeypot: must stay empty
 });

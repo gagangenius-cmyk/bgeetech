@@ -42,6 +42,7 @@ export function CommandPalette() {
       { id: "book", group: "Actions", label: "Book a free consultation", hint: "/book", icon: <CalendarCheck className="size-4" />, run: go("/book") },
       { id: "quote", group: "Actions", label: "Get a free quote", hint: "Opens form", icon: <Mail className="size-4" />, run: () => { close(); openLeadPopup(); } },
       { id: "builder", group: "Actions", label: "Build your website", hint: "/builder", icon: <Sparkles className="size-4" />, run: go("/builder") },
+      { id: "audit", group: "Actions", label: "Free website audit", hint: "/audit", icon: <Calculator className="size-4" />, run: go("/audit") },
       { id: "estimate", group: "Actions", label: "Estimate your project cost", hint: "/estimate", icon: <Calculator className="size-4" />, run: go("/estimate") },
       { id: "wa", group: "Actions", label: "Chat on WhatsApp", hint: "Opens WhatsApp", icon: <MessageCircle className="size-4" />, run: () => { close(); window.open(whatsappUrl(), "_blank", "noopener,noreferrer"); } },
       { id: "home", group: "Pages", label: "Home", hint: "/", icon: <Home className="size-4" />, run: go("/") },

@@ -10,6 +10,8 @@ Website for a web and software services company (websites, apps, CRM, ERP, AI an
 - **Dynamic blog** (37 starter articles) and **product demos** (CRM, POS, HRMS...) managed from the admin panel
 - **Website builder** (`/builder`): business details, 90+ business types, 100 colour themes + custom colours, 8 styles, live Desktop/Tablet/Mobile preview, plans from $10/month (monthly, quarterly, annual)
 - **Admin panel** (`/admin`): blog posts, demos, leads, website orders (search, create, edit, delete, CSV export)
+- **Free website audit** (`/audit`): scores any public site for SEO, speed, mobile and security (`src/lib/audit.ts`), blocks private and internal addresses (SSRF-safe), is rate limited, and turns results into leads (source `audit`)
+- **Proof section** on the home page (`src/components/sections/proof.tsx`): things visitors can verify themselves. Add real testimonials and case studies in `src/lib/proof.ts` and they appear automatically (none are invented)
 - **Currency switcher** (USD / AED / INR) for all prices, with matching Stripe charges (rates in `src/lib/currency.ts`)
 - **Stripe Checkout**: website-builder subscriptions and paid consultation bookings, signature-verified webhook
 - **Search**: full results page (`/search`) over services, articles, demos, team and website types, plus a Cmd/Ctrl+K palette

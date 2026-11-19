@@ -55,6 +55,7 @@ export async function searchSite(query: string): Promise<{ terms: string[]; hits
   }
   for (const n of nav) push({ kind: "Page", title: n.label, href: n.href, snippet: "" }, score(terms, { title: n.label }));
   push({ kind: "Page", title: "Pricing and plans", href: "/pricing", snippet: plans.map((p) => p.name).join(", ") }, score(terms, { title: "pricing plans cost price", body: plans.map((p) => p.name + " " + p.blurb).join(" ") }));
+  push({ kind: "Page", title: "Free website audit", href: "/audit", snippet: "Check any website for SEO, speed, mobile and security issues." }, score(terms, { title: "website audit check seo speed score test analyzer" }));
   push({ kind: "Page", title: "Project cost estimator", href: "/estimate", snippet: "Get an instant planning range for your project." }, score(terms, { title: "estimator estimate quote cost" }));
   push({ kind: "Page", title: "Frequently asked questions", href: "/faq", snippet: "Answers about pricing, process, support and the free consultation." }, score(terms, { title: "faq frequently asked questions help", body: "pricing process support free consultation" }));
   push({ kind: "Page", title: "Book a free consultation", href: "/book", snippet: "Choose a service, pick a time and book online." }, score(terms, { title: "book booking consultation appointment" }));
