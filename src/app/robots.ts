@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { site } from "@/lib/site";
 
 // Pages that should never be crawled: private, transactional or utility URLs.
-const disallow = ["/admin", "/api/", "/search", "/offline", "/book/success", "/builder/success"];
+const disallow = ["/admin", "/api/", "/search", "/offline", "/book/success", "/builder/success", "/care/success", "/portal"];
 
 // Search and "answer engine" crawlers: they fetch pages so the site can be cited in AI answers. Always allowed.
 const answerBots = ["OAI-SearchBot", "ChatGPT-User", "Claude-SearchBot", "Claude-User", "PerplexityBot", "Perplexity-User", "Applebot", "DuckDuckBot", "Bingbot"];

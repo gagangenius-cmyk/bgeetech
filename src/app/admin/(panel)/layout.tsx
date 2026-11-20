@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BookOpen, CalendarCheck, ExternalLink, Inbox, LayoutDashboard, LogOut, MonitorPlay, ShoppingBag } from "lucide-react";
+import { BookOpen, CalendarCheck, ExternalLink, Inbox, LayoutDashboard, LifeBuoy, LogOut, MonitorPlay, ShieldCheck, ShoppingBag } from "lucide-react";
 import { Suspense, type ReactNode } from "react";
 import { logout } from "@/actions/auth";
 import { AdminProviders } from "@/components/admin/providers";
@@ -16,6 +16,8 @@ const links = [
   { href: "/admin/bookings", label: "Bookings", icon: CalendarCheck },
   { href: "/admin/leads", label: "Leads", icon: Inbox },
   { href: "/admin/orders", label: "Website orders", icon: ShoppingBag },
+  { href: "/admin/care", label: "Care plans", icon: ShieldCheck },
+  { href: "/admin/tickets", label: "Support requests", icon: LifeBuoy },
 ];
 
 // Session is verified here for every admin page (the proxy alone is not trusted).

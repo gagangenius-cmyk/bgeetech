@@ -26,6 +26,7 @@ export async function buildLlmsTxt(): Promise<string> {
     `- [Pricing and packages](${absoluteUrl("/pricing")}): ${plans.map((p) => `${p.name} (${planPrice(p)})`).join("; ")}. Includes a custom package calculator.`,
     `- [Website builder](${absoluteUrl("/builder")}): design a website by choosing business type, colours and style, preview on desktop, tablet and mobile; hosting plans from $10 per month.`,
     `- [Project cost estimator](${absoluteUrl("/estimate")}): instant planning range for websites, apps, e-commerce and AI projects.`,
+    `- [Website care plans](${absoluteUrl("/care")}): monthly plans for updates, backups, security, monitoring and fixes.`,
     `- [ROI calculator](${absoluteUrl("/roi")}): estimate the time and money saved by automating repetitive work.`,
     `- [Industries](${absoluteUrl("/industries")}): solutions for real estate, immigration, clinics, restaurants, retail, education, logistics and startups.`,
     `- [Free website audit](${absoluteUrl("/audit")}): instant SEO, speed, mobile and security check of any public website.`,

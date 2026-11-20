@@ -7,7 +7,7 @@ Website for a web and software services company (websites, apps, CRM, ERP, AI an
 - Product catalogue (15): websites, web and mobile apps, CRM, ERP, POS and HRMS, e-commerce, AI, automation, bug fixing and maintenance, design, SEO, hosting, security and consulting
 - **Free first 30-minute consultation** (no payment); 60-minute deep-dives are paid via Stripe
 - Pricing with 6 packages plus a **custom package calculator**; project estimator; animated **AI-style hero slider**
-- **Dynamic blog** (37 starter articles) and **product demos** (CRM, POS, HRMS...) managed from the admin panel
+- **Dynamic blog** (38 starter articles) and **product demos** (CRM, POS, HRMS...) managed from the admin panel
 - **Website builder** (`/builder`): business details, 90+ business types, 100 colour themes + custom colours, 8 styles, live Desktop/Tablet/Mobile preview, plans from $10/month (monthly, quarterly, annual)
 - **Admin panel** (`/admin`): blog posts, demos, leads, website orders (search, create, edit, delete, CSV export)
 - **Free website audit** (`/audit`): scores any public site for SEO, speed, mobile and security (`src/lib/audit.ts`), blocks private and internal addresses (SSRF-safe), is rate limited, and turns results into leads (source `audit`)
@@ -16,6 +16,7 @@ Website for a web and software services company (websites, apps, CRM, ERP, AI an
 - **ROI calculator** (`/roi`), **blog search and category filter** with related articles, **newsletter** signup (footer) and a **referral** page (`/referral`)
 - **Dark mode toggle** (remembered per device, starts from the system setting) and a **next free consultation slot** pill
 - Lead **auto-replies**: when Resend is configured, visitors get an acknowledgement email (leads from `audit`, `newsletter`, `referral` are tagged by source in the admin)
+- **Care plans** (`/care`, `carePlans` in `src/lib/site.ts`): monthly Stripe subscriptions, activated by the webhook, plus a passwordless **client portal** (`/portal`: emailed sign-in link, plans, orders, consultations and support requests with replies) and admin screens for **Care plans** and **Support requests** (`/admin/care`, `/admin/tickets`). Needs `AUTH_SECRET` and working email (SMTP) for sign-in links
 - **Currency switcher** (USD / AED / INR) for all prices, with matching Stripe charges (rates in `src/lib/currency.ts`)
 - **Stripe Checkout**: website-builder subscriptions and paid consultation bookings, signature-verified webhook
 - **Search**: full results page (`/search`) over services, articles, demos, team and website types, plus a Cmd/Ctrl+K palette

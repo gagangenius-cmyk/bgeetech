@@ -7,7 +7,7 @@ import { ButtonLink } from "@/components/ui/button";
 const noop = () => () => {};
 const readRef = () => {
   const r = new URLSearchParams(window.location.search).get("ref") ?? "";
-  return /^B[GK]-[0-9A-F]{10}$/.test(r) ? r : "";
+  return /^(B[GK]|CP)-[0-9A-F]{10}$/.test(r) ? r : "";
 };
 
 /** Shown after Stripe redirects back. Payment status itself is confirmed server-side by the webhook, never from this URL. */

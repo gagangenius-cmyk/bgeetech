@@ -228,6 +228,35 @@ export const stats = [
   { value: 24, suffix: "h", label: "Reply target" },
 ];
 
+/** Monthly care plans. PLACEHOLDER prices and allowances: set what you can honestly deliver before launch. */
+export const carePlans = [
+  {
+    id: "essential",
+    name: "Essential",
+    price: 49,
+    blurb: "Keep a small website safe, backed up and online.",
+    features: ["Software and security updates", "Daily backups, tested restores", "Uptime monitoring", "2 hours of fixes or changes a month", "Email support, reply within 2 business days"],
+    highlight: false,
+  },
+  {
+    id: "growth",
+    name: "Growth",
+    price: 99,
+    blurb: "For businesses that rely on their website to get customers.",
+    features: ["Everything in Essential", "5 hours of fixes or changes a month", "Monthly speed and SEO health report", "Reply within 1 business day", "Priority bug fixing"],
+    highlight: true,
+  },
+  {
+    id: "premium",
+    name: "Premium",
+    price: 199,
+    blurb: "Hands-on care for stores, portals and business software.",
+    features: ["Everything in Growth", "10 hours of fixes or changes a month", "Security scan every month", "Same-day reply on business days", "Quarterly strategy call"],
+    highlight: false,
+  },
+] as const;
+export type CarePlanId = (typeof carePlans)[number]["id"];
+
 export const steps = [
   { title: "Tell us what you need", body: "Book a free 30-minute call or send a message. We listen, ask questions and explain your options in plain language." },
   { title: "Get a clear proposal", body: "You receive a fixed scope, timeline and price for approval before any work begins." },

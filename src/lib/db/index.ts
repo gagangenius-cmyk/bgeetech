@@ -6,6 +6,7 @@ import { posts as staticPosts } from "@/lib/content";
 import { seedDemos } from "@/lib/db/seed";
 import { seedPostsV2 } from "@/lib/db/seed-posts";
 import { seedPostsV3 } from "@/lib/db/seed-posts-3";
+import { seedPostsV4 } from "@/lib/db/seed-posts-4";
 
 export type DB = {
   sequelize: Sequelize;
@@ -15,6 +16,9 @@ export type DB = {
   Post: ModelStatic<Model>;
   Demo: ModelStatic<Model>;
   Booking: ModelStatic<Model>;
+  CareSub: ModelStatic<Model>;
+  Ticket: ModelStatic<Model>;
+  TicketMessage: ModelStatic<Model>;
   Setting: ModelStatic<Model>;
 };
 
@@ -101,6 +105,32 @@ function defineModels(s: Sequelize): Omit<DB, "sequelize"> {
       stripeSessionId: str(255),
       notes: DataTypes.TEXT,
     }),
+    CareSub: s.define("CareSub", {
+      ref: { type: str(24), allowNull: false, unique: true },
+      status: { type: str(20), defaultValue: "pending" }, // pending | active | cancelled
+      planId: str(20),
+      name: str(120),
+      email: { type: str(190), allowNull: false },
+      website: str(190),
+      amountCents: DataTypes.INTEGER,
+      currency: { type: str(3), defaultValue: "usd" },
+      stripeSessionId: str(255),
+      notes: DataTypes.TEXT,
+    }),
+    Ticket: s.define("Ticket", {
+      ref: { type: str(24), allowNull: false, unique: true },
+      email: { type: str(190), allowNull: false },
+      name: str(120),
+      subject: { type: str(200), allowNull: false },
+      website: str(190),
+      priority: { type: str(12), defaultValue: "normal" }, // normal | urgent
+      status: { type: str(12), defaultValue: "open" }, // open | answered | closed
+    }),
+    TicketMessage: s.define("TicketMessage", {
+      ticketId: { type: DataTypes.INTEGER, allowNull: false },
+      author: { type: str(8), allowNull: false }, // client | team
+      body: { type: DataTypes.TEXT, allowNull: false },
+    }),
     Setting: s.define("Setting", {
       key: { type: str(80), allowNull: false, unique: true },
       value: str(255),
@@ -171,6 +201,15 @@ async function seed(db: DB) {
       });
     }
     await db.Setting.create({ key: "seed_posts_v3", value: "1" });
+  }
+  if (!(await db.Setting.findOne({ where: { key: "seed_posts_v4" } }))) {
+    for (const { date, ...p } of seedPostsV4) {
+      await db.Post.findOrCreate({
+        where: { slug: p.slug },
+        defaults: { ...p, published: true, publishedAt: new Date(date), readMinutes: Math.max(2, Math.round(p.body.split(/s+/).length / 200)) },
+      });
+    }
+    await db.Setting.create({ key: "seed_posts_v4", value: "1" });
   }
   if ((await db.Demo.count()) === 0) {
     for (const d of seedDemos) await db.Demo.create({ ...d, published: true });

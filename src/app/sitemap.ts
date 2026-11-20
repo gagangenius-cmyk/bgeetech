@@ -16,6 +16,7 @@ const pages: { path: string; priority: number; freq: Freq }[] = [
   { path: "/estimate", priority: 0.7, freq: "monthly" },
   { path: "/audit", priority: 0.8, freq: "monthly" },
   { path: "/roi", priority: 0.7, freq: "monthly" },
+  { path: "/care", priority: 0.8, freq: "monthly" },
   { path: "/referral", priority: 0.5, freq: "yearly" },
   { path: "/industries", priority: 0.8, freq: "monthly" },
   { path: "/faq", priority: 0.7, freq: "monthly" },

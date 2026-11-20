@@ -15,6 +15,8 @@ const company = [
   { href: "/demos", label: "Live demos" },
   { href: "/pricing", label: "Pricing" },
   { href: "/builder", label: "Site builder" },
+  { href: "/care", label: "Care plans" },
+  { href: "/portal", label: "Client portal" },
 ];
 
 const tools = [
