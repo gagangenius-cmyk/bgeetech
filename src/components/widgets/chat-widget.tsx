@@ -280,7 +280,7 @@ export function ChatWidget() {
               </p>
             )}
             <p className="px-4 pb-3 text-center text-[11px] text-muted-foreground">
-              AI can make mistakes. Check important details with our team.
+              AI can make mistakes. Messages are processed by our AI provider, so please do not share sensitive personal data.
             </p>
           </motion.section>
         )}

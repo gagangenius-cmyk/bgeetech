@@ -2,6 +2,7 @@ import "server-only";
 import { appendFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { getDb } from "@/lib/db";
+import { deliver, notifyAddress } from "@/lib/mailer";
 
 export type Lead = {
   name: string;
@@ -59,39 +60,25 @@ export async function postWebhook(payload: Record<string, unknown>) {
 
 const esc = (v: unknown) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 
+/** Notification to the team inbox (LEAD_NOTIFY_EMAIL), with the visitor set as reply-to. */
 export async function sendEmail(subject: string, fields: Record<string, unknown>, replyTo?: string) {
-  const { RESEND_API_KEY: key, LEAD_NOTIFY_EMAIL: to, LEAD_FROM_EMAIL: from } = process.env;
-  if (!key || !to || !from) return false;
   const rows = Object.entries(fields)
     .filter(([, v]) => v !== undefined && v !== "")
-    .map(([k, v]) => `<tr><td style="padding:4px 12px 4px 0"><b>${esc(k)}</b></td><td>${esc(v)}</td></tr>`)
+    .map(([k, v]) => `<tr><td style="padding:4px 12px 4px 0;vertical-align:top"><b>${esc(k)}</b></td><td>${esc(v)}</td></tr>`)
     .join("");
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ from, to: [to], ...(replyTo ? { reply_to: replyTo } : {}), subject, html: `<table>${rows}</table>` }),
-    signal: AbortSignal.timeout(8000),
-  });
-  return res.ok;
+  return deliver({ to: notifyAddress(), subject, html: `<table>${rows}</table>`, replyTo });
 }
 
 /** Friendly acknowledgement to the visitor, so they know we received it and what happens next. */
 export async function sendAutoReply(lead: Lead) {
-  const { RESEND_API_KEY: key, LEAD_FROM_EMAIL: from } = process.env;
-  if (!key || !from || !lead.email) return false;
+  if (!lead.email) return false;
   const site = process.env.NEXT_PUBLIC_SITE_URL || "https://bgeetech.com";
   const news = lead.source === "newsletter";
   const first = esc(lead.name.split(" ")[0] || "there");
   const html = news
     ? `<p>Thanks for subscribing to BGeetech's tech tips.</p><p>Each week we share one practical idea for your website or software. Unsubscribe any time by replying to this email.</p>`
     : `<p>Hi ${first},</p><p>Thanks for contacting BGeetech. We received your message and will reply within one business day.</p><p>While you wait: <a href="${site}/audit">check your website for free</a>, or <a href="${site}/book">book a free 30-minute consultation</a>.</p><p>BGeetech</p>`;
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ from, to: [lead.email], subject: news ? "You're subscribed to BGeetech tips" : "We received your message", html }),
-    signal: AbortSignal.timeout(8000),
-  });
-  return res.ok;
+  return deliver({ to: lead.email, subject: news ? "You're subscribed to BGeetech tips" : "We received your message", html, replyTo: notifyAddress() });
 }
 
 // Small in-memory limiter (per server instance). Replace with Redis/Upstash when scaling out.

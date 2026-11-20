@@ -1,6 +1,20 @@
 // NOTE: All copy, prices, stats and testimonials below are PLACEHOLDERS.
 // Replace with real, verifiable content before launch.
 
+/**
+ * Official social profile URLs. Paste the real link for each network and its icon appears in the top bar and footer
+ * (empty ones stay hidden, so nobody lands on a wrong page). They also feed Organization "sameAs" for search and AI engines.
+ */
+export const socialLinks = {
+  facebook: "",
+  instagram: "",
+  linkedin: "",
+  x: "",
+  youtube: "",
+  tiktok: "",
+};
+export type SocialKey = keyof typeof socialLinks;
+
 export const site = {
   name: "BGeetech",
   url: "https://bgeetech.com",
@@ -13,7 +27,7 @@ export const site = {
   /** Public location. City-level on purpose: add a street address here when you want one to appear on the map. */
   address: { label: "Dubai, United Arab Emirates", mapQuery: "Dubai, United Arab Emirates", city: "Dubai", country: "AE" },
   /** Official profile URLs (LinkedIn, Facebook, Instagram, X, YouTube...). They feed Organization "sameAs", which helps search and AI engines recognise the brand. */
-  socials: [] as string[],
+  socials: Object.values(socialLinks).filter(Boolean) as string[],
   /** Allow AI model-training crawlers (GPTBot, ClaudeBot...) in robots.txt. Search and answer bots are always allowed. */
   allowAiTraining: true,
 };
@@ -30,10 +44,17 @@ export const nav = [
   { href: "/builder", label: "Site Builder" },
   { href: "/pricing", label: "Pricing" },
   { href: "/blog", label: "Insights" },
+] as const;
+
+/** Shown in the slim bar above the header. */
+export const topLinks = [
   { href: "/about", label: "About" },
   { href: "/team", label: "Team" },
   { href: "/contact", label: "Contact" },
 ] as const;
+
+/** Every main page, for search and the command palette. */
+export const navAll = [...nav, ...topLinks] as const;
 
 export type ServiceIcon =
   | "code" | "cloud" | "brain" | "palette" | "shield" | "compass" | "phone" | "cart" | "trend" | "bot" | "workflow" | "crown"

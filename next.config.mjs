@@ -5,7 +5,7 @@ const nextConfig = {
   // Self-contained server output: deploy `.next/standalone` without needing a build on the host.
   output: "standalone",
   // Keep the ORM and its driver out of the bundle (they load dialects dynamically).
-  serverExternalPackages: ["sequelize", "mysql2"],
+  serverExternalPackages: ["sequelize", "mysql2", "nodemailer"],
   async rewrites() {
     // IndexNow ownership file: /<key>.txt is answered by an API route that only returns the configured key.
     return [{ source: "/:key([A-Za-z0-9-]{16,128}).txt", destination: "/api/indexnow-key/:key" }];

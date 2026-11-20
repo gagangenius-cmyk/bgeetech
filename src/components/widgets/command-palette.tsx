@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { openLeadPopup } from "@/components/widgets/lead-popup";
 import { whatsappUrl } from "@/lib/chat-knowledge";
-import { nav, priceText, services } from "@/lib/site";
+import { navAll as nav, priceText, services } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 export const OPEN_SEARCH_EVENT = "bgee:open-search";

@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { AdminProviders as QueryProvider } from "@/components/admin/providers";
 import { SiteHeader } from "@/components/site-header";
+import { TopBar } from "@/components/top-bar";
 import { SiteFooter } from "@/components/site-footer";
 import { BottomNav } from "@/components/bottom-nav";
 import { BGee } from "@/components/bgee/bgee";
@@ -21,6 +22,7 @@ export default function SiteLayout({ children }: LayoutProps<"/">) {
         Skip to content
       </a>
       {/* usePathname() suspends on routes with runtime params; keep these client pieces in Suspense */}
+      <TopBar />
       <Suspense fallback={<div className="h-16" aria-hidden />}>
         <SiteHeader />
       </Suspense>

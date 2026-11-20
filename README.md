@@ -47,7 +47,8 @@ See [.env.example](.env.example). The essentials:
 | `ADMIN_EMAIL`, `ADMIN_PASSWORD` | Creates the first admin on first start (change the password, then remove these) |
 | `ANTHROPIC_API_KEY` | Enables the AI chatbot (otherwise scripted answers) |
 | `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` | Builder payments (otherwise orders are saved and a payment link is sent manually) |
-| `LEAD_WEBHOOK_URL`, `RESEND_API_KEY`, `LEAD_NOTIFY_EMAIL`, `LEAD_FROM_EMAIL` | Optional lead and order notifications |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `LEAD_NOTIFY_EMAIL` | Email via nodemailer: leads, bookings and orders are sent to `LEAD_NOTIFY_EMAIL` (default `bgeetechai@gmail.com`) and visitors get an auto-reply. For Gmail use `smtp.gmail.com`, port 465 and an App Password |
+| `LEAD_WEBHOOK_URL`, `RESEND_API_KEY`, `LEAD_FROM_EMAIL` | Optional: webhook for leads, and Resend as a fallback if SMTP is not set |
 
 Stripe: add a webhook endpoint at `/api/stripe/webhook` with events `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `checkout.session.async_payment_failed`, `checkout.session.expired` and `invoice.paid`. Amounts are calculated on the server in the chosen currency. AED and INR must be enabled on your Stripe account (INR subscriptions have extra Indian e-mandate rules). The INR rate in `src/lib/currency.ts` is a placeholder, so keep it current.
 

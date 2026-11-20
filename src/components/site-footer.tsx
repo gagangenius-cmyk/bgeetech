@@ -1,88 +1,130 @@
 import Link from "next/link";
 import { Logo } from "@/components/logo";
-import { whatsappUrl } from "@/lib/chat-knowledge";
 import { CookieSettingsLink } from "@/components/analytics";
 import { NewsletterForm } from "@/components/newsletter-form";
-import { nav, services, site } from "@/lib/site";
+import { SocialIcons } from "@/components/social-icons";
+import { whatsappUrl } from "@/lib/chat-knowledge";
+import { services, site } from "@/lib/site";
+
+const company = [
+  { href: "/about", label: "About" },
+  { href: "/team", label: "Team" },
+  { href: "/contact", label: "Contact" },
+  { href: "/blog", label: "Insights" },
+  { href: "/faq", label: "FAQ" },
+  { href: "/demos", label: "Live demos" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/builder", label: "Site builder" },
+];
+
+const tools = [
+  { href: "/estimate", label: "Cost estimator" },
+  { href: "/audit", label: "Free website audit" },
+  { href: "/roi", label: "ROI calculator" },
+  { href: "/industries", label: "Industries" },
+  { href: "/referral", label: "Referral program" },
+];
+
+const linkClass = "inline-block py-1.5 transition-colors hover:text-white";
+
+function Column({ title, children, className }: { title: string; children: React.ReactNode; className?: string }) {
+  return (
+    <div className={className}>
+      <h2 className="text-sm font-semibold text-white">{title}</h2>
+      {children}
+    </div>
+  );
+}
 
 export function SiteFooter() {
   return (
     <footer className="relative mt-24 overflow-hidden bg-ink text-white/70">
       <div aria-hidden className="grid-lines absolute inset-0 opacity-40" />
-      <div className="relative mx-auto grid max-w-7xl gap-12 px-5 py-16 sm:px-8 md:grid-cols-4">
-        <div className="md:col-span-2">
+      <div className="relative mx-auto grid max-w-7xl gap-x-10 gap-y-12 px-5 py-16 sm:px-8 lg:grid-cols-12">
+        <div className="lg:col-span-4">
           <Logo onDark />
           <p className="mt-5 max-w-sm text-sm leading-relaxed">{site.description}</p>
           <div className="mt-6 max-w-sm">
             <NewsletterForm />
           </div>
-          <a href={`mailto:${site.email}`} className="mt-5 inline-block text-sm font-medium text-white underline-offset-4 hover:underline">
-            {site.email}
-          </a>
-          <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="mt-2 block text-sm font-medium text-white underline-offset-4 hover:underline">
-            WhatsApp {site.whatsappDisplay}
-          </a>
+          <div className="mt-6 space-y-1 text-sm">
+            <a href={`mailto:${site.email}`} className="block font-medium text-white underline-offset-4 hover:underline">
+              {site.email}
+            </a>
+            <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="block font-medium text-white underline-offset-4 hover:underline">
+              WhatsApp {site.whatsappDisplay}
+            </a>
+            <p className="pt-1">{site.address.label}</p>
+          </div>
+          <SocialIcons className="-ml-2 mt-4" itemClassName="size-10 border border-white/15 text-white/80" />
         </div>
-        <div>
-          <h2 className="text-sm font-semibold text-white">Services</h2>
-          <ul className="mt-4 space-y-2.5 text-sm">
-            {services.slice(0, 8).map((s) => (
+
+        <Column title="Services" className="lg:col-span-4">
+          <ul className="mt-4 grid grid-cols-1 gap-x-6 text-sm sm:grid-cols-2">
+            {services.map((s) => (
               <li key={s.slug}>
-                <Link className="inline-block py-1.5 transition-colors hover:text-white" href={`/services/${s.slug}`}>
+                <Link className={linkClass} href={`/services/${s.slug}`}>
                   {s.title}
                 </Link>
               </li>
             ))}
             <li>
-              <Link className="inline-block py-1.5 font-semibold text-white transition-colors" href="/services">All services</Link>
+              <Link className={`${linkClass} font-semibold text-white`} href="/services">
+                All services
+              </Link>
             </li>
           </ul>
-        </div>
-        <div>
-          <h2 className="text-sm font-semibold text-white">Company</h2>
-          <ul className="mt-4 space-y-2.5 text-sm">
-            {nav.map((n) => (
-              <li key={n.href}>
-                <Link className="inline-block py-1.5 transition-colors hover:text-white" href={n.href}>
-                  {n.label}
+        </Column>
+
+        <Column title="Company" className="lg:col-span-2">
+          <ul className="mt-4 text-sm">
+            {company.map((l) => (
+              <li key={l.href}>
+                <Link className={linkClass} href={l.href}>
+                  {l.label}
                 </Link>
               </li>
             ))}
-            <li>
-              <Link className="inline-block py-1.5 transition-colors hover:text-white" href="/faq">FAQ</Link>
-            </li>
-            <li>
-              <Link className="inline-block py-1.5 transition-colors hover:text-white" href="/estimate">Cost estimator</Link>
+          </ul>
+        </Column>
+
+        <Column title="Free tools" className="lg:col-span-2">
+          <ul className="mt-4 text-sm">
+            {tools.map((l) => (
+              <li key={l.href}>
+                <Link className={linkClass} href={l.href}>
+                  {l.label}
+                </Link>
               </li>
-              <li>
-                <Link className="inline-block py-1.5 transition-colors hover:text-white" href="/audit">Free website audit</Link>
-              </li>
-              <li>
-                <Link className="inline-block py-1.5 transition-colors hover:text-white" href="/roi">ROI calculator</Link>
-              </li>
-              <li>
-                <Link className="inline-block py-1.5 transition-colors hover:text-white" href="/industries">Industries</Link>
-              </li>
-              <li>
-                <Link className="inline-block py-1.5 transition-colors hover:text-white" href="/referral">Referral program</Link>
+            ))}
+          </ul>
+        </Column>
+      </div>
+
+      <div className="relative border-t border-white/10">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-5 py-6 text-xs sm:px-8 md:flex-row">
+          <p>© 2026 {site.name}. All rights reserved.</p>
+          <ul className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1">
+            <li>
+              <Link className={linkClass} href="/privacy">
+                Privacy
+              </Link>
             </li>
             <li>
-              <Link className="inline-block py-1.5 transition-colors hover:text-white" href="/privacy">Privacy</Link>
+              <Link className={linkClass} href="/terms">
+                Terms
+              </Link>
             </li>
             <li>
-              <Link className="inline-block py-1.5 transition-colors hover:text-white" href="/terms">Terms</Link>
+              <a className={linkClass} href="/feed.xml">
+                RSS feed
+              </a>
             </li>
             <li>
-              <a className="inline-block py-1.5 transition-colors hover:text-white" href="/feed.xml">RSS feed</a>
-            </li>
-            <li>
-              <CookieSettingsLink className="inline-block py-1.5 text-left transition-colors hover:text-white" />
+              <CookieSettingsLink className={`${linkClass} text-left`} />
             </li>
           </ul>
         </div>
-      </div>
-      <div className="relative border-t border-white/10 py-6 text-center text-xs">
-        © 2026 {site.name}. All rights reserved.
       </div>
     </footer>
   );

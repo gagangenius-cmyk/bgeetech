@@ -1,5 +1,5 @@
 import { getDemos, getPosts } from "@/lib/db/queries";
-import { nav, priceText, services } from "@/lib/site";
+import { navAll as nav, priceText, services } from "@/lib/site";
 
 /** Public, read-only index for the Cmd/Ctrl+K palette. */
 export async function GET() {

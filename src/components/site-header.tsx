@@ -12,18 +12,24 @@ import { OPEN_SEARCH_EVENT } from "@/components/widgets/command-palette";
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/logo";
 import { ButtonLink } from "@/components/ui/button";
-import { nav } from "@/lib/site";
+import { nav, navAll } from "@/lib/site";
 import { cn } from "@/lib/utils";
+
+const TOP_BAR = 36; // height of the slim bar above the header (px)
 
 export function SiteHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [bar, setBar] = useState(TOP_BAR); // how much of the top bar is still visible (px)
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 30, mass: 0.4 });
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 12);
+      setBar(Math.max(0, TOP_BAR - window.scrollY));
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -49,8 +55,9 @@ export function SiteHeader() {
   return (
     <>
     <header
+      style={open || bar === 0 ? { top: 0, paddingTop: "env(safe-area-inset-top)" } : { top: `calc(${bar}px + env(safe-area-inset-top))` }}
       className={cn(
-        "fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top)] transition-all duration-300",
+        "fixed inset-x-0 z-50 transition-[background-color,box-shadow,border-color] duration-300",
         scrolled || open ? "glass border-b border-border shadow-sm" : "border-b border-transparent",
       )}
     >
@@ -59,7 +66,7 @@ export function SiteHeader() {
           <Logo onDark={!scrolled && !open} />
         </Link>
 
-        <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
+        <nav aria-label="Main" className={cn("hidden items-center gap-0.5 rounded-full border p-1 transition-colors lg:flex", scrolled ? "border-border bg-muted/70" : "border-white/15 bg-white/[0.08] backdrop-blur-md")}>
           {nav.map((item) => {
             const active = pathname.startsWith(item.href);
             const dark = !scrolled;
@@ -101,7 +108,7 @@ export function SiteHeader() {
           </button>
           <CurrencySwitcher onDark={!scrolled && !open} className="inline-flex" />
           <ThemeToggle onDark={!scrolled && !open} className="hidden lg:grid" />
-          <ButtonLink href="/book" className="hidden min-h-10! xl:inline-flex">
+          <ButtonLink href="/book" className="hidden min-h-10! shadow-lg shadow-brand/30 xl:inline-flex">
             Free consultation <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
           </ButtonLink>
         </div>
@@ -127,7 +134,7 @@ export function SiteHeader() {
             className="fixed inset-x-0 top-[calc(4rem+env(safe-area-inset-top))] bottom-[calc(4.25rem+env(safe-area-inset-bottom))] z-[45] overflow-y-auto overscroll-contain border-t border-border bg-background lg:hidden"
           >
             <nav aria-label="Mobile" className="mx-auto flex max-w-7xl flex-col gap-1 px-5 py-6">
-              {nav.map((item, i) => (
+              {navAll.map((item, i) => (
                 <motion.div
                   key={item.href}
                   initial={{ opacity: 0, x: -16 }}
